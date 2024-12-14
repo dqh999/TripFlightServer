@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: RailGoServer
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/railgo_db
+    username: root
+    password: Hop2005@
+
+  jwt:
+    expiration: 3600 #hours = 1 * 60 * 60
+    expiration-refresh-token: 86400 #days =  24 * 60 * 60
+    secretKeyAccess: c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=
+
+
+logging:
+  level:
+    org:
+      springframework.security: DEBUG
