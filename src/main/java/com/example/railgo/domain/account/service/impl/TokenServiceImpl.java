@@ -47,9 +47,7 @@ public class TokenServiceImpl implements ITokenService {
         Date refreshExpiresAt = new Date(issuedAt.getTime() + expirationRefreshToken);
 
         Token newToken = new Token(accessToken,issuedAt,expiresAt,refreshToken,refreshExpiresAt);
-        tokenRepository.save(newToken);
-
-        return newToken;
+        return tokenRepository.save(newToken);
     }
     private Map<String,Object> buildClaims(String accountId,
                                            String subject){

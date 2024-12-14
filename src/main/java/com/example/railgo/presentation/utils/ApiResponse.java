@@ -47,8 +47,6 @@ public class ApiResponse<T> {
         errors = new HashMap<>();
     }
 
-    // Getters and Setters
-
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }

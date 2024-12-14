@@ -25,23 +25,32 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean existsByPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null) {
+            return false;
+        }
         return repository.existsByPhoneNumber(phoneNumber);
     }
 
     @Override
     public Optional<User> findByPhoneNumber(String phoneNumber) {
-        return repository.findById(phoneNumber)
+        if (phoneNumber == null) {
+            return Optional.empty();
+        }
+        return repository.findByPhoneNumber(phoneNumber)
                 .map(mapper::toDTO);
     }
 
     @Override
     public Optional<User> findById(String id){
+        if (id == null) {
+            return Optional.empty();
+        }
         return repository.findById(id)
                 .map(mapper::toDTO);
     }
     @Override
     public User save(User user) {
-        UserEntity userEntity = new UserEntity();
+        UserEntity userEntity = mapper.toEntity(user);
         repository.save(userEntity);
         return mapper.toDTO(userEntity);
     }

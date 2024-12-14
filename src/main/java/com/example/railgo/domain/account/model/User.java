@@ -12,26 +12,30 @@ public class User {
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
+    private String gender;
     private Role role;
     private Email email;
     private PhoneNumber phoneNumber;
-    private HashPassword hashPassword;
+    private HashPassword password;
     private boolean isAccountLocked;
     private boolean isAccountActive;
 
-    public User(String id, String firstName, String lastName, LocalDate dateOfBirth, String role, String email, String phoneNumber, HashPassword hashPassword, boolean isAccountLocked, boolean isAccountActive) {
+    public User(String id, String firstName, String lastName, LocalDate dateOfBirth,String gender, String role, String email, String phoneNumber, String password, boolean isAccountLocked, boolean isAccountActive) {
         this.id = new Id(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
         this.role = new Role(role);
         this.email = new Email(email);
         this.phoneNumber = new PhoneNumber(phoneNumber);
-        this.hashPassword = hashPassword;
+        this.password = new HashPassword(password);
         this.isAccountLocked = isAccountLocked;
         this.isAccountActive = isAccountActive;
     }
-
+    public void initializeNewId(){
+        this.id = new Id();
+    }
     public String getId() {
         return id.getValue();
     }
@@ -39,7 +43,6 @@ public class User {
     public void setId(String id) {
         this.id = new Id(id);
     }
-
     public String getFirstName() {
         return firstName;
     }
@@ -62,6 +65,14 @@ public class User {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getRole() {
@@ -88,12 +99,14 @@ public class User {
         this.phoneNumber = new PhoneNumber(phoneNumber);
     }
 
-    public String getHashPassword() {
-        return this.hashPassword.getHashedPassword();
+    public String getPassword() {
+        return this.password.getValue();
     }
-
-    public void setHashPassword(String password) {
-        this.hashPassword = new HashPassword(password);
+    public void setPassword(String password) {
+        this.password = new HashPassword(password);
+    }
+    public HashPassword getHashedPassword() {
+        return this.password;
     }
 
     public boolean isAccountLocked() {

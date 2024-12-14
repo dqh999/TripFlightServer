@@ -30,7 +30,6 @@ public class UserServiceImpl implements IUserService {
         if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
             throw new BusinessException(AccountExceptionCode.ACCOUNT_ALREADY_EXISTS);
         }
-
         setUserDefaults(user);
 
         return userRepository.save(user);
@@ -42,6 +41,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     private void setUserDefaults(User user) {
+        user.initializeNewId();
         user.setRole(Role.USER().getValue());
         user.setAccountActive(true);
         user.setAccountLocked(false);
@@ -70,16 +70,16 @@ public class UserServiceImpl implements IUserService {
     }
 
     private void checkCredentials(User existUser, String password) {
-        if (!existUser.getHashPassword().matches(password)) {
+        if (!existUser.getHashedPassword().matches(password)) {
             throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
         }
 
-        if (existUser.isAccountLocked()) {
-            throw new BusinessException(AccountExceptionCode.ACCOUNT_LOCKED);
-        }
-        if (!existUser.isAccountActive()) {
-            throw new BusinessException(AccountExceptionCode.ACCOUNT_INACTIVE);
-        }
+//        if (existUser.isAccountLocked()) {
+//            throw new BusinessException(AccountExceptionCode.ACCOUNT_LOCKED);
+//        }
+//        if (!existUser.isAccountActive()) {
+//            throw new BusinessException(AccountExceptionCode.ACCOUNT_INACTIVE);
+//        }
     }
 
     @Override
@@ -91,11 +91,11 @@ public class UserServiceImpl implements IUserService {
 
         checkCredentials(existUser, oldPassword);
 
-        if (existUser.getHashPassword().matches(newPassword)) {
+        if (existUser.getHashedPassword().matches(newPassword)) {
             throw new BusinessException();
         }
 
-        existUser.setHashPassword(newPassword);
+        existUser.setPassword(newPassword);
 
         userRepository.save(existUser);
     }

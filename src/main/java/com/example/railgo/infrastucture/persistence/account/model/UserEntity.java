@@ -1,6 +1,5 @@
 package com.example.railgo.infrastucture.persistence.account.model;
 
-import com.example.railgo.domain.account.model.User;
 import com.example.railgo.infrastucture.persistence.utils.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +25,7 @@ public class UserEntity extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
     @Column(name = "hashed_password")
-    private String hashedPassword;
+    private String password;
 
     public UserEntity() {
     }
@@ -39,7 +38,7 @@ public class UserEntity extends BaseEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public UserEntity(String id, String firstName, String lastName, String gender, LocalDate dateOfBirth, String role, String email, String phoneNumber, String hashedPassword) {
+    public UserEntity(String id, String firstName, String lastName, String gender, LocalDate dateOfBirth, String role, String email, String phoneNumber, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,7 +47,7 @@ public class UserEntity extends BaseEntity {
         this.role = role;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.hashedPassword = hashedPassword;
+        this.password = password;
     }
 
     public String getId() {
@@ -115,11 +114,11 @@ public class UserEntity extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

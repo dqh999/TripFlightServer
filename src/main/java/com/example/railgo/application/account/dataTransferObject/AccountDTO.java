@@ -13,7 +13,18 @@ public class AccountDTO {
     private String phoneNumber;
     private String accessToken;
     private String refreshToken;
+    public AccountDTO() {}
 
+    public AccountDTO(String id, String firstName, String lastName, String role, String email, String phoneNumber, String accessToken, String refreshToken) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 
     public static AccountDTO from(User user, Token token) {
         AccountDTO accountDTO = new AccountDTO();

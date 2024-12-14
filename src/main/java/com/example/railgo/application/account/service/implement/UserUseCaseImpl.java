@@ -32,7 +32,6 @@ public class UserUseCaseImpl implements UserUseCase {
 
     @Override
     public AccountDTO register(RegisterRequest request) {
-        System.out.println(request.getPhoneNumber());
         User userRegister = accountMapper.toDTO(request);
         System.out.println(userRegister.getId());
         User newUser = userService.register(userRegister);
@@ -43,11 +42,12 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public UserDetail getUserByUsername(String username) {
         User existUser = userService.getUserByPhoneNumber(username);
-        return new UserDetail(existUser.getId(),existUser.getRole(),existUser.getPhoneNumber(),existUser.getHashPassword());
+        return new UserDetail(existUser.getId(),existUser.getRole(),existUser.getPhoneNumber(),existUser.getPassword());
     }
 
     @Override
     public AccountDTO authenticate(String accessToken) {
-        return null;
+
+        return new AccountDTO("1","2","2","2","2","2","2","2");
     }
 }

@@ -4,6 +4,7 @@ import com.example.railgo.domain.account.exception.AccountExceptionCode;
 import com.example.railgo.domain.account.model.User;
 import com.example.railgo.domain.account.valueObject.Role;
 import com.example.railgo.domain.utils.exception.BusinessException;
+import com.example.railgo.domain.utils.validation.SecurityValidator;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -20,14 +21,17 @@ public class UserValidator {
 
         validateDateOfBirth(user.getDateOfBirth());
     }
+
     private void validateFieldName(String fieldName) {
         if (fieldName == null || fieldName.trim().isEmpty()) {
             throw new BusinessException(AccountExceptionCode.INVALID_NAME);
         }
-        if (!fieldName.matches("^[a-zA-Z][a-zA-Z0-9]*$")) {
+        if (!fieldName.matches("^[A-Z][a-z]+( [A-Z][a-z]+)*$")) {
             throw new BusinessException(AccountExceptionCode.INVALID_NAME);
         }
+        if (!SecurityValidator.)
     }
+
     public void validateDateOfBirth(LocalDate dateOfBirth) {
         if (dateOfBirth == null || dateOfBirth.isAfter(LocalDate.now())) {
             throw new BusinessException(AccountExceptionCode.INVALID_DATE_OF_BIRTH);
@@ -46,11 +50,13 @@ public class UserValidator {
         }
         return age;
     }
+
     public void validateDefaultRole(String role) {
-        if (role != null && !role.equals(Role.USER().getValue())){
+        if (role != null && !role.equals(Role.USER().getValue())) {
             throw new IllegalArgumentException("Invalid role type.");
         }
     }
+
     public void validateEmail(String email) {
         if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new BusinessException(AccountExceptionCode.INVALID_EMAIL);
@@ -62,8 +68,18 @@ public class UserValidator {
             throw new BusinessException(AccountExceptionCode.INVALID_PHONE_NUMBER);
         }
     }
+
     public void validatePassword(String password) {
-        if (password.length() < 8 && !password.matches(".*[!@#$%^&*].*")){
+        if (password.length() < 8 || password.length() > 24) {
+            throw new BusinessException(AccountExceptionCode.INVALID_PASSWORD_FORMAT);
+        }
+        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).*$")) {
+            throw new BusinessException(AccountExceptionCode.INVALID_PASSWORD_FORMAT);
+        }
+        if (!password.matches(".*[!@#$%^&*].*")) {
+            throw new BusinessException(AccountExceptionCode.INVALID_PASSWORD_FORMAT);
+        }
+        if (SecurityValidator.contain(password)) {
             throw new BusinessException(AccountExceptionCode.INVALID_PASSWORD_FORMAT);
         }
     }

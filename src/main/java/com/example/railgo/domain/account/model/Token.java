@@ -17,6 +17,7 @@ public class Token {
     }
 
     public Token(String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
+        this.id = new Id();
         this.value = value;
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
