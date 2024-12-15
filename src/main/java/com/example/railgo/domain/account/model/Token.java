@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class Token {
     private Id id;
+    private String accountId;
     private String value;
     private Date issuedAt;
     private Date expiresAt;
@@ -16,8 +17,9 @@ public class Token {
     public Token() {
     }
 
-    public Token(String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
+    public Token(String accountId,String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
         this.id = new Id();
+        this.accountId = accountId;
         this.value = value;
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
@@ -25,8 +27,9 @@ public class Token {
         this.refreshTokenExpiresAt = refreshTokenExpiresAt;
     }
 
-    public Token(String id, String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
+    public Token(String id,String accountId, String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
         this.id = new Id(id);
+        this.accountId = accountId;
         this.value = value;
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
@@ -40,6 +43,14 @@ public class Token {
 
     public void setId(String id) {
         this.id = new Id(id);
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getValue() {

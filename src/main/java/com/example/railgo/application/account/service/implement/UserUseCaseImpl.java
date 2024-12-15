@@ -23,6 +23,12 @@ public class UserUseCaseImpl implements UserUseCase {
         this.tokenService = tokenService;
         this.accountMapper = accountMapper;
     }
+
+    @Override
+    public void testException() {
+        userService.testException();
+    }
+
     @Override
     public AccountDTO login(LoginRequest request) {
         User existUser = userService.login(request.getPhoneNumber(), request.getPassword());
@@ -33,7 +39,7 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public AccountDTO register(RegisterRequest request) {
         User userRegister = accountMapper.toDTO(request);
-        System.out.println(userRegister.getId());
+
         User newUser = userService.register(userRegister);
         Token token = tokenService.generateToken(newUser);
         return AccountDTO.from(newUser, token);
@@ -42,12 +48,13 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public UserDetail getUserByUsername(String username) {
         User existUser = userService.getUserByPhoneNumber(username);
-        return new UserDetail(existUser.getId(),existUser.getRole(),existUser.getPhoneNumber(),existUser.getPassword());
+        return new UserDetail(existUser.getId(), existUser.getRole(), existUser.getPhoneNumber(), existUser.getPassword());
     }
 
     @Override
-    public AccountDTO authenticate(String accessToken) {
-
-        return new AccountDTO("1","2","2","2","2","2","2","2");
+    public UserDetail authenticate(String accessToken) {
+        String userName = tokenService.authenticate(accessToken);
+        User existUser = userService.getUserByPhoneNumber(userName);
+        return new UserDetail(existUser.getId(), existUser.getRole(), existUser.getPhoneNumber(), "");
     }
 }

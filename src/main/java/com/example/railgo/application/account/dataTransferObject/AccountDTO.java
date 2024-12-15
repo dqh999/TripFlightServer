@@ -25,19 +25,30 @@ public class AccountDTO {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+    public static AccountDTO from(User user) {
+        return new AccountDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getRole(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                null,
+                null
+        );
+    }
 
     public static AccountDTO from(User user, Token token) {
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(user.getId());
-        accountDTO.setFirstName(user.getFirstName());
-        accountDTO.setLastName(user.getLastName());
-        accountDTO.setRole(user.getRole());
-        accountDTO.setEmail(user.getEmail());
-        accountDTO.setPhoneNumber(user.getPhoneNumber());
-
-        accountDTO.setAccessToken(token.getValue());
-        accountDTO.setRefreshToken(token.getRefreshToken());
-        return accountDTO;
+        return new AccountDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getRole(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                token.getValue(),
+                token.getRefreshToken()
+        );
     }
 
     public String getId() {

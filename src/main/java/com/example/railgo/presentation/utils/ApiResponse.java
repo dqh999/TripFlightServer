@@ -2,6 +2,8 @@ package com.example.railgo.presentation.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -147,7 +149,10 @@ public class ApiResponse<T> {
         this.errors = errors;
         return this;
     }
-
+    public String toJson() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(this);
+    }
     public ResponseEntity<?> toEntity() {
         if (success) {
             return new ResponseEntity<>(data, headers, httpStatus);

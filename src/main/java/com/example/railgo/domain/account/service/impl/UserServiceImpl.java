@@ -24,6 +24,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public void testException() {
+        throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
+    }
+
+    @Override
     public User register(User user) {
         validateUserForRegistration(user);
 

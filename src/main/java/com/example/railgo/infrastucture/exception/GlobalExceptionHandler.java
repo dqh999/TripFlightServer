@@ -16,10 +16,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<?>> handleBusinessException(BusinessException e) {
+        System.out.println("Caught BusinessException");
+
         ExceptionCode code = e.getExceptionCode();
         Map<String, Object> errors = new HashMap<>();
         errors.put("type", code != null ? code.getType() : HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-
+        System.out.println("Error Code: " + (code != null ? code.getCode() : HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        System.out.println("Error Message: " + e.getMessage());
         return createErrorResponse(
                 code != null ? code.getCode() : HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 e.getMessage(),

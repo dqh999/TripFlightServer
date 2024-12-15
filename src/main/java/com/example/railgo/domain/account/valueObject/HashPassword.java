@@ -10,6 +10,9 @@ public class HashPassword {
     private String value;
 
     public HashPassword(String password) {
+        if (password == null){
+            return;
+        }
         if (isHashedPassword(password)) {
             this.value = password;
             return;

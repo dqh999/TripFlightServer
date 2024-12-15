@@ -13,6 +13,8 @@ import java.util.Date;
 public class TokenEntity extends BaseEntity {
     @Id
     private String id;
+    @Column(name = "account_id")
+    private String accountId;
     private String value;
     @Column(name = "issued_at")
     private Date issuedAt;
@@ -30,8 +32,9 @@ public class TokenEntity extends BaseEntity {
     public TokenEntity() {
     }
 
-    public TokenEntity(String id, String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt, String ipAddress, String userAgent) {
+    public TokenEntity(String id,String accountId, String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt, String ipAddress, String userAgent) {
         this.id = id;
+        this.accountId = accountId;
         this.value = value;
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
@@ -47,6 +50,14 @@ public class TokenEntity extends BaseEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getValue() {

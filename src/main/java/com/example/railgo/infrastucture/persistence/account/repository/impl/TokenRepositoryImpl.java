@@ -30,6 +30,7 @@ public class TokenRepositoryImpl implements TokenRepository {
 
     @Override
     public Optional<Token> findByValue(String value) {
-        return Optional.empty();
+        Optional<TokenEntity> existEntity = repository.findByValue(value);
+        return existEntity.map(mapper::toDTO);
     }
 }

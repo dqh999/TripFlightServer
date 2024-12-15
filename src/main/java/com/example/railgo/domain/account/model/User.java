@@ -5,6 +5,7 @@ import com.example.railgo.domain.account.valueObject.HashPassword;
 import com.example.railgo.domain.account.valueObject.PhoneNumber;
 import com.example.railgo.domain.account.valueObject.Role;
 import com.example.railgo.domain.utils.valueObject.Id;
+
 import java.time.LocalDate;
 
 public class User {
@@ -20,7 +21,7 @@ public class User {
     private boolean isAccountLocked;
     private boolean isAccountActive;
 
-    public User(String id, String firstName, String lastName, LocalDate dateOfBirth,String gender, String role, String email, String phoneNumber, String password, boolean isAccountLocked, boolean isAccountActive) {
+    public User(String id, String firstName, String lastName, LocalDate dateOfBirth, String gender, String role, String email, String phoneNumber, String password, boolean isAccountLocked, boolean isAccountActive) {
         this.id = new Id(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,9 +34,11 @@ public class User {
         this.isAccountLocked = isAccountLocked;
         this.isAccountActive = isAccountActive;
     }
-    public void initializeNewId(){
+
+    public void initializeNewId() {
         this.id = new Id();
     }
+
     public String getId() {
         return id.getValue();
     }
@@ -43,6 +46,7 @@ public class User {
     public void setId(String id) {
         this.id = new Id(id);
     }
+
     public String getFirstName() {
         return firstName;
     }
@@ -102,9 +106,11 @@ public class User {
     public String getPassword() {
         return this.password.getValue();
     }
+
     public void setPassword(String password) {
         this.password = new HashPassword(password);
     }
+
     public HashPassword getHashedPassword() {
         return this.password;
     }

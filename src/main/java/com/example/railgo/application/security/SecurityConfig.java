@@ -1,6 +1,6 @@
 package com.example.railgo.application.security;
 
-import com.example.railgo.application.account.service.implement.UserDetailServiceImpl;
+import com.example.railgo.application.account.service.UserUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,15 +21,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig implements WebMvcConfigurer {
     private final AuthenticationFilter authenticationFilter;
-    private final UserDetailServiceImpl userDetailsService;
+    private final UserUseCase userUseCase;
+
 
     @Autowired
     public SecurityConfig(AuthenticationFilter authenticationFilter,
-                          UserDetailServiceImpl userDetailsService) {
+                          UserUseCase userUseCase) {
         this.authenticationFilter = authenticationFilter;
-        this.userDetailsService = userDetailsService;
+        this.userUseCase = userUseCase;
     }
 
     @Bean
@@ -36,10 +39,10 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(request -> {
-                    request.requestMatchers("**")
-                            .permitAll();
-                });
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/account/login", "/account/register").permitAll()
+                        .anyRequest().authenticated()
+                );
         return http.build();
     }
 
@@ -50,7 +53,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return userDetailsService;
+        return username -> userUseCase.getUserByUsername(username);
     }
     @Bean
     public AuthenticationProvider authenticationProvider() {

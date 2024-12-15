@@ -10,5 +10,6 @@ public interface UserUseCase {
     AccountDTO login(LoginRequest request);
     AccountDTO register(RegisterRequest request);
     UserDetail getUserByUsername(String username);
-    AccountDTO authenticate(String accessToken);
+    UserDetail authenticate(String accessToken);
+    void testException();
 }

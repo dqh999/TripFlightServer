@@ -8,6 +8,10 @@ public class PhoneNumber {
     private final String value;
 
     public PhoneNumber(String number) {
+        if (number == null) {
+            this.value = null;
+            return;
+        }
         userValidator.validatePhoneNumber(number);
         this.value = number;
     }
