@@ -1,5 +1,7 @@
 package com.example.railgo.application.account.dataTransferObject.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDate;
 
 public class RegisterRequest {
@@ -8,8 +10,12 @@ public class RegisterRequest {
     private String password;
     private String firstName;
     private String lastName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
     private String gender;
+
+    public RegisterRequest() {
+    }
 
     public RegisterRequest(String phoneNumber, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String gender) {
         this.phoneNumber = phoneNumber;

@@ -11,6 +11,13 @@ spring:
     username: root
     password: Hop2005@
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: Hop2005@
+      timeout: 2000
+
   jwt:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60

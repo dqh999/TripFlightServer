@@ -5,5 +5,10 @@ import com.example.railgo.domain.account.model.User;
 
 public interface ITokenService {
     Token generateToken(User user);
-    String  authenticate(String accessToken);
+
+    String validateToken(String accessToken);
+
+    Token getToken(String accessToken);
+
+    void saveToken(Token token);
 }

@@ -3,11 +3,16 @@ package com.example.railgo.application.account.dataTransferObject;
 
 import com.example.railgo.domain.account.model.Token;
 import com.example.railgo.domain.account.model.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDate;
 
 public class AccountDTO {
     private String id;
     private String firstName;
     private String lastName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
     private String role;
     private String email;
     private String phoneNumber;
@@ -15,10 +20,11 @@ public class AccountDTO {
     private String refreshToken;
     public AccountDTO() {}
 
-    public AccountDTO(String id, String firstName, String lastName, String role, String email, String phoneNumber, String accessToken, String refreshToken) {
+    public AccountDTO(String id, String firstName, String lastName,LocalDate dateOfBirth, String role, String email, String phoneNumber, String accessToken, String refreshToken) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
         this.role = role;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -30,6 +36,7 @@ public class AccountDTO {
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getDateOfBirth(),
                 user.getRole(),
                 user.getEmail(),
                 user.getPhoneNumber(),
@@ -43,6 +50,7 @@ public class AccountDTO {
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getDateOfBirth(),
                 user.getRole(),
                 user.getEmail(),
                 user.getPhoneNumber(),
@@ -73,6 +81,14 @@ public class AccountDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getRole() {

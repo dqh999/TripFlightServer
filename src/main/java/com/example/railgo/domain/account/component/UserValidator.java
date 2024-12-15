@@ -26,7 +26,7 @@ public class UserValidator {
         if (fieldName == null || fieldName.trim().isEmpty()) {
             throw new BusinessException(AccountExceptionCode.INVALID_NAME);
         }
-        if (!SecurityValidator.contain(fieldName)){
+        if (SecurityValidator.contain(fieldName)){
             throw new BusinessException(AccountExceptionCode.INVALID_NAME);
         }
         if (!fieldName.matches("^[A-Z][a-z]+( [A-Z][a-z]+)*$")) {

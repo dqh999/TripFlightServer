@@ -36,6 +36,7 @@ public class TokenServiceImpl implements ITokenService {
     public TokenServiceImpl(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
+
     @Override
     public Token generateToken(User user) {
         String accountId = user.getId();
@@ -43,23 +44,24 @@ public class TokenServiceImpl implements ITokenService {
         Map<String, Object> claims = buildClaims(accountId, userName);
 
         Date issuedAt = new Date(System.currentTimeMillis());
-        Date expiresAt = new Date(issuedAt.getTime() + expiration*1000);
+        Date expiresAt = new Date(issuedAt.getTime() + expiration * 1000);
 
         String accessToken = generateToken(claims, userName, expiresAt);
 
         String refreshToken = generateRefreshToken();
         Date refreshExpiresAt = new Date(issuedAt.getTime() + expirationRefreshToken);
 
-        Token newToken = new Token(accountId,accessToken,issuedAt,expiresAt,refreshToken,refreshExpiresAt);
-        return tokenRepository.save(newToken);
+        return new Token(accountId, accessToken, issuedAt, expiresAt, refreshToken, refreshExpiresAt);
     }
-    private Map<String,Object> buildClaims(String accountId,
-                                           String subject){
+
+    private Map<String, Object> buildClaims(String accountId,
+                                            String subject) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("accountId", accountId);
         claims.put("subject", subject);
         return claims;
     }
+
     private String generateToken(Map<String, Object> claims,
                                  String subject,
                                  Date expiresAt) {
@@ -70,20 +72,30 @@ public class TokenServiceImpl implements ITokenService {
                 .signWith(getSignInKey(), Jwts.SIG.HS256)
                 .compact();
     }
+
     private SecretKey getSignInKey() {
         byte[] bytes = Decoders.BASE64.decode(secretKeyAccess);
         return Keys.hmacShaKeyFor(bytes);
     }
-    private String generateRefreshToken(){
+
+    private String generateRefreshToken() {
         return UUID.randomUUID().toString();
     }
+
     @Override
-    public String authenticate(String accessToken) {
-        Token existToken = tokenRepository.findByValue(accessToken)
-                .orElseThrow(() -> new BusinessException(AccountExceptionCode.INVALID_TOKEN));
-        if (existToken.getExpiresAt().before(new Date())) {
-            throw new BusinessException(AccountExceptionCode.UNAUTHORIZED_ACCESS);
-        }
+    public Token getToken(String accessToken) {
+        validateToken(accessToken);
+        return tokenRepository.findByValue(accessToken)
+                .orElseThrow(() -> new BusinessException(AccountExceptionCode.INVALID_TOKEN, "Invalid access token."));
+    }
+
+    @Override
+    public void saveToken(Token token) {
+        tokenRepository.save(token);
+    }
+
+    @Override
+    public String validateToken(String accessToken) {
         try {
             var claims = Jwts.parser()
                     .setSigningKey(getSignInKey())
@@ -99,4 +111,5 @@ public class TokenServiceImpl implements ITokenService {
             throw new BusinessException(AccountExceptionCode.UNAUTHORIZED_ACCESS, "Unauthorized access.");
         }
     }
+
 }

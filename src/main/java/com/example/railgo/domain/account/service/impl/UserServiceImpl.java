@@ -24,17 +24,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void testException() {
-        throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
-    }
-
-    @Override
     public User register(User user) {
         validateUserForRegistration(user);
 
         if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
             throw new BusinessException(AccountExceptionCode.ACCOUNT_ALREADY_EXISTS);
         }
+
         setUserDefaults(user);
 
         return userRepository.save(user);
@@ -88,25 +84,32 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void changePassword(String phoneNumber,
+    public User changePassword(String phoneNumber,
                                String oldPassword, String newPassword) {
-        validateChangePasswordRequest(phoneNumber, newPassword);
+        validateChangePasswordRequest(phoneNumber,oldPassword, newPassword);
+
+        if (oldPassword.equals(newPassword)) {
+            throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
+        }
 
         User existUser = this.getUserByPhoneNumber(phoneNumber);
 
         checkCredentials(existUser, oldPassword);
 
         if (existUser.getHashedPassword().matches(newPassword)) {
-            throw new BusinessException();
+            throw new BusinessException(AccountExceptionCode.EXPIRED_PASSWORD);
         }
 
         existUser.setPassword(newPassword);
 
         userRepository.save(existUser);
+
+        return existUser;
     }
 
-    private void validateChangePasswordRequest(String phoneNumber, String newPassword) {
+    private void validateChangePasswordRequest(String phoneNumber,String oldPassword, String newPassword) {
         userValidator.validatePhoneNumber(phoneNumber);
+        userValidator.validatePassword(oldPassword);
         userValidator.validatePassword(newPassword);
     }
 

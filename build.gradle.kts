@@ -21,10 +21,15 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	runtimeOnly("com.mysql:mysql-connector-j")
+	implementation("org.springframework.data:spring-data-redis:3.4.1")
+	implementation("redis.clients:jedis:4.4.3")
 
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	implementation("org.mapstruct:mapstruct-processor:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+
+	implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.1")
 
 	implementation("org.springframework.boot:spring-boot-starter-security")
 

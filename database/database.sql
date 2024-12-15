@@ -10,8 +10,8 @@ CREATE TABLE tbl_users
     date_of_birth datetime     not null,
     gender        varchar(36)  not null,
     role          varchar(36)  not null,
-    email         varchar(100) not null unique,
-    phone_number  varchar(15)  not null,
+    phone_number  varchar(15)  not null unique,
+    email         varchar(100) not null,
     hash_password varchar(255) not null,
     created_at    timestamp    not null,
     updated_at    timestamp    not null

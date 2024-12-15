@@ -4,6 +4,9 @@ public class LoginRequest {
     private String phoneNumber;
     private String password;
 
+    public LoginRequest() {
+    }
+
     public LoginRequest(String phoneNumber, String password) {
         this.phoneNumber = phoneNumber;
         this.password = password;
