@@ -10,6 +10,4 @@ public interface IUserService {
     User changePassword(String phoneNumber,String oldPassword,String newPassword);
 
     User getUserByPhoneNumber(String phoneNumber);
-    User getUserById(String id);
-
 }

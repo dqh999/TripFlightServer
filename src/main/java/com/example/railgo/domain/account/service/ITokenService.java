@@ -9,6 +9,6 @@ public interface ITokenService {
     String validateToken(String accessToken);
 
     Token getToken(String accessToken);
-
-    void saveToken(Token token);
+    void revokeToken(String accessToken);
+    void revokeAllTokens(String userId);
 }

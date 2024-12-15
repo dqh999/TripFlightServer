@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class TokenServiceImpl implements ITokenService {
@@ -51,7 +48,7 @@ public class TokenServiceImpl implements ITokenService {
         String refreshToken = generateRefreshToken();
         Date refreshExpiresAt = new Date(issuedAt.getTime() + expirationRefreshToken);
 
-        return new Token(accountId, accessToken, issuedAt, expiresAt, refreshToken, refreshExpiresAt);
+        return new Token(accountId, accessToken, issuedAt, expiresAt, Boolean.FALSE, refreshToken, refreshExpiresAt);
     }
 
     private Map<String, Object> buildClaims(String accountId,
@@ -90,8 +87,19 @@ public class TokenServiceImpl implements ITokenService {
     }
 
     @Override
-    public void saveToken(Token token) {
+    public void revokeToken(String accessToken) {
+        Token token = getToken(accessToken);
+        token.setRevoked(true);
         tokenRepository.save(token);
+    }
+
+    @Override
+    public void revokeAllTokens(String userId) {
+        List<Token> activeTokens = tokenRepository.findByAccountIdAndRevokedFalse(userId);
+        for (Token token : activeTokens) {
+            token.setRevoked(false);
+        }
+        tokenRepository.saveAll(activeTokens);
     }
 
     @Override

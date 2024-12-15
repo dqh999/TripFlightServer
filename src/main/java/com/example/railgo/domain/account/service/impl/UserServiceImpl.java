@@ -112,9 +112,4 @@ public class UserServiceImpl implements IUserService {
         userValidator.validatePassword(oldPassword);
         userValidator.validatePassword(newPassword);
     }
-
-    @Override
-    public User getUserById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new BusinessException(AccountExceptionCode.ACCOUNT_NOT_FOUND));
-    }
 }

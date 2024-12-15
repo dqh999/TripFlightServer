@@ -4,7 +4,6 @@ import com.example.railgo.application.account.dataTransferObject.AccountDTO;
 import com.example.railgo.application.account.dataTransferObject.request.ChangePasswordRequest;
 import com.example.railgo.application.account.dataTransferObject.request.LoginRequest;
 import com.example.railgo.application.account.dataTransferObject.request.RegisterRequest;
-import com.example.railgo.application.account.dataTransferObject.response.UserResponse;
 import com.example.railgo.application.account.exception.AccountApplicationExceptionCode;
 import com.example.railgo.application.account.mapper.AccountMapper;
 import com.example.railgo.application.account.service.UserUseCase;
@@ -20,7 +19,6 @@ import com.example.railgo.infrastructure.cache.CacheService;
 import com.example.railgo.infrastructure.security.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -69,7 +67,6 @@ public class UserUseCaseImpl implements UserUseCase {
             User newUser = userService.register(userRegister);
 
             Token token = tokenService.generateToken(newUser);
-            tokenService.saveToken(token);
 
             String accessToken = token.getValue();
 
@@ -96,7 +93,6 @@ public class UserUseCaseImpl implements UserUseCase {
         User existUser = userService.login(request.getPhoneNumber(), request.getPassword());
 
         Token token = tokenService.generateToken(existUser);
-        tokenService.saveToken(token);
         String accessToken = token.getValue();
 
         AccountDTO accountDTO = AccountDTO.from(existUser, token);
@@ -116,13 +112,14 @@ public class UserUseCaseImpl implements UserUseCase {
                                      ChangePasswordRequest request) {
         String phoneNumber = userRequest.getUsername();
 
-        User result = userService.changePassword(phoneNumber, request.getOldPassword(), request.getNewPassword());
+        User userResult = userService.changePassword(phoneNumber, request.getOldPassword(), request.getNewPassword());
 
-        Token token = tokenService.generateToken(result);
-        tokenService.saveToken(token);
+        tokenService.revokeAllTokens(userResult.getId());
+
+        Token token = tokenService.generateToken(userResult);
         String accessToken = token.getValue();
 
-        AccountDTO accountDTO = AccountDTO.from(result, token);
+        AccountDTO accountDTO = AccountDTO.from(userResult, token);
 
         storeAccessTokenInCache(accessToken, accountDTO);
 

@@ -20,6 +20,8 @@ public class TokenEntity extends BaseEntity {
     private Date issuedAt;
     @Column(name = "expires_at")
     private Date expiresAt;
+    @Column(name = "is_revoked")
+    private Boolean isRevoked;
     @Column(name = "refresh_token")
     private String refreshToken;
     @Column(name = "refresh_token_expires_at")
@@ -82,6 +84,14 @@ public class TokenEntity extends BaseEntity {
 
     public void setExpiresAt(Date expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public Boolean getRevoked() {
+        return isRevoked;
+    }
+
+    public void setRevoked(Boolean revoked) {
+        isRevoked = revoked;
     }
 
     public String getRefreshToken() {

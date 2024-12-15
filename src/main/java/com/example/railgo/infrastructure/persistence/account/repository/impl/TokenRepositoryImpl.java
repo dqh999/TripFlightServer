@@ -8,7 +8,9 @@ import com.example.railgo.infrastructure.persistence.account.repository.TokenEnt
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TokenRepositoryImpl implements TokenRepository {
@@ -28,8 +30,20 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
+    public void saveAll(List<Token> t) {
+        List<TokenEntity> entities = t.stream().map(mapper::toEntity).collect(Collectors.toList());
+        repository.saveAll(entities);
+    }
+
+    @Override
     public Optional<Token> findByValue(String value) {
         Optional<TokenEntity> existEntity = repository.findByValue(value);
         return existEntity.map(mapper::toDTO);
+    }
+
+    @Override
+    public List<Token> findByAccountIdAndRevokedFalse(String accountId) {
+        return repository.findByAccountIdAndRevokedFalse(accountId)
+                .stream().map(mapper::toDTO).collect(Collectors.toList());
     }
 }

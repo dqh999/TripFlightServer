@@ -11,23 +11,25 @@ public class Token {
     private String value;
     private Date issuedAt;
     private Date expiresAt;
+    private Boolean isRevoked;
     private String refreshToken;
     private Date refreshTokenExpiresAt;
 
     public Token() {
     }
 
-    public Token(String accountId,String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
+    public Token(String accountId,String value, Date issuedAt, Date expiresAt, Boolean isRevoked, String refreshToken, Date refreshTokenExpiresAt) {
         this.id = new Id();
         this.accountId = accountId;
         this.value = value;
         this.issuedAt = issuedAt;
         this.expiresAt = expiresAt;
+        this.isRevoked = isRevoked;
         this.refreshToken = refreshToken;
         this.refreshTokenExpiresAt = refreshTokenExpiresAt;
     }
 
-    public Token(String id,String accountId, String value, Date issuedAt, Date expiresAt, String refreshToken, Date refreshTokenExpiresAt) {
+    public Token(String id,String accountId, String value, Date issuedAt, Date expiresAt, Boolean isRevoked, String refreshToken, Date refreshTokenExpiresAt) {
         this.id = new Id(id);
         this.accountId = accountId;
         this.value = value;
@@ -75,6 +77,14 @@ public class Token {
 
     public void setExpiresAt(Date expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public Boolean getRevoked() {
+        return isRevoked;
+    }
+
+    public void setRevoked(Boolean revoked) {
+        isRevoked = revoked;
     }
 
     public String getRefreshToken() {
