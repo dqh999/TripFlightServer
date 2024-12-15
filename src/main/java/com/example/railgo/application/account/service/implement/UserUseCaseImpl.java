@@ -3,6 +3,7 @@ package com.example.railgo.application.account.service.implement;
 import com.example.railgo.application.account.dataTransferObject.AccountDTO;
 import com.example.railgo.application.account.dataTransferObject.request.ChangePasswordRequest;
 import com.example.railgo.application.account.dataTransferObject.request.LoginRequest;
+import com.example.railgo.application.account.dataTransferObject.request.RefreshTokenRequest;
 import com.example.railgo.application.account.dataTransferObject.request.RegisterRequest;
 import com.example.railgo.application.account.exception.AccountApplicationExceptionCode;
 import com.example.railgo.application.account.mapper.AccountMapper;
@@ -126,6 +127,11 @@ public class UserUseCaseImpl implements UserUseCase {
         return accountDTO;
     }
 
+    @Override
+    public AccountDTO refreshToken(RefreshTokenRequest request) {
+
+        return null;
+    }
 
     @Override
     public UserDetail authenticate(String accessToken) {

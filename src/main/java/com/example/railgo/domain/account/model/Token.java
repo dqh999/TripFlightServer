@@ -1,11 +1,12 @@
 package com.example.railgo.domain.account.model;
 
 
+import com.example.railgo.domain.utils.model.AbstractBase;
 import com.example.railgo.domain.utils.valueObject.Id;
 
 import java.util.Date;
 
-public class Token {
+public class Token extends AbstractBase {
     private Id id;
     private String accountId;
     private String value;

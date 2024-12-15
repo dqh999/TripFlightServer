@@ -13,6 +13,9 @@ import org.mapstruct.*;
 public interface AccountMapper {
     User toDTO(RegisterRequest request);
 
+    @Mapping(source = "phoneNumber",target = "username")
     UserDetail toEntity(User user);
+
+    @Mapping(source = "phoneNumber",target = "username")
     UserDetail toEntity(AccountDTO accountDTO);
 }

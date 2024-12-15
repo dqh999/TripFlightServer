@@ -53,7 +53,5 @@ public class UserRepositoryImpl implements UserRepository {
         UserEntity userEntity = mapper.toEntity(user);
         repository.save(userEntity);
         return mapper.toDTO(userEntity);
-    }
-
-    ;
+    };
 }

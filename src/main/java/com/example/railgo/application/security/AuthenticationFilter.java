@@ -2,6 +2,7 @@ package com.example.railgo.application.security;
 
 import com.example.railgo.application.account.service.UserUseCase;
 import com.example.railgo.domain.utils.exception.BusinessException;
+import com.example.railgo.infrastructure.security.UserDetail;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,12 +37,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String accessToken = authHeader.substring(7);
             try {
-                UserDetails userDetails = userUseCase.authenticate(accessToken);
-            if (userDetails != null) {
+                UserDetail userDetail = userUseCase.authenticate(accessToken);
+            if (userDetail != null) {
                 Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails,
+                        new UsernamePasswordAuthenticationToken(userDetail,
                                 null,
-                                userDetails.getAuthorities());
+                                userDetail.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             } catch (BusinessException e) {

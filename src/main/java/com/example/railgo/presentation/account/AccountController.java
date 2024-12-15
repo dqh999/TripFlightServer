@@ -2,6 +2,7 @@ package com.example.railgo.presentation.account;
 
 import com.example.railgo.application.account.dataTransferObject.request.ChangePasswordRequest;
 import com.example.railgo.application.account.dataTransferObject.request.LoginRequest;
+import com.example.railgo.application.account.dataTransferObject.request.RefreshTokenRequest;
 import com.example.railgo.application.account.dataTransferObject.request.RegisterRequest;
 import com.example.railgo.application.account.service.UserUseCase;
 import com.example.railgo.application.utils.ApiResponse;
@@ -46,6 +47,13 @@ public class AccountController {
     public ResponseEntity<?> handleChangePassword(@AuthenticationPrincipal UserDetail userRequest,
                                                   @RequestBody ChangePasswordRequest request) {
         var result = userUseCase.changePassword(userRequest, request);
+        return ApiResponse.build()
+                .withData(result)
+                .toEntity();
+    }
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> handleRefreshToken(@RequestBody RefreshTokenRequest request) {
+        var result = userUseCase.refreshToken(request);
         return ApiResponse.build()
                 .withData(result)
                 .toEntity();

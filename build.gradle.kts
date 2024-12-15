@@ -27,6 +27,7 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	implementation("org.mapstruct:mapstruct-processor:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
 
 	implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.1")

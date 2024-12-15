@@ -4,11 +4,12 @@ import com.example.railgo.domain.account.valueObject.Email;
 import com.example.railgo.domain.account.valueObject.HashPassword;
 import com.example.railgo.domain.account.valueObject.PhoneNumber;
 import com.example.railgo.domain.account.valueObject.Role;
+import com.example.railgo.domain.utils.model.AbstractBase;
 import com.example.railgo.domain.utils.valueObject.Id;
 
 import java.time.LocalDate;
 
-public class User {
+public class User extends AbstractBase {
     private Id id;
     private String firstName;
     private String lastName;
