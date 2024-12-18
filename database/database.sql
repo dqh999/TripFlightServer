@@ -36,6 +36,8 @@ CREATE TABLE tbl_stations
     name            varchar(100) not null,
     country         varchar(100) not null,
     city            varchar(100) not null,
+    latitude        DECIMAL(10, 8),
+    longitude       DECIMAL(11, 8),
     phone_number    varchar(100),
     email           varchar(100),
     website         varchar(100),
@@ -85,6 +87,7 @@ CREATE TABLE tbl_train_coach_services
     coach_id    varchar(36)  not null,
     name        varchar(100) not null,
     price       decimal(10, 2),
+    currency    varchar(10) not null,
     description text,
     status      varchar(20)  not null,
     created_at  timestamp    not null,
@@ -127,6 +130,7 @@ CREATE TABLE tbl_train_schedule_routes
 CREATE TABLE tbl_discounts
 (
     id               varchar(36) primary key,
+    creator_id       varchar(36),
     code             varchar(50)    not null,
     description      varchar(50),
     type             varchar(20)    not null,
@@ -136,7 +140,6 @@ CREATE TABLE tbl_discounts
     application_type varchar(20)    not null,
     application_id   varchar(36),
     status           varchar(20),
-    creator_id       varchar(36),
     created_at       timestamp      not null,
     updated_at       timestamp      not null
 );
