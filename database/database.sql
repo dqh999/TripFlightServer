@@ -4,21 +4,22 @@ USE
 rail_go_db;
 CREATE TABLE tbl_users
 (
-    id            varchar(36) primary key,
-    first_name    varchar(50)  not null,
-    last_name     varchar(50)  not null,
-    date_of_birth datetime     not null,
-    gender        varchar(36)  not null,
-    role          varchar(36)  not null,
-    phone_number  varchar(15)  not null unique,
-    email         varchar(100) not null,
-    hash_password varchar(255) not null,
-    created_at    timestamp    not null,
-    updated_at    timestamp    not null
+    id              varchar(36) primary key,
+    first_name      varchar(50)  not null,
+    last_name       varchar(50)  not null,
+    date_of_birth   datetime     not null,
+    gender          varchar(36)  not null,
+    role            varchar(36)  not null,
+    phone_number    varchar(15)  not null unique,
+    email           varchar(100) not null,
+    hashed_password varchar(255) not null,
+    created_at      timestamp    not null,
+    updated_at      timestamp    not null
 );
 CREATE TABLE tbl_user_tokens
 (
     id                       varchar(36) primary key,
+    account_id               varchar(36)  not null,
     value                    varchar(255) not null,
     expires_at               timestamp    not null,
     issued_at                timestamp    not null,
@@ -45,31 +46,30 @@ CREATE TABLE tbl_stations
     status          varchar(20),
     created_at      timestamp    not null,
     updated_at      timestamp    not null
-)
+);
 CREATE TABLE tbl_station_routes
 (
-    id               varchar(36) primary key,
-    route_type       varchar(50),
-    start_station_id varchar(36)    not null,
-    end_station_id   varchar(36)    not null,
-    speed_limit      decimal(5, 2),
-    distance_km      decimal(10, 2) not null,
-    duration_minutes int            not null,
-    status           varchar(20),
-    created_at       timestamp      not null,
-    updated_at       timestamp      not null
-)
+    id           varchar(36) primary key,
+    type         varchar(50),
+    station_a_id varchar(36)    not null,
+    station_b_id varchar(36)    not null,
+    speed_limit  decimal(5, 2),
+    distance_km  decimal(10, 2) not null,
+    status       varchar(20),
+    created_at   timestamp      not null,
+    updated_at   timestamp      not null
+);
 CREATE TABLE tbl_trains
 (
     id                varchar(36) primary key,
-    type              varchar(20),
-    name              varchar(100)   not null,
-    year_manufactured int            not null,
-    speed_limit       decimal(10, 2) not null, -- Speed limit (km/h)
-    total_coaches     int            not null,
-    status            varchar(20),
-    created_at        timestamp      not null,
-    updated_at        timestamp      not null
+    type              varchar(20)  not null,
+    name              varchar(100) not null,
+    year_manufactured int          not null,
+    speed_limit       int          not null, -- Speed limit (km/h)
+    total_coaches     int          not null,
+    status            varchar(20)  not null,
+    created_at        timestamp    not null,
+    updated_at        timestamp    not null
 );
 CREATE TABLE tbl_train_coaches
 (
@@ -87,7 +87,7 @@ CREATE TABLE tbl_train_coach_services
     coach_id    varchar(36)  not null,
     name        varchar(100) not null,
     price       decimal(10, 2),
-    currency    varchar(10) not null,
+    currency    varchar(10)  not null,
     description text,
     status      varchar(20)  not null,
     created_at  timestamp    not null,
