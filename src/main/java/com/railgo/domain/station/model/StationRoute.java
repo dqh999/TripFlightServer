@@ -14,29 +14,32 @@ public class StationRoute extends BaseModel {
     private Station stationB;
     private Speed speedLimit;
     private Distance distanceKm;
-    private Double travelTime;
     private StationRouteStatus status;
 
     public StationRoute() {
         this.id = new Id();
     }
 
-    public StationRoute(String id, StationRouteType type, Station stationA, Station stationB, Double speedLimit, Double distanceKm, Double travelTime, StationRouteStatus status) {
+    public StationRoute(String id, StationRouteType type, Station stationA, Station stationB, Double speedLimit, Double distanceKm, StationRouteStatus status) {
         this.id = new Id(id);
         this.type = type;
         this.stationA = stationA;
         this.stationB = stationB;
         this.speedLimit = new Speed(speedLimit);
         this.distanceKm = new Distance(distanceKm);
-        this.travelTime = travelTime;
         this.status = status;
     }
-    public StationRoute reverseStation(){
-        Station temp1 = stationA;
-        this.stationA = this.stationB;
-        this.stationB = temp1;
-        return this;
-    };
+    public StationRoute reverseStation() {
+        return new StationRoute(
+                this.id.getValue(),
+                this.type,
+                this.stationB,
+                this.stationA,
+                this.speedLimit.getValue(),
+                this.distanceKm.getValue(),
+                this.status
+        );
+    }
     public String getId() {
         return id.getValue();
     }
@@ -84,13 +87,8 @@ public class StationRoute extends BaseModel {
     public void setDistanceKm(Double distanceKm) {
         this.distanceKm = new Distance(distanceKm);
     }
-
-    public Double getTravelTime() {
-        return travelTime;
-    }
-
-    public void setTravelTime(Double travelTime) {
-        this.travelTime = travelTime;
+    public Distance getDistance(){
+        return this.distanceKm;
     }
 
     public String getStatus() {

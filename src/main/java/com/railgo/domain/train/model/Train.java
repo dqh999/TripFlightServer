@@ -4,7 +4,10 @@ import com.railgo.domain.train.type.TrainStatus;
 import com.railgo.domain.train.type.TrainType;
 import com.railgo.domain.utils.model.BaseModel;
 import com.railgo.domain.utils.valueObject.Id;
+import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.domain.utils.valueObject.Speed;
+
+import java.math.BigDecimal;
 
 public class Train extends BaseModel {
     private Id id;
@@ -12,20 +15,20 @@ public class Train extends BaseModel {
     private String name;
     private Integer yearManufactured;
     private Speed speedLimit;
-    private Integer totalCoaches;
+    private Integer totalSeats;
     private TrainStatus status;
 
     public Train() {
         this.id = new Id();
     }
 
-    public Train(String id, TrainType type, String name, Integer yearManufactured,Speed speedLimit, Integer totalCoaches, TrainStatus status) {
+    public Train(String id, TrainType type, String name, Integer yearManufactured, Speed speedLimit, Integer totalSeats,  TrainStatus status) {
         this.id = new Id(id);
         this.type = type;
         this.name = name;
         this.yearManufactured = yearManufactured;
         this.speedLimit = speedLimit;
-        this.totalCoaches = totalCoaches;
+        this.totalSeats = totalSeats;
         this.status = status;
     }
 
@@ -43,6 +46,9 @@ public class Train extends BaseModel {
 
     public void setType(String type) {
         this.type = TrainType.valueOf(type);
+    }
+    public BigDecimal getRatePerKm(){
+        return type.getRatePerKm();
     }
 
     public String getName() {
@@ -69,12 +75,12 @@ public class Train extends BaseModel {
         this.speedLimit = new Speed(speedLimit);
     }
 
-    public Integer getTotalCoaches() {
-        return totalCoaches;
+    public Integer getTotalSeats() {
+        return totalSeats;
     }
 
-    public void setTotalCoaches(Integer totalCoaches) {
-        this.totalCoaches = totalCoaches;
+    public void setTotalSeats(Integer totalSeats) {
+        this.totalSeats = totalSeats;
     }
 
     public String getStatus() {

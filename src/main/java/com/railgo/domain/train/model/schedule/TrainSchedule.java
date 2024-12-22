@@ -3,7 +3,9 @@ package com.railgo.domain.train.model.schedule;
 import com.railgo.domain.train.model.Train;
 import com.railgo.domain.train.type.TrainScheduleStatus;
 import com.railgo.domain.utils.valueObject.Id;
+import com.railgo.domain.utils.valueObject.Money;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,6 +18,7 @@ public class TrainSchedule {
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private Integer totalStops;
+    private Money ticketPrice;
     private List<TrainScheduleRoute> routes;
     private TrainScheduleStatus status;
 
@@ -23,38 +26,7 @@ public class TrainSchedule {
         this.id = new Id();
     }
 
-    public TrainSchedule(String creatorId, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, List<TrainScheduleRoute> routes) {
-        this.id = new Id();
-        this.creatorId = creatorId;
-        this.train = train;
-        this.departureStationId = departureStationId;
-        this.arrivalStationId = arrivalStationId;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.totalStops = totalStops;
-        this.routes = routes;
-        this.status = TrainScheduleStatus.PENDING;
-    }
-    public TrainSchedule(String creatorId, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime) {
-        this.id = new Id();
-        this.creatorId = creatorId;
-        this.train = train;
-        this.departureStationId = departureStationId;
-        this.arrivalStationId = arrivalStationId;
-        this.departureTime = departureTime;
-        this.arrivalTime = arrivalTime;
-        this.status = TrainScheduleStatus.PENDING;
-    }
-    public TrainSchedule(String creatorId, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, String status){
-        this.id = new Id();
-        this.creatorId = creatorId;
-        this.train = train;
-        this.departureStationId = departureStationId;
-        this.arrivalStationId = arrivalStationId;
-        this.departureTime = departureTime;
-        this.status = TrainScheduleStatus.valueOf(status);
-    }
-    public TrainSchedule(String id, String creatorId, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, List<TrainScheduleRoute> routes, TrainScheduleStatus status) {
+    public TrainSchedule(String id, String creatorId, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, BigDecimal ticketPrice, String currency, List<TrainScheduleRoute> routes, String status) {
         this.id = new Id(id);
         this.creatorId = creatorId;
         this.train = train;
@@ -63,8 +35,9 @@ public class TrainSchedule {
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.totalStops = totalStops;
+        this.ticketPrice = new Money(ticketPrice,currency);
         this.routes = routes;
-        this.status = status;
+        this.status = TrainScheduleStatus.valueOf(status);
     }
 
     public String getId() {
@@ -131,6 +104,15 @@ public class TrainSchedule {
         this.totalStops = totalStops;
     }
 
+    public BigDecimal getTicketPrice() {
+        return this.ticketPrice.getValue();
+    }
+    public String getCurrency() {
+        return this.ticketPrice.getCurrency();
+    }
+    public void setTicketPrice(BigDecimal ticketPrice, String currency) {
+        this.ticketPrice = new Money(ticketPrice,currency);
+    }
     public List<TrainScheduleRoute> getRoutes() {
         return routes;
     }

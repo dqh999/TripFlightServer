@@ -18,6 +18,8 @@ public class DFSRouteFinder extends StationRouteFinder {
     public List<StationRoute> findPath(Train train, String from, String to) {
         Map<String, List<StationRoute>> graph = this.getStationGraph();
 
+        if (!graph.containsKey(from) || !graph.containsKey(to)) return null;
+
         Set<String> visited = new HashSet<>();
 
         Map<String, StationRoute> previousRoute = new HashMap<>();
@@ -33,7 +35,10 @@ public class DFSRouteFinder extends StationRouteFinder {
                               Map<String, StationRoute> previousRoute) {
         visited.add(from);
 
-        for (StationRoute route : graph.get(from)) {
+        List<StationRoute> routes = graph.get(from);
+        if (routes == null) return;
+
+        for (StationRoute route : routes) {
 
             String stationBId = route.getStationB().getId();
 

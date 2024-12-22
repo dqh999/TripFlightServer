@@ -1,25 +1,27 @@
 package com.railgo.application.train.dataTransferObject.response;
 
 
+import java.math.BigDecimal;
+
 public class TrainResponse {
     private String id;
     private String type;
     private String name;
     private Integer yearManufactured;
     private Integer speedLimit;
-    private Integer totalCoaches;
+    private Integer totalSeats;
     private String status;
 
     public TrainResponse() {
     }
 
-    public TrainResponse(String id, String type, String name, Integer yearManufactured, Integer speedLimit, Integer totalCoaches, String status) {
+    public TrainResponse(String id, String type, String name, Integer yearManufactured, Integer speedLimit, Integer totalSeats, String status) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.yearManufactured = yearManufactured;
         this.speedLimit = speedLimit;
-        this.totalCoaches = totalCoaches;
+        this.totalSeats = totalSeats;
         this.status = status;
     }
 
@@ -63,12 +65,12 @@ public class TrainResponse {
         this.speedLimit = speedLimit;
     }
 
-    public Integer getTotalCoaches() {
-        return totalCoaches;
+    public Integer getTotalSeats() {
+        return totalSeats;
     }
 
-    public void setTotalCoaches(Integer totalCoaches) {
-        this.totalCoaches = totalCoaches;
+    public void setTotalSeats(Integer totalSeats) {
+        this.totalSeats = totalSeats;
     }
 
     public String getStatus() {

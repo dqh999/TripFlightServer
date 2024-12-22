@@ -6,6 +6,7 @@ import com.railgo.domain.station.model.StationRoute;
 import com.railgo.domain.station.repository.StationRouteRepository;
 import com.railgo.domain.station.service.IStationRouteService;
 import com.railgo.domain.station.service.StationRouteFinder;
+import com.railgo.domain.station.valueObject.Distance;
 import com.railgo.domain.train.model.Train;
 import com.railgo.domain.utils.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,13 @@ public class StationRouteServiceImpl implements IStationRouteService {
         List<StationRoute> allRoutes = stationRouteRepository.findAll();
 
         StationRouteFinder stationRouteFinder = new DFSRouteFinder(allRoutes);
+
         stationRouteFinder.buildGraph();
 
         List<StationRoute> path = stationRouteFinder.findPath(train, startStation.getId(), endStation.getId());
+
         if (path.isEmpty()) {
-            throw new BusinessException(StationExceptionCode.STATION_NOT_FOUND);
+            throw new BusinessException(StationExceptionCode.STATION_ROUTE_NOT_FOUND);
         }
         return path;
     }
@@ -60,9 +63,8 @@ public class StationRouteServiceImpl implements IStationRouteService {
     }
 
     private Double getDirectRouteDistance(Station startStation, Station endStation) {
-        StationRoute route = stationRouteRepository.findRouteBetweenStations(startStation.getId(), endStation.getId()).orElseThrow(
-                () -> new BusinessException(StationExceptionCode.STATION_NOT_FOUND)
-        );
+        StationRoute route = stationRouteRepository.findRouteBetweenStations(startStation.getId(), endStation.getId())
+                .orElseThrow(() -> new BusinessException(StationExceptionCode.STATION_NOT_FOUND));
         return route.getDistanceKm();
     }
 
@@ -79,5 +81,13 @@ public class StationRouteServiceImpl implements IStationRouteService {
             distanceKm += route.getDistanceKm();
         }
         return distanceKm;
+    }
+
+    @Override
+    public Double getDistanceBetweenStations(Station startStation, Station endStation) {
+        if (stationRouteRepository.existDirectRouteBetweenStations(startStation.getId(), endStation.getId())) {
+            return getDirectRouteDistance(startStation, endStation);
+        }
+        return getRouteDistance(startStation, endStation, null);
     }
 }

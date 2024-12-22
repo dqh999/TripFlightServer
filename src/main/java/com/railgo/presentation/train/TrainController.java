@@ -36,7 +36,6 @@ public class TrainController {
                 .withData(result)
                 .toEntity();
     }
-
     @PostMapping("/schedule")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handelAddSchedule(@AuthenticationPrincipal UserDetail userRequest,

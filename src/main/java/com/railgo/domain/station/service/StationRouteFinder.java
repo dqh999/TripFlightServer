@@ -15,29 +15,35 @@ public abstract class StationRouteFinder {
     public StationRouteFinder(List<StationRoute> routes) {
         this.routes = routes;
     }
+
     public void buildGraph() {
         routes.forEach(route -> {
             String stationAId = route.getStationA().getId();
 
-            if (!stationGraph.containsKey(stationAId)) {
-                List<StationRoute> newRoutes = new ArrayList<>();
-                newRoutes.add(route);
-                stationGraph.put(stationAId, new ArrayList<>(newRoutes));
-            } else {
-               stationGraph.get(stationAId).add(route);
-            };
+            addRouteToGraph(stationAId, route);
+
             String stationBId = route.getStationB().getId();
-            if (!stationGraph.containsKey(stationBId)) {
-                List<StationRoute> newRoutes = new ArrayList<>();
-                newRoutes.add(route.reverseStation());
-                stationGraph.put(stationBId, new ArrayList<>(newRoutes));
-            } else {
-                stationGraph.get(stationBId).add(route.reverseStation());
-            }
+            StationRoute reversedRoute = route.reverseStation();
+
+            addRouteToGraph(stationBId, reversedRoute);
         });
     }
+
+    private void addRouteToGraph(String stationId, StationRoute route) {
+        if (!stationGraph.containsKey(stationId)) {
+            List<StationRoute> newRoutes = new ArrayList<>();
+            newRoutes.add(route);
+            stationGraph.put(stationId, newRoutes);
+            return;
+        }
+        if (!stationGraph.get(stationId).contains(route)) {
+            stationGraph.get(stationId).add(route);
+        }
+    }
+
     public Map<String, List<StationRoute>> getStationGraph() {
         return this.stationGraph;
     }
+
     public abstract List<StationRoute> findPath(Train train, String from, String to);
 }

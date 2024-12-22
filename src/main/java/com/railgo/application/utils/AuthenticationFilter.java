@@ -1,4 +1,4 @@
-package com.railgo.application.security;
+package com.railgo.application.utils;
 
 import com.railgo.application.account.service.UserUseCase;
 import com.railgo.domain.utils.exception.BusinessException;

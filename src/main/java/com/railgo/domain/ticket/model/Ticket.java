@@ -1,33 +1,38 @@
 package com.railgo.domain.ticket.model;
 
 import com.railgo.domain.account.model.User;
-import com.railgo.domain.station.model.Station;
+import com.railgo.domain.ticket.type.TicketStatus;
+import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.utils.valueObject.Id;
 import com.railgo.domain.utils.valueObject.Money;
 
 import java.math.BigDecimal;
 
+
 public class Ticket {
     private Id id;
     private User user;
-    private Station startStation;
-    private Station endStation;
+    private TrainSchedule trainSchedule;
+    private String startStationId;
+    private String endStationId;
     private Id returnTicketId;
     private Money totalPrice;
-    private Id discountId;
+    private TicketStatus status;
 
     public Ticket() {
         this.id = new Id();
     }
 
-    public Ticket(String id, User user, Station startStation, Station endStation, Id returnTicketId, Money totalPrice, Id discountId) {
+
+    public Ticket(String id, User user, TrainSchedule trainSchedule, String startStationId, String endStationId, Id returnTicketId, BigDecimal totalPrice, String currency, String status) {
         this.id = new Id(id);
         this.user = user;
-        this.startStation = startStation;
-        this.endStation = endStation;
+        this.trainSchedule = trainSchedule;
+        this.startStationId = startStationId;
+        this.endStationId = endStationId;
         this.returnTicketId = returnTicketId;
-        this.totalPrice = totalPrice;
-        this.discountId = discountId;
+        this.totalPrice = new Money(totalPrice, currency);
+        this.status = TicketStatus.valueOf(status);
     }
 
     public String getId() {
@@ -46,24 +51,32 @@ public class Ticket {
         this.user = user;
     }
 
-    public Station getStartStation() {
-        return startStation;
+    public TrainSchedule getTrainSchedule() {
+        return trainSchedule;
     }
 
-    public void setStartStation(Station startStation) {
-        this.startStation = startStation;
+    public void setTrainSchedule(TrainSchedule trainSchedule) {
+        this.trainSchedule = trainSchedule;
     }
 
-    public Station getEndStation() {
-        return endStation;
+    public String getStartStationId() {
+        return startStationId;
     }
 
-    public void setEndStation(Station endStation) {
-        this.endStation = endStation;
+    public void setStartStationId(String startStationId) {
+        this.startStationId = startStationId;
     }
 
-    public Id getReturnTicketId() {
-        return returnTicketId;
+    public String getEndStationId() {
+        return endStationId;
+    }
+
+    public void setEndStationId(String endStationId) {
+        this.endStationId = endStationId;
+    }
+
+    public String getReturnTicketId() {
+        return this.returnTicketId.getValue();
     }
 
     public void setReturnTicketId(String returnTicketId) {
@@ -71,18 +84,21 @@ public class Ticket {
     }
 
     public BigDecimal getTotalPrice() {
-        return totalPrice.getValue();
+        return this.totalPrice.getValue();
     }
-
+    public String getCurrency() {
+        return this.totalPrice.getCurrency();
+    }
     public void setTotalPrice(BigDecimal totalPrice, String currency) {
         this.totalPrice = new Money(totalPrice, currency);
     }
 
-    public String getDiscountId() {
-        return discountId.getValue();
+
+    public String getStatus() {
+        return status.getValue();
     }
 
-    public void setDiscountId(String discountId) {
-        this.discountId = new Id(discountId);
+    public void setStatus(String status) {
+        this.status = TicketStatus.valueOf(status);
     }
 }

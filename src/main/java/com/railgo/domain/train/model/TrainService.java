@@ -1,21 +1,21 @@
-package com.railgo.domain.train.model.coach;
+package com.railgo.domain.train.model;
 
 import com.railgo.domain.utils.valueObject.Id;
 import com.railgo.domain.utils.valueObject.Money;
 
 import java.math.BigDecimal;
 
-public class TrainCoachService {
+public class TrainService {
     private Id id;
-    private String coachId;
+    private String trainId;
     private String name;
     private Money price;
     private String description;
     private String status;
 
-    public TrainCoachService(Id id, String coachId, String name, BigDecimal price, String currency, String description, String status) {
+    public TrainService(Id id, String trainId, String name, BigDecimal price, String currency, String description, String status) {
         this.id = id;
-        this.coachId = coachId;
+        this.trainId = trainId;
         this.name = name;
         this.price = new Money(price, currency);
         this.description = description;
@@ -30,12 +30,12 @@ public class TrainCoachService {
         this.id = id;
     }
 
-    public String getCoachId() {
-        return coachId;
+    public String getTrainId() {
+        return trainId;
     }
 
-    public void setCoachId(String coachId) {
-        this.coachId = coachId;
+    public void setTrainId(String trainId) {
+        this.trainId = trainId;
     }
 
     public String getName() {

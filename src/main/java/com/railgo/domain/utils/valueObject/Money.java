@@ -1,21 +1,26 @@
 package com.railgo.domain.utils.valueObject;
 
+import com.railgo.domain.utils.exception.BusinessException;
+import com.railgo.domain.utils.service.CurrencyConverter;
+import com.railgo.domain.utils.type.Currency;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Money {
-    private final BigDecimal value; // Giá trị tiền tệ
-    private final String currency;  // Đơn vị tiền tệ (USD, EUR, VND, ...)
+    private final BigDecimal value;
+    private final Currency currency;
+
 
     public Money(BigDecimal value, String currency) {
         if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Price cannot be null or negative.");
+            throw new BusinessException("Price cannot be null or negative.");
         }
         if (currency == null || currency.isEmpty()) {
-            throw new IllegalArgumentException("Currency cannot be null or empty.");
+            throw new BusinessException("Currency cannot be null or empty.");
         }
         this.value = value;
-        this.currency = currency;
+        this.currency = Currency.valueOf(currency);
     }
 
     public BigDecimal getValue() {
@@ -23,38 +28,29 @@ public class Money {
     }
 
     public String getCurrency() {
-        return currency;
+        return currency.getValue();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Money price = (Money) obj;
-        return value.equals(price.value) && currency.equals(price.currency);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value, currency);
-    }
-
-    @Override
-    public String toString() {
-        return value + " " + currency;
-    }
 
     public Money add(Money other) {
         if (!this.currency.equals(other.currency)) {
-            throw new IllegalArgumentException("Cannot add prices with different currencies.");
+            other = other.convertTo(this);
         }
-        return new Money(this.value.add(other.value), this.currency);
+        return new Money(this.value.add(other.value), this.currency.getValue());
     }
+    private Money convertTo(Money target) {
+        if (this.currency.equals(target.currency)) {
+            return this;
+        }
 
+        BigDecimal exchangeRate = CurrencyConverter.getExchangeRate(this.currency, target.currency);
+        BigDecimal convertedValue = this.value.multiply(exchangeRate);
+        return new Money(convertedValue, target.currency.getValue());
+    }
     public Money subtract(Money other) {
         if (!this.currency.equals(other.currency)) {
-            throw new IllegalArgumentException("Cannot subtract prices with different currencies.");
+            other = other.convertTo(this);
         }
-        return new Money(this.value.subtract(other.value), this.currency);
+        return new Money(this.value.subtract(other.value), this.currency.getValue());
     }
 }

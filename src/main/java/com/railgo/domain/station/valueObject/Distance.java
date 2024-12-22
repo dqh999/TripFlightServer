@@ -3,15 +3,15 @@ package com.railgo.domain.station.valueObject;
 import com.railgo.domain.utils.exception.BusinessException;
 
 public class Distance {
-    private final double value;
+    private final Double value;
 
-    public Distance(double distance) {
+    public Distance(Double distance) {
         if (distance <= 0) {
             throw new BusinessException("distance <= 0");
         }
-        value = distance;
+        this.value = distance;
     }
-    public double getValue() {
+    public Double getValue() {
         return value;
     }
 }

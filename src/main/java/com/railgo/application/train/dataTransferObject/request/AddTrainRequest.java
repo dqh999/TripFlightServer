@@ -7,19 +7,16 @@ public class AddTrainRequest {
     private String name;
     private Integer yearManufactured;
     private Integer speedLimit;
-    private Integer totalCoaches;
-    private String status;
+    private Integer totalSeats;
 
     public AddTrainRequest() {
     }
-
-    public AddTrainRequest(String type, String name, Integer yearManufactured, Integer speedLimit, Integer totalCoaches, String status) {
+    public AddTrainRequest(String type, String name, Integer yearManufactured, Integer speedLimit, Integer totalSeats) {
         this.type = type;
         this.name = name;
         this.yearManufactured = yearManufactured;
         this.speedLimit = speedLimit;
-        this.totalCoaches = totalCoaches;
-        this.status = status;
+        this.totalSeats = totalSeats;
     }
 
     public String getType() {
@@ -54,19 +51,11 @@ public class AddTrainRequest {
         this.speedLimit = speedLimit;
     }
 
-    public Integer getTotalCoaches() {
-        return totalCoaches;
+    public Integer getTotalSeats() {
+        return totalSeats;
     }
 
-    public void setTotalCoaches(Integer totalCoaches) {
-        this.totalCoaches = totalCoaches;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setTotalSeats(Integer totalSeats) {
+        this.totalSeats = totalSeats;
     }
 }

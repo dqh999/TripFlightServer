@@ -1,19 +1,26 @@
 package com.railgo.domain.train.type;
 
-public enum TrainType {
-    PASSENGER("PASSENGER"),      // Passenger trains, including intercity and local
-    FREIGHT("FREIGHT"),          // Freight trains for goods transport
-    HIGH_SPEED("HIGH_SPEED"),    // High-speed trains designed for fast travel
-    SUBURBAN("SUBURBAN"),        // Trains serving suburban areas
-    LUXURY("LUXURY");            // High-end trains offering luxurious services
-    private final String value;
+import java.math.BigDecimal;
 
-    TrainType(String value) {
+public enum TrainType {
+    REGULAR("REGULAR", BigDecimal.valueOf(1.0)),
+    HIGH_SPEED("HIGH_SPEED", BigDecimal.valueOf(1.5)),
+    LUXURY("LUXURY", BigDecimal.valueOf(3.0));
+
+    private final String value;
+    private final BigDecimal ratePerKm;
+
+    TrainType(String value, BigDecimal ratePerKm) {
         this.value = value;
+        this.ratePerKm = ratePerKm;
     }
 
     public String getValue() {
         return value;
+    }
+
+    public BigDecimal getRatePerKm() {
+        return ratePerKm;
     }
 
     @Override

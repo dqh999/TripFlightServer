@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tbl_trains")
 public class TrainEntity extends BaseEntity {
@@ -17,20 +20,20 @@ public class TrainEntity extends BaseEntity {
     private Integer yearManufactured;
     @Column(name = "speed_limit")
     private Double speedLimit;
-    @Column(name = "total_coaches")
-    private Integer totalCoaches;
+    @Column(name = "total_seats")
+    private Integer totalSeats;
     private String status;
 
     public TrainEntity() {
     }
 
-    public TrainEntity(String id, String type, String name, Integer yearManufactured, Double speedLimit, Integer totalCoaches, String status) {
+    public TrainEntity(String id, String type, String name, Integer yearManufactured, Double speedLimit, Integer totalSeats, String status) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.yearManufactured = yearManufactured;
         this.speedLimit = speedLimit;
-        this.totalCoaches = totalCoaches;
+        this.totalSeats = totalSeats;
         this.status = status;
     }
 
@@ -74,12 +77,12 @@ public class TrainEntity extends BaseEntity {
         this.speedLimit = speedLimit;
     }
 
-    public Integer getTotalCoaches() {
-        return totalCoaches;
+    public Integer getTotalSeats() {
+        return totalSeats;
     }
 
-    public void setTotalCoaches(Integer totalCoaches) {
-        this.totalCoaches = totalCoaches;
+    public void setTotalSeats(Integer totalSeats) {
+        this.totalSeats = totalSeats;
     }
 
     public String getStatus() {

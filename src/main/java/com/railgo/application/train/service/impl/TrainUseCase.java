@@ -29,4 +29,5 @@ public class TrainUseCase implements ITrainUseCase {
         Train newTrain = trainService.addTrain(trainObject);
         return trainMapper.toDTO(newTrain);
     }
+
 }

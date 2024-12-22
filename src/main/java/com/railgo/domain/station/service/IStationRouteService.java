@@ -2,6 +2,7 @@ package com.railgo.domain.station.service;
 
 import com.railgo.domain.station.model.Station;
 import com.railgo.domain.station.model.StationRoute;
+import com.railgo.domain.station.valueObject.Distance;
 import com.railgo.domain.train.model.Train;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface IStationRouteService {
     List<StationRoute> getRoutesBetweenStations(Station startStationId, Station endStationId,
                                                 Train train);
     Double getTravelTime(Station startStationId, Station endStationId, Train train);
+
+    Double getDistanceBetweenStations(Station startStation, Station endStation);
 }

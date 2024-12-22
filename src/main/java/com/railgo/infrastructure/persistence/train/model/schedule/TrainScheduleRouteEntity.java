@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,15 +21,20 @@ public class TrainScheduleRouteEntity extends BaseEntity {
     private String stationId;
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
+    @Column(name = "ticket_price")
+    private BigDecimal ticketPrice;
+    private String currency;
 
     public TrainScheduleRouteEntity() {
     }
 
-    public TrainScheduleRouteEntity(String id, String scheduleId, String stationId, LocalDateTime arrivalTime) {
+    public TrainScheduleRouteEntity(String id, String scheduleId, String stationId, LocalDateTime arrivalTime, BigDecimal ticketPrice, String currency) {
         this.id = id;
         this.scheduleId = scheduleId;
         this.stationId = stationId;
         this.arrivalTime = arrivalTime;
+        this.ticketPrice = ticketPrice;
+        this.currency = currency;
     }
 
     public String getId() {
@@ -61,5 +67,20 @@ public class TrainScheduleRouteEntity extends BaseEntity {
 
     public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+    public BigDecimal getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(BigDecimal ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

@@ -3,6 +3,7 @@ package com.railgo.domain.station.exception;
 import com.railgo.domain.utils.exception.ExceptionCode;
 
 public enum StationExceptionCode implements ExceptionCode {
+    STATION_ROUTE_NOT_FOUND("STATION_ROUTE_NOT_FOUND",404),
     STATION_NOT_FOUND("STATION", 404);
 
 

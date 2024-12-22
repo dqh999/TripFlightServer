@@ -1,4 +1,4 @@
-package com.railgo.application.security;
+package com.railgo.application.utils;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,6 +4,7 @@ import com.railgo.infrastructure.persistence.train.model.TrainEntity;
 import com.railgo.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,12 +29,16 @@ public class TrainScheduleEntity extends BaseEntity {
     @Column(name = "total_stops")
     private Integer totalStops;
     @OneToMany(mappedBy = "scheduleId", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OrderBy("arrivalTime ASC")
     private List<TrainScheduleRouteEntity> routes;
+    @Column(name = "ticket_price")
+    private BigDecimal ticketPrice;
+    private String currency;
     private String status;
 
     public TrainScheduleEntity() {}
 
-    public TrainScheduleEntity(String id, String creatorId, TrainEntity train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, List<TrainScheduleRouteEntity> routes, String status) {
+    public TrainScheduleEntity(String id, String creatorId, TrainEntity train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, List<TrainScheduleRouteEntity> routes,BigDecimal ticketPrice,String currency, String status) {
         this.id = id;
         this.creatorId = creatorId;
         this.train = train;
@@ -43,6 +48,8 @@ public class TrainScheduleEntity extends BaseEntity {
         this.arrivalTime = arrivalTime;
         this.totalStops = totalStops;
         this.routes = routes;
+        this.ticketPrice = ticketPrice;
+        this.currency = currency;
         this.status = status;
     }
 
@@ -116,6 +123,22 @@ public class TrainScheduleEntity extends BaseEntity {
 
     public void setRoutes(List<TrainScheduleRouteEntity> routes) {
         this.routes = routes;
+    }
+
+    public BigDecimal getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(BigDecimal ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public String getStatus() {
