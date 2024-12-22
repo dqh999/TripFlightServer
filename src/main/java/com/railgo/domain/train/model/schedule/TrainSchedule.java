@@ -11,14 +11,13 @@ import java.util.List;
 
 public class TrainSchedule {
     private Id id;
-    private String creatorId;
     private Train train;
     private String departureStationId;
     private String arrivalStationId;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
-    private Integer totalStops;
     private Money ticketPrice;
+    private Integer totalStops;
     private List<TrainScheduleRoute> routes;
     private TrainScheduleStatus status;
 
@@ -26,16 +25,25 @@ public class TrainSchedule {
         this.id = new Id();
     }
 
-    public TrainSchedule(String id, String creatorId, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, BigDecimal ticketPrice, String currency, List<TrainScheduleRoute> routes, String status) {
-        this.id = new Id(id);
-        this.creatorId = creatorId;
+    public TrainSchedule(Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime,Money ticketPrice) {
+        this.id = new Id();
         this.train = train;
         this.departureStationId = departureStationId;
         this.arrivalStationId = arrivalStationId;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.ticketPrice = ticketPrice;
+    }
+
+    public TrainSchedule(String id, Train train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Money ticketPrice, Integer totalStops, List<TrainScheduleRoute> routes, String status) {
+        this.id = new Id(id);
+        this.train = train;
+        this.departureStationId = departureStationId;
+        this.arrivalStationId = arrivalStationId;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.ticketPrice = ticketPrice;
         this.totalStops = totalStops;
-        this.ticketPrice = new Money(ticketPrice,currency);
         this.routes = routes;
         this.status = TrainScheduleStatus.valueOf(status);
     }
@@ -46,14 +54,6 @@ public class TrainSchedule {
 
     public void setId(String id) {
         this.id = new Id(id);
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
     }
 
     public Train getTrain() {
@@ -96,6 +96,14 @@ public class TrainSchedule {
         this.arrivalTime = arrivalTime;
     }
 
+    public Money getTicketPrice() {
+        return this.ticketPrice;
+    }
+
+    public void setTicketPrice(Money ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
     public Integer getTotalStops() {
         return totalStops;
     }
@@ -104,15 +112,6 @@ public class TrainSchedule {
         this.totalStops = totalStops;
     }
 
-    public BigDecimal getTicketPrice() {
-        return this.ticketPrice.getValue();
-    }
-    public String getCurrency() {
-        return this.ticketPrice.getCurrency();
-    }
-    public void setTicketPrice(BigDecimal ticketPrice, String currency) {
-        this.ticketPrice = new Money(ticketPrice,currency);
-    }
     public List<TrainScheduleRoute> getRoutes() {
         return routes;
     }

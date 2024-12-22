@@ -1,8 +1,8 @@
 package com.railgo.application.train.dataTransferObject.response;
 
 
+import com.railgo.domain.utils.valueObject.Money;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,26 +13,24 @@ public class TrainScheduleResponse {
     private String arrivalStationId;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
+    private Money ticketPrice;
     private Integer totalStops;
     private List<TrainScheduleRouteResponse> routes;
-    private BigDecimal ticketPrice;
-    private String currency;
     private String status;
 
     public TrainScheduleResponse() {
     }
 
-    public TrainScheduleResponse(String id, TrainResponse train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, List<TrainScheduleRouteResponse> routes, BigDecimal ticketPrice, String currency, String status) {
+    public TrainScheduleResponse(String id, TrainResponse train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Money ticketPrice, Integer totalStops, List<TrainScheduleRouteResponse> routes, String status) {
         this.id = id;
         this.train = train;
         this.departureStationId = departureStationId;
         this.arrivalStationId = arrivalStationId;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.ticketPrice = ticketPrice;
         this.totalStops = totalStops;
         this.routes = routes;
-        this.ticketPrice = ticketPrice;
-        this.currency = currency;
         this.status = status;
     }
 
@@ -84,6 +82,14 @@ public class TrainScheduleResponse {
         this.arrivalTime = arrivalTime;
     }
 
+    public Money getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(Money ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
     public Integer getTotalStops() {
         return totalStops;
     }
@@ -98,22 +104,6 @@ public class TrainScheduleResponse {
 
     public void setRoutes(List<TrainScheduleRouteResponse> routes) {
         this.routes = routes;
-    }
-
-    public BigDecimal getTicketPrice() {
-        return ticketPrice;
-    }
-
-    public void setTicketPrice(BigDecimal ticketPrice) {
-        this.ticketPrice = ticketPrice;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public String getStatus() {

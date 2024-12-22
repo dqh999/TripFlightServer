@@ -1,7 +1,6 @@
 package com.railgo.application.train.dataTransferObject.response;
 
 
-import java.math.BigDecimal;
 
 public class TrainResponse {
     private String id;

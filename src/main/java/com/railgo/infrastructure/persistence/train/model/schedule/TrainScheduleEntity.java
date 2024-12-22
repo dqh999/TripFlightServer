@@ -1,5 +1,6 @@
 package com.railgo.infrastructure.persistence.train.model.schedule;
 
+import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.infrastructure.persistence.train.model.TrainEntity;
 import com.railgo.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.*;
@@ -13,8 +14,6 @@ import java.util.List;
 public class TrainScheduleEntity extends BaseEntity {
     @Id
     private String id;
-    @Column(name = "creator_id")
-    private String creatorId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "train_id", referencedColumnName = "id", nullable = false)
     private TrainEntity train;
@@ -26,30 +25,30 @@ public class TrainScheduleEntity extends BaseEntity {
     private LocalDateTime departureTime;
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
-    @Column(name = "total_stops")
-    private Integer totalStops;
-    @OneToMany(mappedBy = "scheduleId", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @OrderBy("arrivalTime ASC")
-    private List<TrainScheduleRouteEntity> routes;
     @Column(name = "ticket_price")
     private BigDecimal ticketPrice;
     private String currency;
+    @Column(name = "total_stops")
+    private Integer totalStops;
+    @OneToMany(mappedBy = "scheduleId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderBy("arrivalTime ASC")
+    private List<TrainScheduleRouteEntity> routes;
     private String status;
 
-    public TrainScheduleEntity() {}
+    public TrainScheduleEntity() {
+    }
 
-    public TrainScheduleEntity(String id, String creatorId, TrainEntity train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Integer totalStops, List<TrainScheduleRouteEntity> routes,BigDecimal ticketPrice,String currency, String status) {
+    public TrainScheduleEntity(String id, TrainEntity train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, BigDecimal ticketPrice, String currency, Integer totalStops, List<TrainScheduleRouteEntity> routes, String status) {
         this.id = id;
-        this.creatorId = creatorId;
         this.train = train;
         this.departureStationId = departureStationId;
         this.arrivalStationId = arrivalStationId;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-        this.totalStops = totalStops;
-        this.routes = routes;
         this.ticketPrice = ticketPrice;
         this.currency = currency;
+        this.totalStops = totalStops;
+        this.routes = routes;
         this.status = status;
     }
 
@@ -59,14 +58,6 @@ public class TrainScheduleEntity extends BaseEntity {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getCreatorId() {
-        return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
     }
 
     public TrainEntity getTrain() {
@@ -109,6 +100,15 @@ public class TrainScheduleEntity extends BaseEntity {
         this.arrivalTime = arrivalTime;
     }
 
+    public Money getTicketPrice() {
+        return new Money(ticketPrice,currency);
+    }
+
+    public void setTicketPrice(Money ticketPrice) {
+        this.ticketPrice = ticketPrice.getValue();
+        this.currency = ticketPrice.getCurrency();
+    }
+
     public Integer getTotalStops() {
         return totalStops;
     }
@@ -123,22 +123,6 @@ public class TrainScheduleEntity extends BaseEntity {
 
     public void setRoutes(List<TrainScheduleRouteEntity> routes) {
         this.routes = routes;
-    }
-
-    public BigDecimal getTicketPrice() {
-        return ticketPrice;
-    }
-
-    public void setTicketPrice(BigDecimal ticketPrice) {
-        this.ticketPrice = ticketPrice;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public String getStatus() {

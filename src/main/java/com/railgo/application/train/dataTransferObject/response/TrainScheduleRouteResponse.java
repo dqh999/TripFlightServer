@@ -1,24 +1,23 @@
 package com.railgo.application.train.dataTransferObject.response;
 
-import java.math.BigDecimal;
+import com.railgo.domain.utils.valueObject.Money;
+
 import java.time.LocalDateTime;
 
 public class TrainScheduleRouteResponse {
     private String id;
     private String stationId;
     private LocalDateTime arrivalTime;
-    private BigDecimal ticketPrice;
-    private String currency;
+    private Money ticketPrice;
 
     public TrainScheduleRouteResponse() {
     }
 
-    public TrainScheduleRouteResponse(String id, String stationId, LocalDateTime arrivalTime, BigDecimal ticketPrice, String currency) {
+    public TrainScheduleRouteResponse(String id, String stationId, LocalDateTime arrivalTime, Money ticketPrice) {
         this.id = id;
         this.stationId = stationId;
         this.arrivalTime = arrivalTime;
         this.ticketPrice = ticketPrice;
-        this.currency = currency;
     }
 
     public String getId() {
@@ -45,19 +44,11 @@ public class TrainScheduleRouteResponse {
         this.arrivalTime = arrivalTime;
     }
 
-    public BigDecimal getTicketPrice() {
+    public Money getTicketPrice() {
         return ticketPrice;
     }
 
-    public void setTicketPrice(BigDecimal ticketPrice) {
+    public void setTicketPrice(Money ticketPrice) {
         this.ticketPrice = ticketPrice;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 }

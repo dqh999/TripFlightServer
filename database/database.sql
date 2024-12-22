@@ -74,12 +74,7 @@ CREATE TABLE tbl_trains
 CREATE TABLE tbl_train_schedules
 (
     id                   varchar(36) primary key,
-    creator_id           varchar(36)    not null,
     train_id             varchar(36)    not null,
-    departure_station_id varchar(36)    not null,
-    arrival_station_id   varchar(36)    not null,
-    departure_time       datetime       not null,
-    arrival_time         datetime       not null,
     total_stops          int default 0,
     ticket_price         decimal(10, 2) not null,
     currency             varchar(10)    not null,
@@ -87,7 +82,7 @@ CREATE TABLE tbl_train_schedules
     created_at           timestamp      not null,
     updated_at           timestamp      not null
 );
-CREATE TABLE tbl_train_schedule_routes
+CREATE TABLE tbl_train_schedule_stops
 (
     id           varchar(36) primary key,
     schedule_id  varchar(36)    not null,

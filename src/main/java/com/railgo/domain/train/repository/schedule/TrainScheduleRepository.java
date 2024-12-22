@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface TrainScheduleRepository {
     void save(TrainSchedule s);
+
     Optional<TrainSchedule> findById(String id);
     Page<TrainSchedule> findAllSchedules(String departureStationId, String arrivalStationId,
                                          LocalDateTime startDate,LocalDateTime endDate,

@@ -74,7 +74,7 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         LocalDateTime startTime = time.minusMinutes(conflictTimeInMillis / (60 * 1000));
         LocalDateTime endTime = time.plusMinutes(conflictTimeInMillis / (60 * 1000));
         return trainScheduleRepository.checkConflictingScheduleAtStation(stationId, startTime, endTime)
-                || trainScheduleRepository.checkConflictingScheduleAtStation(stationId, startTime, endTime);
+                || trainScheduleRouteRepository.checkConflictingScheduleAtStation(stationId, startTime, endTime);
     }
 
     @Override

@@ -17,19 +17,19 @@ public class TrainScheduleRoute {
         this.id = new Id();
     }
 
-    public TrainScheduleRoute(String stationId, LocalDateTime arrivalTime,BigDecimal ticketPrice, String currency) {
+    public TrainScheduleRoute(String stationId, LocalDateTime arrivalTime,Money ticketPrice) {
         this.id = new Id();
         this.stationId = stationId;
         this.arrivalTime = arrivalTime;
-        this.ticketPrice = new Money(ticketPrice, currency);
+        this.ticketPrice = ticketPrice;
     }
 
-    public TrainScheduleRoute(String id, String scheduleId, String stationId, LocalDateTime arrivalTime, BigDecimal ticketPrice, String currency) {
+    public TrainScheduleRoute(String id, String scheduleId, String stationId, LocalDateTime arrivalTime, Money ticketPrice) {
         this.id = new Id(id);
         this.scheduleId = scheduleId;
         this.stationId = stationId;
         this.arrivalTime = arrivalTime;
-        this.ticketPrice = new Money(ticketPrice, currency);
+        this.ticketPrice = ticketPrice;
     }
 
     public String getId() {
@@ -64,15 +64,11 @@ public class TrainScheduleRoute {
         this.arrivalTime = arrivalTime;
     }
 
-    public BigDecimal getTicketPrice() {
-        return this.ticketPrice.getValue();
+    public Money getTicketPrice() {
+        return this.ticketPrice;
     }
 
-    public String getCurrency() {
-        return this.ticketPrice.getCurrency();
-    }
-
-    public void setTicketPrice(BigDecimal ticketPrice, String currency) {
-        this.ticketPrice = new Money(ticketPrice, currency);
+    public void setTicketPrice(Money ticketPrice) {
+        this.ticketPrice = ticketPrice;
     }
 }

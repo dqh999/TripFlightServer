@@ -72,10 +72,7 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
 
         Money totalPrice = calculateTotalPrice(train, trainScheduleRoutes, routes.getLast());
 
-        String creatorId = userRequest.getId();
-
-        TrainSchedule trainSchedule = initializeTrainSchedule(creatorId, train, departureStationId, arrivalStationId, departureTime, arrivalTime, totalPrice, trainScheduleRoutes);
-        trainSchedule.setRoutes(trainScheduleRoutes);
+        TrainSchedule trainSchedule = buildTrainSchedule(train, departureStation, arrivalStation, departureTime, arrivalTime, totalPrice, trainScheduleRoutes);
         TrainSchedule newTrainSchedule = trainScheduleService.addSchedule(trainSchedule);
 
         return trainScheduleMapper.toDTO(newTrainSchedule);
@@ -99,7 +96,7 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
 
             Money ticketPrice = ticketPricingService.calculateTicketPrice(train, route);
 
-            TrainScheduleRoute trainScheduleRoute = new TrainScheduleRoute(stationB.getId(), nextArrivalTime, ticketPrice.getValue(), ticketPrice.getCurrency());
+            TrainScheduleRoute trainScheduleRoute = new TrainScheduleRoute(stationB.getId(), nextArrivalTime, new Money(ticketPrice.getValue(), ticketPrice.getCurrency()));
             scheduleRoutes.add(trainScheduleRoute);
 
             currentDepartureTime = nextArrivalTime;
@@ -121,31 +118,19 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
         totalPrice = totalPrice.add(lastTicketPrice);
 
         for (TrainScheduleRoute route : trainScheduleRoutes) {
-            totalPrice = totalPrice.add(new Money(route.getTicketPrice(), route.getCurrency()));
+            totalPrice = totalPrice.add(route.getTicketPrice());
         }
 
         return totalPrice;
     }
 
-    private TrainSchedule initializeTrainSchedule(String creatorId, Train train,
-                                                  String departureStationId, String arrivalStationId,
-                                                  LocalDateTime departureTime, LocalDateTime arrivalTime,
-                                                  Money totalPrice,
-                                                  List<TrainScheduleRoute> trainScheduleRoutes) {
-        TrainSchedule trainSchedule = new TrainSchedule();
-
-        trainSchedule.setCreatorId(creatorId);
-        trainSchedule.setTrain(train);
-        trainSchedule.setDepartureStationId(departureStationId);
-        trainSchedule.setArrivalStationId(arrivalStationId);
-        trainSchedule.setDepartureTime(departureTime);
-        trainSchedule.setArrivalTime(arrivalTime);
-        trainSchedule.setTicketPrice(totalPrice.getValue(), totalPrice.getCurrency());
+    private TrainSchedule buildTrainSchedule(Train train, Station departureStation, Station arrivalStation,
+                                             LocalDateTime departureTime, LocalDateTime arrivalTime, Money totalPrice,
+                                             List<TrainScheduleRoute> trainScheduleRoutes) {
+        TrainSchedule trainSchedule = new TrainSchedule(train, departureStation.getId(), arrivalStation.getId(), departureTime, arrivalTime, totalPrice);
         trainSchedule.setTotalStops(trainScheduleRoutes.size());
-
         trainScheduleRoutes.forEach(route -> route.setScheduleId(trainSchedule.getId()));
         trainSchedule.setRoutes(trainScheduleRoutes);
-
         return trainSchedule;
     }
 
@@ -173,89 +158,72 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
                                             String departureStationId, String arrivalStationId,
                                             List<TrainScheduleResponse> trainScheduleResponses) {
         trainSchedules.forEach(trainSchedule -> {
-
             TrainScheduleResponse trainScheduleResponse = trainScheduleMapper.toDTO(trainSchedule);
-            trainScheduleResponse.setDepartureStationId(departureStationId);
-            trainScheduleResponse.setArrivalStationId(arrivalStationId);
             trainScheduleResponse.setRoutes(new ArrayList<>());
 
             if (isDirectRoute(trainSchedule, departureStationId, arrivalStationId)) {
-                trainScheduleResponse.setTicketPrice(trainSchedule.getTicketPrice());
-                trainScheduleResponse.setCurrency(trainSchedule.getCurrency());
-
                 trainScheduleResponses.add(trainScheduleResponse);
                 return;
             }
 
-            TrainScheduleResponse responseForIndirectRoute = processIndirectRoute(trainSchedule, departureStationId, arrivalStationId, trainScheduleResponse);
-            trainScheduleResponses.add(responseForIndirectRoute);
+            List<TrainScheduleRoute> trainScheduleRoutes = trainSchedule.getRoutes();
+
+            String currency = trainSchedule.getTicketPrice().getCurrency();
+            TrainScheduleRoute firstRoute = new TrainScheduleRoute(trainSchedule.getDepartureStationId(), trainSchedule.getDepartureTime(), new Money(BigDecimal.ZERO,currency));
+
+            Money priceTicketRouteLast = calculateTicketPriceForLastRoute(trainScheduleRoutes, trainSchedule.getTicketPrice());
+            TrainScheduleRoute lastRoute = new TrainScheduleRoute(trainSchedule.getArrivalStationId(), trainSchedule.getArrivalTime(), new Money(priceTicketRouteLast.getValue(), currency));
+
+            List<TrainScheduleRoute> newTrainScheduleRoutes = buildNewRoutesList(firstRoute, trainScheduleRoutes, lastRoute);
+
+            calculateTrainScheduleDetails(newTrainScheduleRoutes, departureStationId, arrivalStationId, trainScheduleResponse);
+            trainScheduleResponses.add(trainScheduleResponse);
         });
     }
 
     private boolean isDirectRoute(TrainSchedule trainSchedule, String departureStationId, String arrivalStationId) {
-        return trainSchedule.getDepartureStationId().equals(departureStationId) &&
-                trainSchedule.getArrivalStationId().equals(arrivalStationId);
+        return trainSchedule.getDepartureStationId().equals(departureStationId) && trainSchedule.getArrivalStationId().equals(arrivalStationId);
     }
 
-    private TrainScheduleResponse processIndirectRoute(TrainSchedule trainSchedule,
-                                                       String departureStationId, String arrivalStationId,
-                                                       TrainScheduleResponse trainScheduleResponse) {
-        List<TrainScheduleRoute> trainScheduleRoutes = trainSchedule.getRoutes();
-
-        int trainScheduleRoutesSize = trainScheduleRoutes.size();
-
-        if (trainSchedule.getDepartureStationId().equals(departureStationId)) {
-            Money totalPrice = new Money(BigDecimal.ZERO, trainSchedule.getCurrency());
-            for (int i = 0; i < trainScheduleRoutesSize; i++) {
-                TrainScheduleRoute trainScheduleRoute = trainScheduleRoutes.get(i);
-                totalPrice = totalPrice.add(new Money(trainScheduleRoute.getTicketPrice(), trainSchedule.getCurrency()));
-
-                if (trainScheduleRoute.getStationId().equals(arrivalStationId)) {
-                    trainScheduleResponse.setTicketPrice(totalPrice.getValue());
-                    trainScheduleResponse.setCurrency(trainSchedule.getCurrency());
-
-                    trainScheduleResponse.setArrivalTime(trainScheduleRoute.getArrivalTime());
-                    trainScheduleResponse.setTotalStops(i);
-                    return trainScheduleResponse;
-                }
-
-            }
+    private Money calculateTicketPriceForLastRoute(List<TrainScheduleRoute> routes, Money totalPrice) {
+        Money ticketPrice = new Money(BigDecimal.ZERO, totalPrice.getCurrency());
+        for (int i = 0; i < routes.size() - 1; i++) {
+            ticketPrice = ticketPrice.add(routes.get(i).getTicketPrice());
         }
+        return totalPrice.subtract(ticketPrice);
+    }
 
-        boolean hasDepartureStation = false;
-        int totalStops = 0;
+    private List<TrainScheduleRoute> buildNewRoutesList(TrainScheduleRoute firstRoute, List<TrainScheduleRoute> trainScheduleRoutes, TrainScheduleRoute lastRoute) {
+        List<TrainScheduleRoute> newRoutes = new ArrayList<>();
+        newRoutes.add(firstRoute);
+        newRoutes.addAll(trainScheduleRoutes);
+        newRoutes.add(lastRoute);
+        return newRoutes;
+    }
 
-        Money totalPrice = new Money(BigDecimal.ZERO, trainSchedule.getCurrency());
+    private void calculateTrainScheduleDetails(List<TrainScheduleRoute> trainScheduleRoutes,
+                                               String departureStationId, String arrivalStationId,
+                                               TrainScheduleResponse trainScheduleResponse) {
+        String currency = trainScheduleRoutes.getFirst().getTicketPrice().getCurrency();
+        Money totalPrice = new Money(BigDecimal.ZERO, currency);
+        boolean isInRange = false;
 
-        for (int i = 0; i < trainScheduleRoutesSize; i++) {
-            TrainScheduleRoute trainScheduleRoute = trainScheduleRoutes.get(i);
-
-            if (hasDepartureStation) {
-                totalPrice = totalPrice.add(new Money(trainScheduleRoute.getTicketPrice(), trainSchedule.getCurrency()));
-                totalStops++;
+        for (TrainScheduleRoute trainScheduleRoute : trainScheduleRoutes) {
+            if (isInRange) {
+                totalPrice = totalPrice.add(trainScheduleRoute.getTicketPrice());
             }
-
             if (trainScheduleRoute.getStationId().equals(departureStationId)) {
+                isInRange = true;
+                trainScheduleResponse.setDepartureStationId(trainScheduleRoute.getStationId());
                 trainScheduleResponse.setDepartureTime(trainScheduleRoute.getArrivalTime());
-
-                hasDepartureStation = true;
-
-                if (trainSchedule.getArrivalStationId().equals(arrivalStationId)) {
-
-                    trainScheduleResponse.setTotalStops(trainSchedule.getTotalStops() - i - 1);
-                    return trainScheduleResponse;
-                }
-
-            } else if (trainScheduleRoute.getStationId().equals(arrivalStationId) && hasDepartureStation) {
-                trainScheduleResponse.setTotalStops(totalStops - 1);
-                trainScheduleResponse.setArrivalTime(trainScheduleRoute.getArrivalTime());
-                trainScheduleResponse.setTicketPrice(totalPrice.getValue());
-                trainScheduleResponse.setCurrency(trainSchedule.getCurrency());
-                return trainScheduleResponse;
             }
+            if (trainScheduleRoute.getStationId().equals(arrivalStationId) && isInRange) {
+                trainScheduleResponse.setArrivalStationId(trainScheduleRoute.getStationId());
+                trainScheduleResponse.setArrivalTime(trainScheduleRoute.getArrivalTime());
 
+                trainScheduleResponse.setTicketPrice(totalPrice);
+                return;
+            }
         }
-        return trainScheduleResponse;
     }
-
 }

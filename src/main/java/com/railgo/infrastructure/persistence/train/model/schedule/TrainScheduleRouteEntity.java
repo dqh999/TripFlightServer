@@ -1,6 +1,7 @@
 package com.railgo.infrastructure.persistence.train.model.schedule;
 
 
+import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,19 +69,12 @@ public class TrainScheduleRouteEntity extends BaseEntity {
     public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
-    public BigDecimal getTicketPrice() {
-        return ticketPrice;
+    public Money getTicketPrice() {
+        return new Money(ticketPrice,currency);
     }
 
-    public void setTicketPrice(BigDecimal ticketPrice) {
-        this.ticketPrice = ticketPrice;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setTicketPrice(Money ticketPrice) {
+        this.ticketPrice = ticketPrice.getValue();
+        this.currency = ticketPrice.getCurrency();
     }
 }
