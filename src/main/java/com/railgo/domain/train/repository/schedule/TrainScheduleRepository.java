@@ -11,10 +11,10 @@ public interface TrainScheduleRepository {
     void save(TrainSchedule s);
 
     Optional<TrainSchedule> findById(String id);
-    Page<TrainSchedule> findAllSchedules(String departureStationId, String arrivalStationId,
-                                         LocalDateTime startDate,LocalDateTime endDate,
-                                         Pageable pageable);
 
-    boolean checkConflictingScheduleAtStation(String stationId, LocalDateTime startTime, LocalDateTime endTime);
-    boolean checkConflictingSchedules(String trainId, LocalDateTime departureTime);
+    Optional<TrainSchedule> findScheduleByIdAndStations(String trainScheduleId, String departureStationId, String arrivalStationId);
+
+    Page<TrainSchedule> findAllSchedules(String departureStationId, String arrivalStationId,
+                                         LocalDateTime startDate, LocalDateTime endDate,
+                                         Pageable pageable);
 }

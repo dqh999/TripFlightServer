@@ -61,50 +61,62 @@ CREATE TABLE tbl_station_routes
 );
 CREATE TABLE tbl_trains
 (
-    id                  varchar(36) primary key,
-    type                varchar(20)    not null,
-    name                varchar(100)   not null,
-    year_manufactured   int            not null,
-    speed_limit         int            not null, -- Speed limit (km/h)
-    total_seats         int            not null,
-    status              varchar(20)    not null,
-    created_at          timestamp      not null,
-    updated_at          timestamp      not null
+    id                varchar(36) primary key,
+    type              varchar(20)  not null,
+    name              varchar(100) not null,
+    year_manufactured int          not null,
+    speed_limit       int          not null, -- Speed limit (km/h)
+    total_seats       int          not null,
+    status            varchar(20)  not null,
+    created_at        timestamp    not null,
+    updated_at        timestamp    not null
 );
 CREATE TABLE tbl_train_schedules
 (
-    id                   varchar(36) primary key,
-    train_id             varchar(36)    not null,
-    total_stops          int default 0,
-    ticket_price         decimal(10, 2) not null,
-    currency             varchar(10)    not null,
-    status               varchar(20)    not null,
-    created_at           timestamp      not null,
-    updated_at           timestamp      not null
-);
-CREATE TABLE tbl_train_schedule_stops
-(
     id           varchar(36) primary key,
-    schedule_id  varchar(36)    not null,
-    station_id   varchar(36)    not null,
-    arrival_time datetime       not null,
+    train_id     varchar(36)    not null,
+    total_stops  int default 0,
+    total_seats  int            not null,
     ticket_price decimal(10, 2) not null,
     currency     varchar(10)    not null,
+    status       varchar(20)    not null,
     created_at   timestamp      not null,
     updated_at   timestamp      not null
 );
+CREATE TABLE tbl_train_schedule_stops
+(
+    id              varchar(36) primary key,
+    schedule_id     varchar(36)    not null,
+    station_id      varchar(36)    not null,
+    arrival_time    datetime       not null,
+    available_seats int not null,
+    ticket_price    decimal(10, 2) not null,
+    currency        varchar(10)    not null,
+    created_at      timestamp      not null,
+    updated_at      timestamp      not null
+);
 CREATE TABLE tbl_tickets
 (
-    id               varchar(36) primary key,
-    user_id          varchar(36),
-    schedule_id      varchar(36)    not null,
-    start_station_id varchar(36)    not null,
-    end_station_id   varchar(36)    not null,
-    return_ticket_id varchar(36),
-    total_price      decimal(10, 2) not null,
-    currency         varchar(10)    not null,
-    discount_id      varchar(36),
-    status           varchar(20)    not null,
-    created_at       timestamp      not null,
-    updated_at       timestamp      not null
+    id                varchar(36) primary key,
+    train_schedule_id varchar(36)    not null,
+    start_station_id  varchar(36)    not null,
+    end_station_id    varchar(36)    not null,
+    total_passengers  int            not null,
+    total_price       decimal(10, 2) not null,
+    currency          varchar(10)    not null,
+    contact_email     varchar(100)   not null,
+    status            varchar(20)    not null,
+    created_at        timestamp      not null,
+    updated_at        timestamp      not null
+);
+CREATE TABLE tbl_ticket_passengers
+(
+    id            varchar(36) primary key,
+    ticket_id     varchar(36) not null,
+    first_name    varchar(50) not null,
+    last_name     varchar(50) not null,
+    gender        varchar(36) not null,
+    date_of_birth datetime    not null,
+    created_at    timestamp   not null,
+    updated_at    timestamp   not null
 );

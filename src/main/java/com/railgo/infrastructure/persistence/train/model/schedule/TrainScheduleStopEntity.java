@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_train_schedule_routes")
-public class TrainScheduleRouteEntity extends BaseEntity {
+@Table(name = "tbl_train_schedule_stops")
+public class TrainScheduleStopEntity extends BaseEntity {
     @Id
     private String id;
     @Column(name = "schedule_id")
@@ -22,18 +22,21 @@ public class TrainScheduleRouteEntity extends BaseEntity {
     private String stationId;
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
+    @Column(name = "available_seats")
+    private Integer availableSeats;
     @Column(name = "ticket_price")
     private BigDecimal ticketPrice;
     private String currency;
 
-    public TrainScheduleRouteEntity() {
+    public TrainScheduleStopEntity() {
     }
 
-    public TrainScheduleRouteEntity(String id, String scheduleId, String stationId, LocalDateTime arrivalTime, BigDecimal ticketPrice, String currency) {
+    public TrainScheduleStopEntity(String id, String scheduleId, String stationId, LocalDateTime arrivalTime,Integer availableSeats, BigDecimal ticketPrice, String currency) {
         this.id = id;
         this.scheduleId = scheduleId;
         this.stationId = stationId;
         this.arrivalTime = arrivalTime;
+        this.availableSeats = availableSeats;
         this.ticketPrice = ticketPrice;
         this.currency = currency;
     }
@@ -69,6 +72,15 @@ public class TrainScheduleRouteEntity extends BaseEntity {
     public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
+
+    public Integer getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public void setAvailableSeats(Integer availableSeats) {
+        this.availableSeats = availableSeats;
+    }
+
     public Money getTicketPrice() {
         return new Money(ticketPrice,currency);
     }

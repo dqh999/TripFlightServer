@@ -10,9 +10,13 @@ import com.railgo.infrastructure.security.UserDetail;
 import java.time.LocalDateTime;
 
 public interface ITrainScheduleUseCase {
-    TrainScheduleResponse addTrainSchedule(UserDetail userRequest,AddTrainScheduleRequest request);
-    PageResponse<TrainScheduleResponse> getAllSchedules(String departureStationId,String arrivalStationId,
+    TrainScheduleResponse addTrainSchedule(UserDetail userRequest, AddTrainScheduleRequest request);
+    TrainScheduleResponse buildTrainScheduleResponse(TrainSchedule trainSchedule,
+                                                     String departureStationId, String arrivalStationId);
+    TrainScheduleResponse getTrainScheduleByIdAndStations(String trainScheduleId, String departureStationId, String arrivalStationId);
+
+    PageResponse<TrainScheduleResponse> getAllSchedules(String departureStationId, String arrivalStationId,
                                                         LocalDateTime departureTime,
-                                                        int pageNo,int pageSize, String sortBy);
+                                                        int pageNo, int pageSize, String sortBy);
 
 }

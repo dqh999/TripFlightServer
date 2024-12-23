@@ -9,17 +9,19 @@ public class Id {
         if (id != null) {
             this.value = id;
             return;
-        };
+        }
         this.value = generateId();
     }
-    public Id(){
+
+    public Id() {
         this.value = generateId();
     }
-    private String generateId(){
+
+    private String generateId() {
         return UUID.randomUUID().toString();
     }
+
     public String getValue() {
         return this.value;
     }
-
 }

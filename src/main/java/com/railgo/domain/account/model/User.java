@@ -1,8 +1,8 @@
 package com.railgo.domain.account.model;
 
-import com.railgo.domain.account.valueObject.Email;
+import com.railgo.domain.utils.valueObject.Email;
 import com.railgo.domain.account.valueObject.HashPassword;
-import com.railgo.domain.account.valueObject.PhoneNumber;
+import com.railgo.domain.utils.valueObject.PhoneNumber;
 import com.railgo.domain.account.valueObject.Role;
 import com.railgo.domain.utils.model.BaseModel;
 import com.railgo.domain.utils.valueObject.Id;

@@ -1,37 +1,39 @@
 package com.railgo.domain.ticket.model;
 
-import com.railgo.domain.account.model.User;
 import com.railgo.domain.ticket.type.TicketStatus;
 import com.railgo.domain.train.model.schedule.TrainSchedule;
+import com.railgo.domain.utils.model.BaseModel;
+import com.railgo.domain.utils.valueObject.Email;
 import com.railgo.domain.utils.valueObject.Id;
 import com.railgo.domain.utils.valueObject.Money;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 
-public class Ticket {
+public class Ticket extends BaseModel {
     private Id id;
-    private User user;
     private TrainSchedule trainSchedule;
-    private String startStationId;
-    private String endStationId;
-    private Id returnTicketId;
+    private Id startStationId;
+    private Id endStationId;
     private Money totalPrice;
+    private Integer totalPassengers;
+    private List<Passenger> passengers;
+    private Email contactEmail;
     private TicketStatus status;
 
     public Ticket() {
         this.id = new Id();
     }
 
-
-    public Ticket(String id, User user, TrainSchedule trainSchedule, String startStationId, String endStationId, Id returnTicketId, BigDecimal totalPrice, String currency, String status) {
+    public Ticket(String id, TrainSchedule trainSchedule, String startStationId, String endStationId, Money totalPrice,Integer totalPassengers, List<Passenger> passengers,String contactEmail, String status) {
         this.id = new Id(id);
-        this.user = user;
         this.trainSchedule = trainSchedule;
-        this.startStationId = startStationId;
-        this.endStationId = endStationId;
-        this.returnTicketId = returnTicketId;
-        this.totalPrice = new Money(totalPrice, currency);
+        this.startStationId = new Id(startStationId);
+        this.endStationId = new Id(endStationId);
+        this.totalPrice = totalPrice;
+        this.totalPassengers = totalPassengers;
+        this.passengers = passengers;
+        this.contactEmail = new Email(contactEmail);
         this.status = TicketStatus.valueOf(status);
     }
 
@@ -43,14 +45,6 @@ public class Ticket {
         this.id = new Id(id);
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public TrainSchedule getTrainSchedule() {
         return trainSchedule;
     }
@@ -60,39 +54,52 @@ public class Ticket {
     }
 
     public String getStartStationId() {
-        return startStationId;
+        return startStationId.getValue();
     }
 
     public void setStartStationId(String startStationId) {
-        this.startStationId = startStationId;
+        this.startStationId = new Id(startStationId);
     }
 
     public String getEndStationId() {
-        return endStationId;
+        return endStationId.getValue();
     }
 
     public void setEndStationId(String endStationId) {
-        this.endStationId = endStationId;
+        this.endStationId = new Id(endStationId);
     }
 
-    public String getReturnTicketId() {
-        return this.returnTicketId.getValue();
+    public Money getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setReturnTicketId(String returnTicketId) {
-        this.returnTicketId = new Id(returnTicketId);
+    public void setTotalPrice(Money totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
-    public BigDecimal getTotalPrice() {
-        return this.totalPrice.getValue();
-    }
-    public String getCurrency() {
-        return this.totalPrice.getCurrency();
-    }
-    public void setTotalPrice(BigDecimal totalPrice, String currency) {
-        this.totalPrice = new Money(totalPrice, currency);
+    public Integer getTotalPassengers() {
+        return totalPassengers;
     }
 
+    public void setTotalPassengers(Integer totalPassengers) {
+        this.totalPassengers = totalPassengers;
+    }
+
+    public List<Passenger> getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(List<Passenger> passengers) {
+        this.passengers = passengers;
+    }
+
+    public String getContactEmail() {
+        return contactEmail.getValue();
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = new Email(contactEmail);
+    }
 
     public String getStatus() {
         return status.getValue();

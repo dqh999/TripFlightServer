@@ -13,24 +13,26 @@ public class TrainScheduleResponse {
     private String arrivalStationId;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
+    private Integer totalSeats;
     private Money ticketPrice;
     private Integer totalStops;
-    private List<TrainScheduleRouteResponse> routes;
+    private List<TrainScheduleStopResponse> stops;
     private String status;
 
     public TrainScheduleResponse() {
     }
 
-    public TrainScheduleResponse(String id, TrainResponse train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime, Money ticketPrice, Integer totalStops, List<TrainScheduleRouteResponse> routes, String status) {
+    public TrainScheduleResponse(String id, TrainResponse train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime,Integer totalSeats, Money ticketPrice, Integer totalStops, List<TrainScheduleStopResponse> stops, String status) {
         this.id = id;
         this.train = train;
         this.departureStationId = departureStationId;
         this.arrivalStationId = arrivalStationId;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.totalSeats = totalSeats;
         this.ticketPrice = ticketPrice;
         this.totalStops = totalStops;
-        this.routes = routes;
+        this.stops = stops;
         this.status = status;
     }
 
@@ -82,6 +84,14 @@ public class TrainScheduleResponse {
         this.arrivalTime = arrivalTime;
     }
 
+    public Integer getTotalSeats() {
+        return totalSeats;
+    }
+
+    public void setTotalSeats(Integer totalSeats) {
+        this.totalSeats = totalSeats;
+    }
+
     public Money getTicketPrice() {
         return ticketPrice;
     }
@@ -98,12 +108,12 @@ public class TrainScheduleResponse {
         this.totalStops = totalStops;
     }
 
-    public List<TrainScheduleRouteResponse> getRoutes() {
-        return routes;
+    public List<TrainScheduleStopResponse> getStops() {
+        return stops;
     }
 
-    public void setRoutes(List<TrainScheduleRouteResponse> routes) {
-        this.routes = routes;
+    public void setStops(List<TrainScheduleStopResponse> stops) {
+        this.stops = stops;
     }
 
     public String getStatus() {

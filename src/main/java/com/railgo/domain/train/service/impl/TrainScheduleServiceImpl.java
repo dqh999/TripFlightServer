@@ -1,11 +1,10 @@
 package com.railgo.domain.train.service.impl;
 
 import com.railgo.domain.train.exception.TrainExceptionCode;
-import com.railgo.domain.train.model.Train;
 import com.railgo.domain.train.model.schedule.TrainSchedule;
-import com.railgo.domain.train.model.schedule.TrainScheduleRoute;
+import com.railgo.domain.train.model.schedule.TrainScheduleStop;
 import com.railgo.domain.train.repository.schedule.TrainScheduleRepository;
-import com.railgo.domain.train.repository.schedule.TrainScheduleRouteRepository;
+import com.railgo.domain.train.repository.schedule.TrainScheduleStopRepository;
 import com.railgo.domain.train.service.ITrainScheduleService;
 import com.railgo.domain.train.type.TrainScheduleStatus;
 import com.railgo.domain.utils.exception.BusinessException;
@@ -18,18 +17,17 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
 @Service
 public class TrainScheduleServiceImpl implements ITrainScheduleService {
     private final TrainScheduleRepository trainScheduleRepository;
-    private final TrainScheduleRouteRepository trainScheduleRouteRepository;
+    private final TrainScheduleStopRepository trainScheduleStopRepository;
 
     @Autowired
     public TrainScheduleServiceImpl(TrainScheduleRepository trainScheduleRepository,
-                                    TrainScheduleRouteRepository trainScheduleRouteRepository) {
+                                    TrainScheduleStopRepository trainScheduleStopRepository) {
         this.trainScheduleRepository = trainScheduleRepository;
-        this.trainScheduleRouteRepository = trainScheduleRouteRepository;
+        this.trainScheduleStopRepository = trainScheduleStopRepository;
     }
 
     @Override
@@ -37,44 +35,30 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         validateSchedule(trainSchedule);
 
         trainSchedule.setStatus(TrainScheduleStatus.SCHEDULED.getValue());
-
         trainScheduleRepository.save(trainSchedule);
-
 
         return trainSchedule;
     }
 
     private void validateSchedule(TrainSchedule trainSchedule) {
-        LocalDateTime departureTime = trainSchedule.getDepartureTime();
+        TrainScheduleStop trainScheduleStopFirst = trainSchedule.getStops().getFirst();
+        LocalDateTime departureTime = trainScheduleStopFirst.getArrivalTime();
         if (departureTime.isBefore(LocalDateTime.now())) {
             throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID);
         }
 
-        Train train = trainSchedule.getTrain();
-        if (trainScheduleRepository.checkConflictingSchedules(train.getId(), departureTime)) {
-            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_CONFLICT);
-        }
-
         long conflictTimeInMillis = 30 * 60 * 1000;
-
-        if (hasScheduleConflictAtStation(trainSchedule.getDepartureStationId(), departureTime, conflictTimeInMillis) ||
-                hasScheduleConflictAtStation(trainSchedule.getArrivalStationId(), trainSchedule.getArrivalTime(), conflictTimeInMillis)) {
-            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_CONFLICT);
-        }
-
-        for (TrainScheduleRoute route : trainSchedule.getRoutes()) {
+        for (TrainScheduleStop route : trainSchedule.getStops()) {
             if (hasScheduleConflictAtStation(route.getStationId(), route.getArrivalTime(), conflictTimeInMillis)) {
                 throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_CONFLICT);
             }
         }
-
     }
 
     private boolean hasScheduleConflictAtStation(String stationId, LocalDateTime time, long conflictTimeInMillis) {
         LocalDateTime startTime = time.minusMinutes(conflictTimeInMillis / (60 * 1000));
         LocalDateTime endTime = time.plusMinutes(conflictTimeInMillis / (60 * 1000));
-        return trainScheduleRepository.checkConflictingScheduleAtStation(stationId, startTime, endTime)
-                || trainScheduleRouteRepository.checkConflictingScheduleAtStation(stationId, startTime, endTime);
+        return trainScheduleStopRepository.checkConflictingScheduleAtStation(stationId, startTime, endTime);
     }
 
     @Override
@@ -82,18 +66,16 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         return trainScheduleRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_NOT_FOUND));
     }
-
+    @Override
+    public TrainSchedule getScheduleByIdAndStations(String id, String departureStationId, String arrivalStationId){
+        return trainScheduleRepository.findScheduleByIdAndStations(id,departureStationId,arrivalStationId)
+                .orElseThrow(() -> new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_NOT_FOUND));
+    }
     @Override
     public Page<TrainSchedule> getAllSchedules(String departureStationId, String arrivalStationId,
                                                LocalDateTime departureTime,
                                                int pageNumber, int pageSize) {
-        if (departureStationId.equals(arrivalStationId)) {
-            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID);
-        }
-
-        if (departureTime.isBefore(LocalDateTime.now())) {
-            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID);
-        }
+        validateRequestGetAllSchedule(departureStationId, arrivalStationId, departureTime, pageNumber, pageSize);
 
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
 
@@ -101,6 +83,17 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         LocalDateTime endDate = calculateEndDate(departureTime);
 
         return trainScheduleRepository.findAllSchedules(departureStationId, arrivalStationId, startDate, endDate, pageable);
+    }
+
+    private void validateRequestGetAllSchedule(String departureStationId, String arrivalStationId,
+                                               LocalDateTime departureTime,
+                                               int pageNumber, int pageSize) {
+        if (departureStationId.equals(arrivalStationId) || departureTime.isBefore(LocalDateTime.now())) {
+            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID);
+        }
+        if (pageNumber < 1) {
+            throw new BusinessException();
+        }
     }
 
     private LocalDateTime calculateStartDate(LocalDateTime departureTime) {
@@ -112,28 +105,5 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
 
     private LocalDateTime calculateEndDate(LocalDateTime departureTime) {
         return departureTime.toLocalDate().atTime(LocalTime.MAX);
-    }
-
-    @Override
-    public boolean isValidRoute(TrainSchedule trainSchedule,
-                                String startStationId, String endStationId) {
-        if (trainSchedule.getDepartureStationId().equals(startStationId) && trainSchedule.getArrivalStationId().equals(endStationId)) {
-            return true;
-        }
-
-        List<TrainScheduleRoute> routes = trainSchedule.getRoutes();
-        boolean hasStartStation = false;
-
-        for (TrainScheduleRoute route : routes) {
-            if (route.getStationId().equals(startStationId) && !hasStartStation) {
-                if (route.getStationId().equals(endStationId)) {
-                    return true;
-                }
-                hasStartStation = true;
-            } else if (route.getStationId().equals(endStationId) && hasStartStation) {
-                return true;
-            }
-        }
-        return false;
     }
 }

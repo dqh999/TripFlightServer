@@ -1,4 +1,4 @@
-package com.railgo.domain.account.valueObject;
+package com.railgo.domain.utils.valueObject;
 
 
 import com.railgo.domain.account.component.UserValidator;

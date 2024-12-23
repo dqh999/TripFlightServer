@@ -4,16 +4,16 @@ import com.railgo.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
 
-public class TrainScheduleRouteResponse {
+public class TrainScheduleStopResponse {
     private String id;
     private String stationId;
     private LocalDateTime arrivalTime;
     private Money ticketPrice;
 
-    public TrainScheduleRouteResponse() {
+    public TrainScheduleStopResponse() {
     }
 
-    public TrainScheduleRouteResponse(String id, String stationId, LocalDateTime arrivalTime, Money ticketPrice) {
+    public TrainScheduleStopResponse(String id, String stationId, LocalDateTime arrivalTime, Money ticketPrice) {
         this.id = id;
         this.stationId = stationId;
         this.arrivalTime = arrivalTime;

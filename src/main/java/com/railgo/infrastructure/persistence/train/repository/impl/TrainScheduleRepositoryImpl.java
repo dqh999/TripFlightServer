@@ -36,15 +36,6 @@ public class TrainScheduleRepositoryImpl implements TrainScheduleRepository {
         return repository.findById(id).map(mapper::toDTO);
     }
 
-    @Override
-    public boolean checkConflictingScheduleAtStation(String stationId, LocalDateTime startTime, LocalDateTime endTime){
-        return repository.checkConflictingScheduleAtStation(stationId,startTime,endTime);
-    }
-
-    @Override
-    public boolean checkConflictingSchedules(String trainId, LocalDateTime departureTime) {
-        return repository.checkConflictingSchedule(trainId,departureTime);
-    }
 
     @Override
     public Page<TrainSchedule> findAllSchedules(String departureStationId, String arrivalStationId,
@@ -52,5 +43,9 @@ public class TrainScheduleRepositoryImpl implements TrainScheduleRepository {
                                                 Pageable pageable) {
         return repository.findAllSchedules(departureStationId,arrivalStationId,startDate,endDate,pageable)
                 .map(mapper::toDTO);
+    }
+    @Override
+    public Optional<TrainSchedule> findScheduleByIdAndStations(String scheduleId, String departureStationId, String arrivalStationId) {
+        return repository.findScheduleByIdAndStations(scheduleId,departureStationId,arrivalStationId).map(mapper::toDTO);
     }
 }

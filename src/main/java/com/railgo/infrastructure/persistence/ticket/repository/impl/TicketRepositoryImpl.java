@@ -14,8 +14,7 @@ public class TicketRepositoryImpl implements TicketRepository {
     private final TicketEntityMapper mapper;
 
     @Autowired
-    public TicketRepositoryImpl(TicketEntityRepository repository,
-                                TicketEntityMapper mapper) {
+    public TicketRepositoryImpl(TicketEntityRepository repository, TicketEntityMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
     }

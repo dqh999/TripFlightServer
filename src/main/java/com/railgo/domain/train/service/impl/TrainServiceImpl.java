@@ -29,16 +29,4 @@ public class TrainServiceImpl implements ITrainService {
         return trainRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(TrainApplicationExceptionCode.TRAIN_NOT_FOUND));
     }
-
-    @Override
-    public void reserveSeats(Train train,
-                             int numberOfSeats) {
-
-    }
-
-    @Override
-    public void cancelSeats(Train train,
-                            int numberOfSeats) {
-
-    }
 }

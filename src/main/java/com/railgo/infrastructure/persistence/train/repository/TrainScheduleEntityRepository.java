@@ -8,34 +8,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface TrainScheduleEntityRepository extends JpaRepository<TrainScheduleEntity,String> {
-    @Query("SELECT COUNT(s.id) > 0 " +
+    @Query("SELECT DISTINCT s " +
             "FROM TrainScheduleEntity s " +
-            "WHERE (s.departureStationId = :stationId AND s.departureTime BETWEEN :startTime AND :endTime) " +
-            "OR (s.arrivalStationId = :stationId AND s.arrivalTime BETWEEN :startTime AND :endTime) ")
-    boolean checkConflictingScheduleAtStation(@Param("stationId") String stationId,
-                                              @Param("startTime") LocalDateTime startTime,
-                                              @Param("endTime") LocalDateTime endTime);
-
-    @Query("SELECT COUNT(s.id) > 0 FROM TrainScheduleEntity s " +
-            "WHERE s.train.id = :trainId AND s.arrivalTime < :departureTime")
-    boolean checkConflictingSchedule(String trainId, LocalDateTime departureTime);
-
-    @Query("SELECT DISTINCT s FROM TrainScheduleEntity s " +
-            "JOIN TrainScheduleRouteEntity sr1 ON s.id = sr1.scheduleId " +
-            "JOIN TrainScheduleRouteEntity sr2 ON s.id = sr2.scheduleId " +
-            "WHERE s.status IN ('PENDING', 'SCHEDULED', 'IN_PROGRESS') AND ( (" +
-            "    s.departureStationId = :departureStationId " +
-            "    AND s.departureTime BETWEEN :startDate AND :endDate " +
-            "    AND (s.arrivalStationId = :arrivalStationId OR sr1.stationId = :arrivalStationId) " +
-            ") " +
-            "OR (" +
-            "    sr1.stationId = :departureStationId " +
-            "   AND sr1.arrivalTime BETWEEN :startDate AND :endDate " +
-            "    AND (s.arrivalStationId = :arrivalStationId " +
-            "       OR (sr1.arrivalTime < sr2.arrivalTime AND sr2.stationId = :arrivalStationId)) " +
-            ") )")
+            "   JOIN TrainScheduleStopEntity st1 ON s.id = st1.scheduleId " +
+            "   JOIN TrainScheduleStopEntity st2 ON s.id = st2.scheduleId " +
+            "WHERE s.status IN ('PENDING', 'SCHEDULED', 'IN_PROGRESS') " +
+            "   AND st1.arrivalTime < st2.arrivalTime " +
+            "   AND st1.stationId = :departureStationId " +
+            "   AND st2.stationId = :arrivalStationId " +
+            "   AND st1.arrivalTime BETWEEN :startDate AND :endDate")
     Page<TrainScheduleEntity> findAllSchedules(
             @Param("departureStationId") String departureStationId,
             @Param("arrivalStationId") String arrivalStationId,
@@ -43,4 +27,16 @@ public interface TrainScheduleEntityRepository extends JpaRepository<TrainSchedu
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
+
+    @Query("SELECT s " +
+            "FROM TrainScheduleEntity s " +
+            "   JOIN TrainScheduleStopEntity st1 ON s.id = st1.scheduleId " +
+            "   JOIN TrainScheduleStopEntity st2 ON s.id = st2.scheduleId " +
+            "WHERE s.id = :trainScheduleId " +
+            "   AND st1.arrivalTime < st2.arrivalTime " +
+            "   AND st1.stationId = :departureStationId " +
+            "   AND st2.stationId = :arrivalStationId")
+    Optional<TrainScheduleEntity> findScheduleByIdAndStations(String trainScheduleId,
+                                                    @Param("departureStationId") String departureStationId,
+                                                    @Param("arrivalStationId") String arrivalStationId);
 }

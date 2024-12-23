@@ -1,43 +1,48 @@
 package com.railgo.infrastructure.persistence.ticket.model;
 
-import com.railgo.infrastructure.persistence.train.model.schedule.TrainScheduleEntity;
+import com.railgo.domain.utils.valueObject.Money;
+import com.railgo.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_tickets")
-public class TicketEntity {
+public class TicketEntity extends BaseEntity {
     @Id
     private String id;
-    @Column(name = "user_id")
-    private String userId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id", referencedColumnName = "id", nullable = false)
-    private TrainScheduleEntity schedule;
+    @Column(name = "train_schedule_id")
+    private String trainScheduleId;
     @Column(name = "start_station_id")
     private String startStationId;
     @Column(name = "end_station_id")
     private String endStationId;
-    @Column(name = "return_ticket_id")
-    private String returnTicketId;
+    @Column(name = "total_passengers")
+    private Integer totalPassengers;
     @Column(name = "total_price")
     private BigDecimal totalPrice;
     private String currency;
+    @OneToMany(mappedBy = "ticketId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<PassengerEntity> passengers;
+    @Column(name = "contact_email",nullable = false)
+    private String contactEmail;
     private String status;
 
     public TicketEntity() {
     }
 
-    public TicketEntity(String id, String userId, TrainScheduleEntity schedule, String startStationId, String endStationId, String returnTicketId, BigDecimal totalPrice, String currency, String status) {
+    public TicketEntity(String id, String trainScheduleId, String startStationId, String endStationId,Integer totalPassengers, Money totalPrice, List<PassengerEntity> passengers, String contactEmail, String status) {
         this.id = id;
-        this.userId = userId;
-        this.schedule = schedule;
+        this.trainScheduleId = trainScheduleId;
         this.startStationId = startStationId;
         this.endStationId = endStationId;
-        this.returnTicketId = returnTicketId;
-        this.totalPrice = totalPrice;
+        this.totalPassengers = totalPassengers;
+        this.totalPrice = totalPrice.getValue();
+        this.currency = totalPrice.getCurrency();
         this.currency = currency;
+        this.passengers = passengers;
+        this.contactEmail = contactEmail;
         this.status = status;
     }
 
@@ -49,20 +54,12 @@ public class TicketEntity {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getTrainScheduleId() {
+        return trainScheduleId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public TrainScheduleEntity getSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(TrainScheduleEntity schedule) {
-        this.schedule = schedule;
+    public void setTrainScheduleId(String trainScheduleId) {
+        this.trainScheduleId = trainScheduleId;
     }
 
     public String getStartStationId() {
@@ -81,20 +78,21 @@ public class TicketEntity {
         this.endStationId = endStationId;
     }
 
-    public String getReturnTicketId() {
-        return returnTicketId;
+    public Integer getTotalPassengers() {
+        return totalPassengers;
     }
 
-    public void setReturnTicketId(String returnTicketId) {
-        this.returnTicketId = returnTicketId;
+    public void setTotalPassengers(Integer totalPassengers) {
+        this.totalPassengers = totalPassengers;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public Money getTotalPrice() {
+        return new Money(this.totalPrice, this.currency);
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotalPrice(Money totalPrice) {
+        this.totalPrice = totalPrice.getValue();
+        this.currency = totalPrice.getCurrency();
     }
 
     public String getCurrency() {
@@ -105,6 +103,21 @@ public class TicketEntity {
         this.currency = currency;
     }
 
+    public List<PassengerEntity> getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(List<PassengerEntity> passengers) {
+        this.passengers = passengers;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
 
     public String getStatus() {
         return status;
