@@ -7,8 +7,7 @@ import com.railgo.domain.utils.valueObject.Email;
 import com.railgo.domain.utils.valueObject.Id;
 import com.railgo.domain.utils.valueObject.Money;
 
-import java.util.List;
-
+import java.time.LocalDateTime;
 
 public class Ticket extends BaseModel {
     private Id id;
@@ -16,26 +15,32 @@ public class Ticket extends BaseModel {
     private Id startStationId;
     private Id endStationId;
     private Money totalPrice;
-    private Integer totalPassengers;
-    private List<Passenger> passengers;
+    private Integer childSeats = 0;
+    private Integer adultSeats = 0;
+    private Integer seniorSeats = 0;
     private Email contactEmail;
+    private LocalDateTime expirationTime;
     private TicketStatus status;
 
     public Ticket() {
         this.id = new Id();
     }
 
-    public Ticket(String id, TrainSchedule trainSchedule, String startStationId, String endStationId, Money totalPrice,Integer totalPassengers, List<Passenger> passengers,String contactEmail, String status) {
+
+    public Ticket(String id, TrainSchedule trainSchedule, String startStationId, String endStationId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail,LocalDateTime expirationTime, TicketStatus status) {
         this.id = new Id(id);
         this.trainSchedule = trainSchedule;
         this.startStationId = new Id(startStationId);
         this.endStationId = new Id(endStationId);
         this.totalPrice = totalPrice;
-        this.totalPassengers = totalPassengers;
-        this.passengers = passengers;
+        this.childSeats = childSeats;
+        this.adultSeats = adultSeats;
+        this.seniorSeats = seniorSeats;
         this.contactEmail = new Email(contactEmail);
-        this.status = TicketStatus.valueOf(status);
+        this.expirationTime = expirationTime;
+        this.status = status;
     }
+
 
     public String getId() {
         return id.getValue();
@@ -77,20 +82,28 @@ public class Ticket extends BaseModel {
         this.totalPrice = totalPrice;
     }
 
-    public Integer getTotalPassengers() {
-        return totalPassengers;
+    public Integer getChildSeats() {
+        return childSeats;
     }
 
-    public void setTotalPassengers(Integer totalPassengers) {
-        this.totalPassengers = totalPassengers;
+    public void setChildSeats(Integer childSeats) {
+        this.childSeats = childSeats;
     }
 
-    public List<Passenger> getPassengers() {
-        return passengers;
+    public Integer getAdultSeats() {
+        return adultSeats;
     }
 
-    public void setPassengers(List<Passenger> passengers) {
-        this.passengers = passengers;
+    public void setAdultSeats(Integer adultSeats) {
+        this.adultSeats = adultSeats;
+    }
+
+    public Integer getSeniorSeats() {
+        return seniorSeats;
+    }
+
+    public void setSeniorSeats(Integer seniorSeats) {
+        this.seniorSeats = seniorSeats;
     }
 
     public String getContactEmail() {
@@ -99,6 +112,14 @@ public class Ticket extends BaseModel {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = new Email(contactEmail);
+    }
+
+    public LocalDateTime getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(LocalDateTime expirationTime) {
+        this.expirationTime = expirationTime;
     }
 
     public String getStatus() {

@@ -8,6 +8,8 @@ import com.railgo.infrastructure.persistence.ticket.repository.TicketEntityRepos
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class TicketRepositoryImpl implements TicketRepository {
     private final TicketEntityRepository repository;
@@ -23,5 +25,10 @@ public class TicketRepositoryImpl implements TicketRepository {
     public void save(Ticket ticket) {
         TicketEntity ticketEntity = mapper.toEntity(ticket);
         repository.save(ticketEntity);
+    }
+
+    @Override
+    public Optional<Ticket> findById(String id) {
+        return repository.findById(id).map(mapper::toDTO);
     }
 }

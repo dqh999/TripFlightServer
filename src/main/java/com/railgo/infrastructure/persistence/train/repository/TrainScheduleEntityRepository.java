@@ -16,10 +16,10 @@ public interface TrainScheduleEntityRepository extends JpaRepository<TrainSchedu
             "   JOIN TrainScheduleStopEntity st1 ON s.id = st1.scheduleId " +
             "   JOIN TrainScheduleStopEntity st2 ON s.id = st2.scheduleId " +
             "WHERE s.status IN ('PENDING', 'SCHEDULED', 'IN_PROGRESS') " +
-            "   AND st1.arrivalTime < st2.arrivalTime " +
+            "   AND st1.stopOrder <= st2.stopOrder " +
             "   AND st1.stationId = :departureStationId " +
-            "   AND st2.stationId = :arrivalStationId " +
-            "   AND st1.arrivalTime BETWEEN :startDate AND :endDate")
+            "   AND st2.nextStationId = :arrivalStationId " +
+            "   AND st1.departureTime BETWEEN :startDate AND :endDate")
     Page<TrainScheduleEntity> findAllSchedules(
             @Param("departureStationId") String departureStationId,
             @Param("arrivalStationId") String arrivalStationId,
@@ -33,10 +33,10 @@ public interface TrainScheduleEntityRepository extends JpaRepository<TrainSchedu
             "   JOIN TrainScheduleStopEntity st1 ON s.id = st1.scheduleId " +
             "   JOIN TrainScheduleStopEntity st2 ON s.id = st2.scheduleId " +
             "WHERE s.id = :trainScheduleId " +
-            "   AND st1.arrivalTime < st2.arrivalTime " +
+            "   AND st1.stopOrder <= st2.stopOrder " +
             "   AND st1.stationId = :departureStationId " +
-            "   AND st2.stationId = :arrivalStationId")
-    Optional<TrainScheduleEntity> findScheduleByIdAndStations(String trainScheduleId,
+            "   AND st2.nextStationId = :arrivalStationId")
+    Optional<TrainScheduleEntity> findScheduleByIdAndStations(@Param("trainScheduleId") String trainScheduleId,
                                                     @Param("departureStationId") String departureStationId,
                                                     @Param("arrivalStationId") String arrivalStationId);
 }

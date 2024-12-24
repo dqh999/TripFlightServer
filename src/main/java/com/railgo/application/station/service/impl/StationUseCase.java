@@ -18,15 +18,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class StationUseCase implements IStationUseCase {
     private final IStationService stationService;
-    private final IStationRouteService stationRouteService;
     private final StationMapper stationMapper;
     private final StationRouteMapper stationRouteMapper;
 
     @Autowired
-    public StationUseCase(IStationService stationService,IStationRouteService stationRouteService,
-                          StationMapper stationMapper, StationRouteMapper stationRouteMapper) {
+    public StationUseCase(IStationService stationService,
+                          StationMapper stationMapper,
+                          StationRouteMapper stationRouteMapper) {
         this.stationService = stationService;
-        this.stationRouteService = stationRouteService;
         this.stationMapper = stationMapper;
         this.stationRouteMapper = stationRouteMapper;
     }
@@ -39,6 +38,12 @@ public class StationUseCase implements IStationUseCase {
         Station newStation = stationService.addStation(stationObject);
 
         return stationMapper.toDTO(newStation);
+    }
+
+    @Override
+    public StationResponse getStation(String id) {
+        Station existingStation = stationService.getStation(id);
+        return stationMapper.toDTO(existingStation);
     }
 
     @Override

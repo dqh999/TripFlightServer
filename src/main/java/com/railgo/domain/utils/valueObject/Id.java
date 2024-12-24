@@ -17,8 +17,9 @@ public class Id {
         this.value = generateId();
     }
 
+
     private String generateId() {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     public String getValue() {

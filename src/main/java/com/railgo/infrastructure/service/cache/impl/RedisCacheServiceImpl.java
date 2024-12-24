@@ -1,6 +1,6 @@
-package com.railgo.infrastructure.cache.impl;
+package com.railgo.infrastructure.service.cache.impl;
 
-import com.railgo.infrastructure.cache.CacheService;
+import com.railgo.infrastructure.service.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

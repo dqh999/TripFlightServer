@@ -9,6 +9,7 @@ import com.railgo.infrastructure.security.UserDetail;
 public interface IStationUseCase {
     StationResponse addStation(UserDetail userRequest,
                                AddStationRequest request);
+    StationResponse getStation(String id);
     StationRouteResponse addRoute(UserDetail userRequest,
                                   AddStationRouteRequest request);
 }

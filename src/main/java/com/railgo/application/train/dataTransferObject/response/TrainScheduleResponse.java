@@ -1,6 +1,7 @@
 package com.railgo.application.train.dataTransferObject.response;
 
 
+import com.railgo.application.station.dataTransferObject.response.StationResponse;
 import com.railgo.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
@@ -9,8 +10,8 @@ import java.util.List;
 public class TrainScheduleResponse {
     private String id;
     private TrainResponse train;
-    private String departureStationId;
-    private String arrivalStationId;
+    private StationResponse departureStation;
+    private StationResponse arrivalStation;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
     private Integer totalSeats;
@@ -22,11 +23,11 @@ public class TrainScheduleResponse {
     public TrainScheduleResponse() {
     }
 
-    public TrainScheduleResponse(String id, TrainResponse train, String departureStationId, String arrivalStationId, LocalDateTime departureTime, LocalDateTime arrivalTime,Integer totalSeats, Money ticketPrice, Integer totalStops, List<TrainScheduleStopResponse> stops, String status) {
+    public TrainScheduleResponse(String id, TrainResponse train, StationResponse departureStation, StationResponse arrivalStation, LocalDateTime departureTime, LocalDateTime arrivalTime,Integer totalSeats, Money ticketPrice, Integer totalStops, List<TrainScheduleStopResponse> stops, String status) {
         this.id = id;
         this.train = train;
-        this.departureStationId = departureStationId;
-        this.arrivalStationId = arrivalStationId;
+        this.departureStation = departureStation;
+        this.arrivalStation = arrivalStation;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.totalSeats = totalSeats;
@@ -52,20 +53,20 @@ public class TrainScheduleResponse {
         this.train = train;
     }
 
-    public String getDepartureStationId() {
-        return departureStationId;
+    public StationResponse getDepartureStation() {
+        return departureStation;
     }
 
-    public void setDepartureStationId(String departureStationId) {
-        this.departureStationId = departureStationId;
+    public void setDepartureStation(StationResponse departureStation) {
+        this.departureStation = departureStation;
     }
 
-    public String getArrivalStationId() {
-        return arrivalStationId;
+    public StationResponse getArrivalStation() {
+        return arrivalStation;
     }
 
-    public void setArrivalStationId(String arrivalStationId) {
-        this.arrivalStationId = arrivalStationId;
+    public void setArrivalStation(StationResponse arrivalStation) {
+        this.arrivalStation = arrivalStation;
     }
 
     public LocalDateTime getDepartureTime() {

@@ -1,26 +1,25 @@
 package com.railgo.application.ticket.dataTransferObject.request;
 
 
-import com.railgo.application.ticket.dataTransferObject.PassengerDTO;
-
-import java.util.List;
 
 public class TicketBookingRequest {
     private String trainScheduleId;
     private String startStationId;
     private String endStationId;
-    private List<PassengerDTO> passengers;
-    private String contactEmail;
+    private Integer childSeats = 0;
+    private Integer adultSeats = 0;
+    private Integer seniorSeats = 0;
 
     public TicketBookingRequest() {
     }
 
-    public TicketBookingRequest(String trainScheduleId, String startStationId, String endStationId, List<PassengerDTO> passengers, String contactEmail) {
+    public TicketBookingRequest(String trainScheduleId, String startStationId, String endStationId, Integer childSeats, Integer adultSeats, Integer seniorSeats) {
         this.trainScheduleId = trainScheduleId;
         this.startStationId = startStationId;
         this.endStationId = endStationId;
-        this.passengers = passengers;
-        this.contactEmail = contactEmail;
+        this.childSeats = childSeats;
+        this.adultSeats = adultSeats;
+        this.seniorSeats = seniorSeats;
     }
 
     public String getTrainScheduleId() {
@@ -47,19 +46,28 @@ public class TicketBookingRequest {
         this.endStationId = endStationId;
     }
 
-    public List<PassengerDTO> getPassengers() {
-        return passengers;
+    public Integer getChildSeats() {
+        return childSeats;
     }
 
-    public void setPassengers(List<PassengerDTO> passengers) {
-        this.passengers = passengers;
+    public void setChildSeats(Integer childSeats) {
+        this.childSeats = childSeats;
     }
 
-    public String getContactEmail() {
-        return contactEmail;
+    public Integer getAdultSeats() {
+        return adultSeats;
     }
 
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
+    public void setAdultSeats(Integer adultSeats) {
+        this.adultSeats = adultSeats;
     }
+
+    public Integer getSeniorSeats() {
+        return seniorSeats;
+    }
+
+    public void setSeniorSeats(Integer seniorSeats) {
+        this.seniorSeats = seniorSeats;
+    }
+
 }

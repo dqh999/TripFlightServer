@@ -1,14 +1,18 @@
 package com.railgo.domain.train.model.schedule;
 
+import com.railgo.domain.utils.model.BaseModel;
 import com.railgo.domain.utils.valueObject.Id;
 import com.railgo.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
 
-public class TrainScheduleStop {
+public class TrainScheduleStop extends BaseModel {
     private Id id;
-    private String scheduleId;
-    private String stationId;
+    private Id scheduleId;
+    private Integer stopOrder;
+    private Id stationId;
+    private LocalDateTime departureTime;
+    private Id nextStationId;
     private LocalDateTime arrivalTime;
     private Integer availableSeats;
     private Money ticketPrice;
@@ -17,18 +21,25 @@ public class TrainScheduleStop {
         this.id = new Id();
     }
 
-    public TrainScheduleStop(String stationId, LocalDateTime arrivalTime,Integer availableSeats, Money ticketPrice) {
+
+    public TrainScheduleStop(Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice) {
         this.id = new Id();
-        this.stationId = stationId;
+        this.stopOrder = stopOrder;
+        this.stationId = new Id(stationId);
+        this.departureTime = departureTime;
+        this.nextStationId = new Id(nextStationId);
         this.arrivalTime = arrivalTime;
         this.availableSeats = availableSeats;
         this.ticketPrice = ticketPrice;
     }
 
-    public TrainScheduleStop(String id, String scheduleId, String stationId, LocalDateTime arrivalTime,Integer availableSeats, Money ticketPrice) {
+    public TrainScheduleStop(String id, String scheduleId, Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice) {
         this.id = new Id(id);
-        this.scheduleId = scheduleId;
-        this.stationId = stationId;
+        this.scheduleId = new Id(scheduleId);
+        this.stopOrder = stopOrder;
+        this.stationId = new Id(stationId);
+        this.departureTime = departureTime;
+        this.nextStationId = new Id(nextStationId);
         this.arrivalTime = arrivalTime;
         this.availableSeats = availableSeats;
         this.ticketPrice = ticketPrice;
@@ -43,19 +54,43 @@ public class TrainScheduleStop {
     }
 
     public String getScheduleId() {
-        return scheduleId;
+        return scheduleId.getValue();
     }
 
     public void setScheduleId(String scheduleId) {
-        this.scheduleId = scheduleId;
+        this.scheduleId = new Id(scheduleId);
+    }
+
+    public Integer getStopOrder() {
+        return stopOrder;
+    }
+
+    public void setStopOrder(Integer stopOrder) {
+        this.stopOrder = stopOrder;
     }
 
     public String getStationId() {
-        return stationId;
+        return stationId.getValue();
     }
 
     public void setStationId(String stationId) {
-        this.stationId = stationId;
+        this.stationId = new Id(stationId);
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public String getNextStationId() {
+        return nextStationId.getValue();
+    }
+
+    public void setNextStationId(String nextStationId) {
+        this.nextStationId = new Id(nextStationId);
     }
 
     public LocalDateTime getArrivalTime() {
@@ -75,7 +110,7 @@ public class TrainScheduleStop {
     }
 
     public Money getTicketPrice() {
-        return this.ticketPrice;
+        return ticketPrice;
     }
 
     public void setTicketPrice(Money ticketPrice) {

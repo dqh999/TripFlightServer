@@ -16,7 +16,7 @@ import com.railgo.domain.account.model.User;
 import com.railgo.domain.account.service.ITokenService;
 import com.railgo.domain.account.service.IUserService;
 import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.infrastructure.cache.CacheService;
+import com.railgo.infrastructure.service.cache.CacheService;
 import com.railgo.infrastructure.security.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

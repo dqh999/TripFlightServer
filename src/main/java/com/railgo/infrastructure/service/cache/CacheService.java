@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.cache;
+package com.railgo.infrastructure.service.cache;
 
 public interface CacheService {
 

@@ -53,4 +53,11 @@ public class Money {
         }
         return new Money(this.value.subtract(other.value), this.currency.getValue());
     }
+    public Money multiply(BigDecimal multiplier) {
+        if (multiplier == null || multiplier.compareTo(BigDecimal.ZERO) < 0) {
+            throw new BusinessException("Multiplier cannot be null or negative.");
+        }
+        BigDecimal newValue = this.value.multiply(multiplier);
+        return new Money(newValue, this.currency.getValue());
+    }
 }

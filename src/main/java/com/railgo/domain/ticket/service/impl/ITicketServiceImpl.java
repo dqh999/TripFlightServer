@@ -1,54 +1,100 @@
 package com.railgo.domain.ticket.service.impl;
 
 import com.railgo.domain.ticket.exception.TicketExceptionCode;
-import com.railgo.domain.ticket.model.Passenger;
 import com.railgo.domain.ticket.model.Ticket;
 import com.railgo.domain.ticket.repository.TicketRepository;
+import com.railgo.domain.ticket.service.ITicketPricingService;
 import com.railgo.domain.ticket.service.ITicketService;
 import com.railgo.domain.ticket.type.TicketStatus;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
 import com.railgo.domain.utils.exception.BusinessException;
+import com.railgo.domain.utils.valueObject.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
+import java.time.LocalDateTime;
+
 
 @Service
 public class ITicketServiceImpl implements ITicketService {
+    private static final long CONFIRMATION_TIMEOUT_MINUTES = 15;
+    private static final long PAYMENT_TIMEOUT_MINUTES = 15;
+
+    private final ITicketPricingService ticketPricingService;
     private final TicketRepository ticketRepository;
     private final ITrainScheduleStopService trainScheduleStopService;
 
     @Autowired
-    public ITicketServiceImpl(TicketRepository ticketRepository, ITrainScheduleStopService trainScheduleStopService) {
+    public ITicketServiceImpl(ITicketPricingService ticketPricingService,
+                              TicketRepository ticketRepository,
+                              ITrainScheduleStopService trainScheduleStopService) {
+        this.ticketPricingService = ticketPricingService;
         this.ticketRepository = ticketRepository;
         this.trainScheduleStopService = trainScheduleStopService;
     }
 
     @Override
     public Ticket book(Ticket ticket) {
-        validateTicket(ticket);
+        validateTicketForBooking(ticket);
 
-        ticket.setStatus(TicketStatus.CONFIRMED.getValue());
+        int totalSeats = getTotalSeats(ticket);
+        int availableSeats = trainScheduleStopService.calculateAvailableSeats(ticket.getTrainSchedule().getStops(), ticket.getStartStationId(), ticket.getEndStationId());
+        if (totalSeats < availableSeats) {
+            throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
+        }
+        Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(ticket.getTrainSchedule());
+        Money totalPrice = ticketPricingService.calculateTicketPriceForPassengers(
+                standardTicketPrice, ticket.getChildSeats(), ticket.getAdultSeats(), ticket.getSeniorSeats()
+        );
 
-        trainScheduleStopService.updateAvailableSeats(ticket.getTrainSchedule().getStops(),ticket.getStartStationId(),ticket.getEndStationId(),ticket.getTotalPassengers());
+        ticket.setTotalPrice(totalPrice);
+        ticket.setExpirationTime(LocalDateTime.now().plusMinutes(CONFIRMATION_TIMEOUT_MINUTES));
+        ticket.setStatus(TicketStatus.PENDING.getValue());
 
         ticketRepository.save(ticket);
-
         return ticket;
     }
+    private void validateTicketForBooking(Ticket ticket) {
+        int totalSeats = getTotalSeats(ticket);
 
-    private void validateTicket(Ticket ticket) {
-        validatePassenger(ticket.getPassengers());
+        if (totalSeats <= 0 || totalSeats >= 10) {
+            throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
+        }
+    }
+    private int getTotalSeats(Ticket ticket) {
+        return ticket.getChildSeats() + ticket.getAdultSeats() + ticket.getSeniorSeats();
     }
 
-    private void validatePassenger(List<Passenger> passengers) {
-        passengers.forEach(passenger -> {
-            int age = Period.between(passenger.getDateOfBirth(), LocalDate.now()).getYears();
-            if (age < 16) {
-                throw new BusinessException(TicketExceptionCode.INVALID_PASSENGER_AGE);
-            }
-        });
+    @Override
+    public void confirm(Ticket ticket) {
+        validateTicketForConfirmation(ticket);
+        int totalSeats = getTotalSeats(ticket);
+
+        trainScheduleStopService.updateAvailableSeats(
+                ticket.getTrainSchedule().getStops(),
+                ticket.getStartStationId(), ticket.getEndStationId(),
+                totalSeats);
+
+        ticket.setExpirationTime(LocalDateTime.now().plusMinutes(PAYMENT_TIMEOUT_MINUTES));
+        ticket.setStatus(TicketStatus.CONFIRMED.getValue());
+        ticketRepository.save(ticket);
+    }
+
+    private void validateTicketForConfirmation(Ticket ticket) {
+        if (!ticket.getStatus().equals(TicketStatus.PENDING.getValue())) {
+            throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
+        }
+        if (ticket.getExpirationTime().isBefore(LocalDateTime.now())) {
+            throw new BusinessException(TicketExceptionCode.CONFIRMATION_EXPIRED);
+        }
+        if (ticket.getContactEmail() == null) {
+            throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
+        }
+    }
+
+    @Override
+    public Ticket getTicket(String id) {
+        return ticketRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(TicketExceptionCode.TICKET_NOT_FOUND));
     }
 }

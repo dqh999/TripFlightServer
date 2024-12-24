@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public interface ITrainScheduleService {
     TrainSchedule addSchedule(TrainSchedule trainSchedule);
 
-    TrainSchedule getSchedule(String id);
     TrainSchedule getScheduleByIdAndStations(String id, String departureStationId, String arrivalStationId);
     Page<TrainSchedule> getAllSchedules(String departureStationId, String arrivalStationId,
                                         LocalDateTime departureTime,

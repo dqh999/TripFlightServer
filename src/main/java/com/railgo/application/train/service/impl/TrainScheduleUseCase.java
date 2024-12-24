@@ -1,5 +1,7 @@
 package com.railgo.application.train.service.impl;
 
+import com.railgo.application.station.dataTransferObject.response.StationResponse;
+import com.railgo.application.station.service.IStationUseCase;
 import com.railgo.application.train.dataTransferObject.request.AddTrainScheduleRequest;
 import com.railgo.application.train.dataTransferObject.response.TrainScheduleResponse;
 import com.railgo.application.train.dataTransferObject.response.TrainScheduleStopResponse;
@@ -19,7 +21,6 @@ import com.railgo.domain.train.service.ITrainScheduleStopService;
 import com.railgo.domain.train.service.ITrainService;
 import com.railgo.domain.utils.type.Currency;
 import com.railgo.domain.utils.valueObject.Money;
-import com.railgo.infrastructure.exception.ApplicationException;
 import com.railgo.infrastructure.security.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,7 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
     private final ITrainService trainService;
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
+    private final IStationUseCase stationUseCase;
     private final IStationService stationService;
     private final IStationRouteService stationRouteService;
     private final ITicketPricingService ticketPricingService;
@@ -46,6 +48,7 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
     public TrainScheduleUseCase(ITrainService trainService,
                                 ITrainScheduleService trainScheduleService,
                                 ITrainScheduleStopService trainScheduleStopService,
+                                IStationUseCase stationUseCase,
                                 IStationService stationService,
                                 IStationRouteService stationRouteService,
                                 ITicketPricingService ticketPricingService,
@@ -53,6 +56,7 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
         this.trainService = trainService;
         this.trainScheduleService = trainScheduleService;
         this.trainScheduleStopService = trainScheduleStopService;
+        this.stationUseCase =  stationUseCase;
         this.stationService = stationService;
         this.stationRouteService = stationRouteService;
         this.ticketPricingService = ticketPricingService;
@@ -70,157 +74,98 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
         List<StationRoute> routes = stationRouteService.getRoutesBetweenStations(departureStation, arrivalStation, train);
         List<TrainScheduleStop> trainScheduleStops = buildTrainScheduleStops(routes, train, request.getDepartureTime());
 
-        Money ticketPrice = calculateTicketPrice(trainScheduleStops);
-        TrainSchedule trainSchedule = buildTrainSchedule(train, ticketPrice, trainScheduleStops);
+        TrainSchedule trainSchedule = buildTrainSchedule(train, trainScheduleStops);
         TrainSchedule newTrainSchedule = trainScheduleService.addSchedule(trainSchedule);
 
-        return buildTrainScheduleResponse(newTrainSchedule, departureStation.getId(), arrivalStation.getId());
+        TrainScheduleResponse response = buildTrainScheduleResponse(newTrainSchedule);
+
+        Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(trainSchedule);
+
+        response.setTicketPrice(standardTicketPrice);
+
+        return response;
     }
 
     private List<TrainScheduleStop> buildTrainScheduleStops(List<StationRoute> routes,
                                                             Train train,
                                                             LocalDateTime departureTime) {
         List<TrainScheduleStop> scheduleRoutes = new ArrayList<>();
-
-        String currency = Currency.VND.getValue();
-
-        TrainScheduleStop trainScheduleStopFirst = createTrainScheduleStop(train,routes.getFirst().getStationA().getId(), departureTime, BigDecimal.ZERO, currency);
-        scheduleRoutes.add(trainScheduleStopFirst);
-
         LocalDateTime currentDepartureTime = departureTime;
 
-        for (StationRoute route : routes) {
+        for (int i = 0; i < routes.size(); i++) {
+            StationRoute route = routes.get(i);
+            Station stationA = route.getStationA();
             Station stationB = route.getStationB();
 
-            Double travelTime = stationRouteService.getTravelTime(route.getStationA(), stationB, train);
-
+            Double travelTime = stationRouteService.getTravelTime(stationA, stationB, train);
             LocalDateTime nextArrivalTime = currentDepartureTime.plusMinutes((long) (travelTime * 60));
 
-            Money ticketPrice = ticketPricingService.calculateTicketPrice(train, route);
+            Money ticketPrice = ticketPricingService.calculateBaseFareForRoute(train, route);
 
-            TrainScheduleStop trainScheduleStopB = createTrainScheduleStop(train,stationB.getId(), nextArrivalTime, ticketPrice.getValue(), currency);
-            scheduleRoutes.add(trainScheduleStopB);
+            TrainScheduleStop trainScheduleStop = new TrainScheduleStop(i, stationA.getId(), departureTime, stationB.getId(), nextArrivalTime, train.getTotalSeats(), ticketPrice);
+            scheduleRoutes.add(trainScheduleStop);
 
-            currentDepartureTime = nextArrivalTime;
+            currentDepartureTime = nextArrivalTime.plusMinutes(15);
         }
         return scheduleRoutes;
     }
 
-    private TrainScheduleStop createTrainScheduleStop(Train train,String stationId, LocalDateTime arrivalTime, BigDecimal ticketPrice, String currency) {
-        return new TrainScheduleStop(stationId, arrivalTime,train.getTotalSeats(), new Money(ticketPrice, currency));
-    }
-
-    public Money calculateTicketPrice(List<TrainScheduleStop> trainScheduleStops) {
-        Money ticketPrice = new Money(BigDecimal.ZERO, Currency.VND.getValue());
-        for (TrainScheduleStop trainScheduleStop : trainScheduleStops) {
-            ticketPrice = ticketPrice.add(trainScheduleStop.getTicketPrice());
-        }
-        return ticketPrice;
-    }
-
-    private TrainSchedule buildTrainSchedule(Train train, Money totalPrice,
+    private TrainSchedule buildTrainSchedule(Train train,
                                              List<TrainScheduleStop> trainScheduleStops) {
-        TrainSchedule trainSchedule = new TrainSchedule(train, totalPrice);
+        TrainSchedule trainSchedule = new TrainSchedule();
+        trainSchedule.setTrain(train);
         trainSchedule.setTotalStops(trainScheduleStops.size());
         trainScheduleStops.forEach(route -> route.setScheduleId(trainSchedule.getId()));
         trainSchedule.setStops(trainScheduleStops);
         return trainSchedule;
     }
 
-    @Override
-    public TrainScheduleResponse buildTrainScheduleResponse(TrainSchedule trainSchedule,
-                                                             String departureStationId, String arrivalStationId) {
+
+    private TrainScheduleResponse buildTrainScheduleResponse(TrainSchedule trainSchedule) {
         TrainScheduleResponse trainScheduleResponse = trainScheduleMapper.toDTO(trainSchedule);
+
         List<TrainScheduleStopResponse> trainScheduleStops = trainScheduleResponse.getStops();
 
-        int totalSeats = trainScheduleStopService.calculateAvailableSeats(trainSchedule.getStops(),departureStationId,arrivalStationId);
-        trainScheduleResponse.setTotalSeats(totalSeats);
-
         TrainScheduleStopResponse trainScheduleStopFirst = trainScheduleStops.getFirst();
+        StationResponse departureStation = stationUseCase.getStation(trainScheduleStopFirst.getStationId());
+        trainScheduleResponse.setDepartureStation(departureStation);
+        trainScheduleResponse.setDepartureTime(trainScheduleStopFirst.getDepartureTime());
+
         TrainScheduleStopResponse trainScheduleStopLast = trainScheduleStops.getLast();
-
-        if (!trainScheduleStopFirst.getStationId().equals(departureStationId)
-                || !trainScheduleStopLast.getStationId().equals(arrivalStationId)) {
-            adjustForMismatchedStations(trainScheduleResponse, trainScheduleResponse.getStops(), departureStationId, arrivalStationId);
-            return trainScheduleResponse;
-        }
-
-        trainScheduleResponse.setDepartureStationId(trainScheduleStopFirst.getStationId());
-        trainScheduleResponse.setDepartureTime(trainScheduleStopFirst.getArrivalTime());
-        trainScheduleResponse.setArrivalStationId(trainScheduleStopLast.getStationId());
+        StationResponse arrivalStation = stationUseCase.getStation(trainScheduleStopLast.getNextStationId());
+        trainScheduleResponse.setArrivalStation(arrivalStation);
         trainScheduleResponse.setArrivalTime(trainScheduleStopLast.getArrivalTime());
 
-        if (trainScheduleStops.size() > 2) {
-            trainScheduleStops = trainScheduleStops.subList(1, trainScheduleStops.size() - 1);
-        } else {
-            trainScheduleStops.clear();
-        }
-
-        trainScheduleResponse.setTotalStops(trainSchedule.getTotalStops() - 2);
-        trainScheduleResponse.setStops(trainScheduleStops);
-
         return trainScheduleResponse;
-    }
-
-    private void adjustForMismatchedStations(TrainScheduleResponse trainScheduleResponse,
-                                             List<TrainScheduleStopResponse> trainScheduleStops,
-                                             String departureStationId, String arrivalStationId) {
-
-        String currency = trainScheduleStops.getFirst().getTicketPrice().getCurrency();
-        Money totalPrice = new Money(BigDecimal.ZERO, currency);
-
-        boolean foundDeparture = false;
-        int indexFoundDeparture = 0;
-
-        for (int i = 0; i < trainScheduleStops.size(); i++) {
-            TrainScheduleStopResponse trainScheduleStop = trainScheduleStops.get(i);
-
-            if (foundDeparture) {
-                totalPrice = totalPrice.add(trainScheduleStop.getTicketPrice());
-            }
-            if (trainScheduleStop.getStationId().equals(departureStationId)) {
-                foundDeparture = true;
-                indexFoundDeparture = i;
-
-                trainScheduleResponse.setDepartureStationId(departureStationId);
-                trainScheduleResponse.setDepartureTime(trainScheduleStop.getArrivalTime());
-
-                continue;
-            }
-            if (trainScheduleStop.getStationId().equals(arrivalStationId) && foundDeparture) {
-                trainScheduleResponse.setArrivalStationId(arrivalStationId);
-                trainScheduleResponse.setArrivalTime(trainScheduleStop.getArrivalTime());
-                trainScheduleResponse.setTicketPrice(totalPrice);
-                trainScheduleResponse.setTotalStops(i - indexFoundDeparture - 1);
-                trainScheduleResponse.setStops(trainScheduleStops.subList(indexFoundDeparture + 1, i));
-
-                return;
-            }
-        }
-        throw new ApplicationException("Departure or Arrival station mismatch.");
-    }
-
-    @Override
-    public TrainScheduleResponse getTrainScheduleByIdAndStations(String trainScheduleId, String departureStationId, String arrivalStationId) {
-        TrainSchedule trainSchedule = trainScheduleService.getScheduleByIdAndStations(trainScheduleId, departureStationId, arrivalStationId);
-        return buildTrainScheduleResponse(trainSchedule, departureStationId, arrivalStationId);
     }
 
     @Override
     public PageResponse<TrainScheduleResponse> getAllSchedules(String departureStationId, String arrivalStationId,
                                                                LocalDateTime departureTime,
+                                                               int childSeats, int adultSeats, int seniorSeats,
                                                                int pageNo, int pageSize, String sortBy) {
         Page<TrainSchedule> trainSchedulePage = trainScheduleService.getAllSchedules(departureStationId, arrivalStationId, departureTime, pageNo, pageSize);
 
         List<TrainScheduleResponse> trainScheduleResponses = trainSchedulePage.stream()
-                .map(trainSchedule -> buildTrainScheduleResponse(trainSchedule, departureStationId, arrivalStationId))
+                .filter(trainSchedule -> {
+                    int totalAvailableSeat = trainScheduleStopService.calculateAvailableSeats(trainSchedule.getStops(),departureStationId, arrivalStationId);
+                    int totalRequestSeat = childSeats + adultSeats + seniorSeats;
+                    return totalAvailableSeat >= totalRequestSeat;
+                })
+                .map(trainSchedule -> {
+                    TrainScheduleResponse response = buildTrainScheduleResponse(trainSchedule);
+                    Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(trainSchedule);
+                    Money ticketPrice = ticketPricingService.calculateTicketPriceForPassengers(standardTicketPrice,childSeats,adultSeats,seniorSeats);
+                    response.setTicketPrice(ticketPrice);
+                    return response;
+                })
                 .collect(Collectors.toList());
 
         return new PageResponse<>(
                 (int) trainSchedulePage.getTotalElements(),
                 trainSchedulePage.getTotalPages(),
                 pageNo,
-                trainSchedulePage.getSize(),
+                trainScheduleResponses.size(),
                 trainScheduleResponses,
                 trainSchedulePage.hasNext(),
                 trainSchedulePage.hasPrevious()

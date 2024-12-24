@@ -2,15 +2,15 @@ package com.railgo.domain.train.model.schedule;
 
 import com.railgo.domain.train.model.Train;
 import com.railgo.domain.train.type.TrainScheduleStatus;
+import com.railgo.domain.utils.model.BaseModel;
 import com.railgo.domain.utils.valueObject.Id;
 import com.railgo.domain.utils.valueObject.Money;
 
 import java.util.List;
 
-public class TrainSchedule {
+public class TrainSchedule extends BaseModel {
     private Id id;
     private Train train;
-    private Money ticketPrice;
     private Integer totalStops;
     private List<TrainScheduleStop> stops;
     private TrainScheduleStatus status;
@@ -19,16 +19,10 @@ public class TrainSchedule {
         this.id = new Id();
     }
 
-    public TrainSchedule(Train train,Money ticketPrice) {
-        this.id = new Id();
-        this.train = train;
-        this.ticketPrice = ticketPrice;
-    }
 
-    public TrainSchedule(String id, Train train, Money ticketPrice, Integer totalStops, List<TrainScheduleStop> stops, String status) {
+    public TrainSchedule(String id, Train train, Integer totalStops, List<TrainScheduleStop> stops, String status) {
         this.id = new Id(id);
         this.train = train;
-        this.ticketPrice = ticketPrice;
         this.totalStops = totalStops;
         this.stops = stops;
         this.status = TrainScheduleStatus.valueOf(status);
@@ -48,14 +42,6 @@ public class TrainSchedule {
 
     public void setTrain(Train train) {
         this.train = train;
-    }
-
-    public Money getTicketPrice() {
-        return this.ticketPrice;
-    }
-
-    public void setTicketPrice(Money ticketPrice) {
-        this.ticketPrice = ticketPrice;
     }
 
     public Integer getTotalStops() {

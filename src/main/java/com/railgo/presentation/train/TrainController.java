@@ -36,11 +36,12 @@ public class TrainController {
                 .withData(result)
                 .toEntity();
     }
+
     @PostMapping("/schedule")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handelAddSchedule(@AuthenticationPrincipal UserDetail userRequest,
                                                @RequestBody AddTrainScheduleRequest request) {
-        var result = trainScheduleUseCase.addTrainSchedule(userRequest,request);
+        var result = trainScheduleUseCase.addTrainSchedule(userRequest, request);
         return ApiResponse.build().withData(result).toEntity();
     }
 
@@ -48,10 +49,13 @@ public class TrainController {
     public ResponseEntity<?> handelGetAllSchedules(@RequestParam String departureStationId,
                                                    @RequestParam String arrivalStationId,
                                                    @RequestParam LocalDateTime departureTime,
+                                                   @RequestParam(defaultValue = "0") int childSeats,
+                                                   @RequestParam(defaultValue = "1") int adultSeats,
+                                                   @RequestParam(defaultValue = "0") int seniorSeats,
                                                    @RequestParam(defaultValue = "1") int page,
                                                    @RequestParam(defaultValue = "10") int pageSize,
                                                    @RequestParam String sortBy) {
-        var result = trainScheduleUseCase.getAllSchedules(departureStationId, arrivalStationId, departureTime, page, pageSize, sortBy);
+        var result = trainScheduleUseCase.getAllSchedules(departureStationId, arrivalStationId, departureTime, childSeats, adultSeats, seniorSeats, page, pageSize, sortBy);
         return ApiResponse.build()
                 .withData(result)
                 .toEntity();

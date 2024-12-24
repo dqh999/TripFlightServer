@@ -18,8 +18,14 @@ public class TrainScheduleStopEntity extends BaseEntity {
     private String id;
     @Column(name = "schedule_id")
     private String scheduleId;
+    @Column(name = "stop_order")
+    private Integer stopOrder;
     @Column(name = "station_id")
     private String stationId;
+    @Column(name = "departure_time")
+    private LocalDateTime departureTime;
+    @Column(name = "next_station_id")
+    private String nextStationId;
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
     @Column(name = "available_seats")
@@ -31,14 +37,17 @@ public class TrainScheduleStopEntity extends BaseEntity {
     public TrainScheduleStopEntity() {
     }
 
-    public TrainScheduleStopEntity(String id, String scheduleId, String stationId, LocalDateTime arrivalTime,Integer availableSeats, BigDecimal ticketPrice, String currency) {
+    public TrainScheduleStopEntity(String id, String scheduleId, Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice) {
         this.id = id;
         this.scheduleId = scheduleId;
+        this.stopOrder = stopOrder;
         this.stationId = stationId;
+        this.departureTime = departureTime;
+        this.nextStationId = nextStationId;
         this.arrivalTime = arrivalTime;
         this.availableSeats = availableSeats;
-        this.ticketPrice = ticketPrice;
-        this.currency = currency;
+        this.ticketPrice = ticketPrice.getValue();
+        this.currency = ticketPrice.getCurrency();
     }
 
     public String getId() {
@@ -57,12 +66,36 @@ public class TrainScheduleStopEntity extends BaseEntity {
         this.scheduleId = scheduleId;
     }
 
+    public Integer getStopOrder() {
+        return stopOrder;
+    }
+
+    public void setStopOrder(Integer stopOrder) {
+        this.stopOrder = stopOrder;
+    }
+
     public String getStationId() {
         return stationId;
     }
 
     public void setStationId(String stationId) {
         this.stationId = stationId;
+    }
+
+    public LocalDateTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalDateTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public String getNextStationId() {
+        return nextStationId;
+    }
+
+    public void setNextStationId(String nextStationId) {
+        this.nextStationId = nextStationId;
     }
 
     public LocalDateTime getArrivalTime() {
@@ -82,7 +115,7 @@ public class TrainScheduleStopEntity extends BaseEntity {
     }
 
     public Money getTicketPrice() {
-        return new Money(ticketPrice,currency);
+        return new Money(this.ticketPrice, this.currency);
     }
 
     public void setTicketPrice(Money ticketPrice) {
