@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Success</title>
+</head>
+<body>
+<h1>Thank You, <span th:text="${name}">Customer</span>!</h1>
+<p>Your payment for ticket ID <strong th:text="${ticketId}">12345</strong> has been successfully processed.</p>
+<p>Details:</p>
+<ul>
+    <li>Train: <span th:text="${trainName}">Train Name</span></li>
+    <li>Date: <span th:text="${date}">Travel Date</span></li>
+    <li>Amount Paid: <span th:text="${amount}">0.00</span></li>
+    <li>Payment Method: <span th:text="${paymentMethod}">Credit Card</span></li>
+</ul>
+<p>Enjoy your journey!</p>
+</body>
+</html>

@@ -17,11 +17,13 @@ import com.railgo.domain.ticket.service.ITicketService;
 import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.train.service.ITrainScheduleService;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
+import com.railgo.infrastructure.service.messaging.EmailService;
+import com.railgo.infrastructure.util.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Map;
 
 @Service
 public class TicketUseCaseImpl implements ITicketUseCase {
@@ -31,6 +33,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
     private final IPaymentService paymentService;
+    private final EmailService emailService;
 
     @Autowired
     public TicketUseCaseImpl(ITicketService ticketService,
@@ -38,13 +41,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                              IStationUseCase stationUseCase,
                              ITrainScheduleService trainScheduleService,
                              ITrainScheduleStopService trainScheduleStopService,
-                             IPaymentService paymentService) {
+                             IPaymentService paymentService,
+                             EmailService emailService) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
         this.stationUseCase = stationUseCase;
         this.trainScheduleService = trainScheduleService;
         this.trainScheduleStopService = trainScheduleStopService;
         this.paymentService = paymentService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -94,7 +99,6 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         Ticket existTicket = ticketService.getTicket(ticketId);
         existTicket.setContactEmail(request.getContactEmail());
         Ticket ticket = ticketService.confirm(existTicket);
-        TicketResponse ticketResponse = buildTicketResponse(ticket);
 
         InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
                 request.getIpAddress(),
@@ -102,15 +106,41 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                 ticketId,
                 existTicket.getTotalPrice()
         );
+        emailService.send(request.getContactEmail(), Template.CONFIRM_TICKET, Map.of(
+                "name", "John Doe",
+                "ticketId", "12345",
+                "trainName", "Express Train 123",
+                "date", "2024-12-25",
+                "amount", "700,000 VND",
+                "paymentMethod", "Credit Card"
+        ));
+
         InitPaymentResponse initPaymentResponse = paymentService.init(initPaymentRequest);
+        TicketResponse ticketResponse = buildTicketResponse(ticket);
         return new TicketConfirmationResponse(ticketResponse,initPaymentResponse);
     }
+    private void sendTicketConfirmationEmail(String email, Ticket ticket) {
+        Map<String, Object> emailVariables = buildEmailVariables(ticket);
+        emailService.send(email, Template.CONFIRM_TICKET, emailVariables);
+    }
 
+    // Phương thức xây dựng các biến cho email
+    private Map<String, Object> buildEmailVariables(Ticket ticket) {
+        return Map.of(
+                "name", ticket.getContactName(),
+                "ticketId", ticket.getId(),
+                "trainName", ticket.getTrainName(),
+                "date", ticket.getTravelDate().toString(),
+                "amount", formatAmount(ticket.getTotalPrice()),
+                "paymentMethod", ticket.getPaymentMethod()
+        );
+    }
     @Override
     public void finalizePayment(String ticketId) {
         Ticket existTicket = ticketService.getTicket(ticketId);
         Ticket ticket = ticketService.confirmPayment(existTicket);
 
+        String contactEmail = ticket.getContactEmail();
         System.out.println("Confirm payment success!");
     }
 

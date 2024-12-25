@@ -24,6 +24,9 @@ dependencies {
 	implementation("org.springframework.data:spring-data-redis:3.4.1")
 	implementation("redis.clients:jedis:4.4.3")
 
+	implementation("org.springframework.boot:spring-boot-starter-mail:3.4.1")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.4.1")
+
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	implementation("org.mapstruct:mapstruct-processor:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")

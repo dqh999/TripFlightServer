@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Confirmation</title>
+</head>
+<body>
+<h1>Hello, <span th:text="${name}">Customer</span>!</h1>
+<p>Your ticket with ID <strong th:text="${ticketId}">12345</strong> has been successfully booked.</p>
+<p>Details:</p>
+<ul>
+    <li>Train: <span th:text="${trainName}">Train Name</span></li>
+    <li>Date: <span th:text="${date}">Travel Date</span></li>
+    <li>Amount: <span th:text="${amount}">0.00</span></li>
+</ul>
+<p>We look forward to seeing you on board!</p>
+</body>
+</html>
