@@ -39,7 +39,7 @@ public class ITicketServiceImpl implements ITicketService {
 
         int totalSeats = getTotalSeats(ticket);
         int availableSeats = trainScheduleStopService.calculateAvailableSeats(ticket.getTrainSchedule().getStops(), ticket.getStartStationId(), ticket.getEndStationId());
-        if (totalSeats < availableSeats) {
+        if (totalSeats > availableSeats) {
             throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
         }
         Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(ticket.getTrainSchedule());
@@ -66,18 +66,13 @@ public class ITicketServiceImpl implements ITicketService {
     }
 
     @Override
-    public void confirm(Ticket ticket) {
+    public Ticket confirm(Ticket ticket) {
         validateTicketForConfirmation(ticket);
-        int totalSeats = getTotalSeats(ticket);
-
-        trainScheduleStopService.updateAvailableSeats(
-                ticket.getTrainSchedule().getStops(),
-                ticket.getStartStationId(), ticket.getEndStationId(),
-                totalSeats);
 
         ticket.setExpirationTime(LocalDateTime.now().plusMinutes(PAYMENT_TIMEOUT_MINUTES));
         ticket.setStatus(TicketStatus.CONFIRMED.getValue());
         ticketRepository.save(ticket);
+        return ticket;
     }
 
     private void validateTicketForConfirmation(Ticket ticket) {
@@ -90,6 +85,20 @@ public class ITicketServiceImpl implements ITicketService {
         if (ticket.getContactEmail() == null) {
             throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
         }
+    }
+
+    @Override
+    public Ticket confirmPayment(Ticket ticket) {
+        int totalSeats = getTotalSeats(ticket);
+
+        trainScheduleStopService.updateAvailableSeats(
+                ticket.getTrainSchedule().getStops(),
+                ticket.getStartStationId(), ticket.getEndStationId(),
+                totalSeats);
+
+        ticket.setStatus(TicketStatus.PAID.getValue());
+        ticketRepository.save(ticket);
+        return ticket;
     }
 
     @Override

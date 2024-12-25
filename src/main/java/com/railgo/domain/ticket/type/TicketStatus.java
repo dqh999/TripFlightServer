@@ -3,6 +3,7 @@ package com.railgo.domain.ticket.type;
 public enum TicketStatus {
     PENDING("PENDING"),
     CONFIRMED("CONFIRMED"),
+    PAID("PAID"),
     CANCELLED("CANCELLED"),
     REFUNDED("REFUNDED"),
     EXPIRED("EXPIRED");

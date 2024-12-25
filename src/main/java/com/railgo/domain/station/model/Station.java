@@ -2,6 +2,7 @@ package com.railgo.domain.station.model;
 
 import com.railgo.domain.station.type.StationStatus;
 import com.railgo.domain.utils.model.BaseModel;
+import com.railgo.domain.utils.valueObject.Email;
 import com.railgo.domain.utils.valueObject.Id;
 
 public class Station extends BaseModel {
@@ -12,7 +13,7 @@ public class Station extends BaseModel {
     private Double latitude;
     private Double longitude;
     private String phoneNumber;
-    private String email;
+    private Email email;
     private String website;
     private String operatingHours;
     private StationStatus status;
@@ -25,7 +26,7 @@ public class Station extends BaseModel {
         this.latitude = latitude;
         this.longitude = longitude;
         this.phoneNumber = phoneNumber;
-        this.email = email;
+        this.email = new Email(email);
         this.website = website;
         this.operatingHours = operatingHours;
         this.status = StationStatus.valueOf(status);
@@ -88,11 +89,11 @@ public class Station extends BaseModel {
     }
 
     public String getEmail() {
-        return email;
+        return email.getValue();
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = new Email(email);
     }
 
     public String getWebsite() {

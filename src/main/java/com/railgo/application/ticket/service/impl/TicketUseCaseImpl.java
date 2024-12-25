@@ -1,10 +1,14 @@
 package com.railgo.application.ticket.service.impl;
 
+import com.railgo.application.payment.dataTransferObject.request.InitPaymentRequest;
+import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
+import com.railgo.application.payment.service.IPaymentService;
 import com.railgo.application.station.dataTransferObject.response.StationResponse;
 import com.railgo.application.station.service.IStationUseCase;
 import com.railgo.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
 import com.railgo.application.ticket.dataTransferObject.request.TicketBookingRequest;
 import com.railgo.application.ticket.dataTransferObject.request.TicketConfirmationRequest;
+import com.railgo.application.ticket.dataTransferObject.response.TicketConfirmationResponse;
 import com.railgo.application.ticket.dataTransferObject.response.TicketResponse;
 import com.railgo.application.ticket.mapper.TicketMapper;
 import com.railgo.application.ticket.service.ITicketUseCase;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class TicketUseCaseImpl implements ITicketUseCase {
@@ -25,18 +30,21 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private final IStationUseCase stationUseCase;
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
+    private final IPaymentService paymentService;
 
     @Autowired
     public TicketUseCaseImpl(ITicketService ticketService,
                              TicketMapper ticketMapper,
                              IStationUseCase stationUseCase,
                              ITrainScheduleService trainScheduleService,
-                             ITrainScheduleStopService trainScheduleStopService) {
+                             ITrainScheduleStopService trainScheduleStopService,
+                             IPaymentService paymentService) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
         this.stationUseCase = stationUseCase;
         this.trainScheduleService = trainScheduleService;
         this.trainScheduleStopService = trainScheduleStopService;
+        this.paymentService = paymentService;
     }
 
     @Override
@@ -63,14 +71,14 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         );
         Ticket newTicket = ticketService.book(ticket);
 
-        return buildTicketResponse(newTicket, trainSchedule);
+        return buildTicketResponse(newTicket);
     }
 
-    private TicketResponse buildTicketResponse(Ticket ticket, TrainSchedule trainSchedule) {
+    private TicketResponse buildTicketResponse(Ticket ticket) {
         StationResponse departureStation = stationUseCase.getStation(ticket.getStartStationId());
-        LocalDateTime departureTime = trainScheduleStopService.getDepartureTime(trainSchedule.getStops(), ticket.getStartStationId());
+        LocalDateTime departureTime = trainScheduleStopService.getDepartureTime(ticket.getTrainSchedule().getStops(), ticket.getStartStationId());
         StationResponse arrivalStation = stationUseCase.getStation(ticket.getEndStationId());
-        LocalDateTime arrivalTime = trainScheduleStopService.getArrivalTime(trainSchedule.getStops(), ticket.getEndStationId());
+        LocalDateTime arrivalTime = trainScheduleStopService.getArrivalTime(ticket.getTrainSchedule().getStops(), ticket.getEndStationId());
 
         TicketResponse ticketResponse = ticketMapper.toDTO(ticket);
         ticketResponse.setDepartureStation(departureStation);
@@ -81,11 +89,29 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     }
 
     @Override
-    public void confirm(String ticketId,
-                        TicketConfirmationRequest request) {
+    public TicketConfirmationResponse confirm(String ticketId,
+                                              TicketConfirmationRequest request) {
         Ticket existTicket = ticketService.getTicket(ticketId);
         existTicket.setContactEmail(request.getContactEmail());
-        ticketService.confirm(existTicket);
+        Ticket ticket = ticketService.confirm(existTicket);
+        TicketResponse ticketResponse = buildTicketResponse(ticket);
+
+        InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
+                request.getIpAddress(),
+                request.getContactEmail(),
+                ticketId,
+                existTicket.getTotalPrice()
+        );
+        InitPaymentResponse initPaymentResponse = paymentService.init(initPaymentRequest);
+        return new TicketConfirmationResponse(ticketResponse,initPaymentResponse);
+    }
+
+    @Override
+    public void finalizePayment(String ticketId) {
+        Ticket existTicket = ticketService.getTicket(ticketId);
+        Ticket ticket = ticketService.confirmPayment(existTicket);
+
+        System.out.println("Confirm payment success!");
     }
 
     @Override

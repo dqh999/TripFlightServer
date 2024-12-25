@@ -21,8 +21,15 @@ spring:
   jwt:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60
-    secretKeyAccess: c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=
+    secretKeyAccess: =
 
+payment:
+  VNPay:
+    tmn-code:
+    secret-key:
+    init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    return-url:
+    time-out: 15
 
 logging:
   level:
