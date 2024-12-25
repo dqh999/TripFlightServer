@@ -5,7 +5,6 @@ import com.railgo.domain.utils.service.CurrencyConverter;
 import com.railgo.domain.utils.type.Currency;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class Money {
     private final BigDecimal value;
@@ -59,5 +58,19 @@ public class Money {
         }
         BigDecimal newValue = this.value.multiply(multiplier);
         return new Money(newValue, this.currency.getValue());
+    }
+
+    public Money convertToCurrency(String targetCurrency) {
+        if (this.currency.getValue().equals(targetCurrency)) {
+            return this;
+        }
+
+        Currency target = Currency.valueOf(targetCurrency);
+
+        BigDecimal exchangeRate = CurrencyConverter.getExchangeRate(this.currency, target);
+
+        BigDecimal convertedValue = this.value.multiply(exchangeRate);
+
+        return new Money(convertedValue, target.getValue());
     }
 }

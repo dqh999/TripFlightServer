@@ -48,6 +48,7 @@ public class AccountController {
                 .withData(result)
                 .toEntity();
     }
+
     @PostMapping("/refreshToken")
     public ResponseEntity<?> handleRefreshToken(@RequestBody RefreshTokenRequest request) {
         var result = userUseCase.refreshToken(request);

@@ -114,12 +114,15 @@ CREATE TABLE tbl_tickets
     created_at        timestamp      not null,
     updated_at        timestamp      not null
 );
-CREATE TABLE tbl_customers
+CREATE TABLE tbl_ticket_passengers
 (
     id            varchar(45) primary key,
-    ticket_id     varchar(45)  not null,
-    account_id    varchar(45)  not null,
-    contact_email varchar(100) not null,
-    created_at    timestamp    not null,
-    updated_at    timestamp    not null
+    first_name    varchar(50) not null,
+    last_name     varchar(50) not null,
+    date_of_birth datetime    not null,
+    created_at    timestamp   not null,
+    updated_at    timestamp   not null
+);
+CREATE TABLE tbl_payments (
+
 );
