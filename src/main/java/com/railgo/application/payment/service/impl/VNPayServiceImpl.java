@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -79,7 +81,9 @@ public class VNPayServiceImpl implements IPaymentService {
 
         String initPaymentUrl = buildInitPaymentUrl(params);
 
-        return new InitPaymentResponse(initPaymentUrl);
+        LocalDateTime expiryTime = LocalDateTime.parse(expiredDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+
+        return new InitPaymentResponse(initPaymentUrl,expiryTime);
     }
     private String formatVnTime(Calendar calendar) {
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");

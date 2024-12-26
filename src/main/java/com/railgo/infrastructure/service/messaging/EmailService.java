@@ -1,9 +1,11 @@
 package com.railgo.infrastructure.service.messaging;
 
 import com.railgo.domain.utils.exception.BusinessException;
+import com.railgo.infrastructure.util.Template;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ import java.util.Map;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+
+    @Value("${spring.mail.username}")
+    private String from;
     @Autowired
     public EmailService(JavaMailSender mailSender,
                         TemplateEngine templateEngine) {
@@ -24,22 +29,23 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    public void send(String to, String templateName, Map<String, Object> variables) {
+    public void send(String to,
+                     String subject,
+                     String template,
+                     Map<String, Object> variables) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             Context context = new Context();
             context.setVariables(variables);
-            String htmlContent = templateEngine.process(templateName, context);
+            String htmlContent = templateEngine.process(template, context);
 
-            // Configure email
             helper.setTo(to);
-            helper.setSubject("RailGo Notification");
-            helper.setFrom("railgo@gmail.com");
+            helper.setSubject(subject);
+            helper.setFrom(from);
             helper.setText(htmlContent, true);
 
-            // Send email
             mailSender.send(message);
         } catch (MessagingException e){
             throw new BusinessException();

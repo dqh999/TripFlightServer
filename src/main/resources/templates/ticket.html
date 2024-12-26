@@ -2,18 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Payment Success</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailGo e-Ticket</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
-<body>
-<h1>Thank You, <span th:text="${name}">Customer</span>!</h1>
-<p>Your payment for ticket ID <strong th:text="${ticketId}">12345</strong> has been successfully processed.</p>
-<p>Details:</p>
-<ul>
-    <li>Train: <span th:text="${trainName}">Train Name</span></li>
-    <li>Date: <span th:text="${date}">Travel Date</span></li>
-    <li>Amount Paid: <span th:text="${amount}">0.00</span></li>
-    <li>Payment Method: <span th:text="${paymentMethod}">Credit Card</span></li>
-</ul>
-<p>Enjoy your journey!</p>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff;">
+<div class="ticket" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 20px; margin-bottom: 20px;">
+    <div class="ticket-header" style="border-bottom: 1px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px;">
+        <h1 class="ticket-title" style="font-size: 24px; font-weight: bold; margin: 0; color: #000000;">RailGo e-Ticket</h1>
+        <p class="ticket-description" style="color: #666; margin-top: 5px;">Your ticket has been successfully booked.</p>
+    </div>
+    <div class="ticket-content" style="margin-bottom: 20px;">
+        <h3 class="text-bold" style="font-weight: bold; color: #000000;" th:text="'Hello, ' + ${name} + '!'"></h3>
+        <p>Your e-ticket details are below. Please present this ticket when boarding.</p>
+
+        <h4 class="text-bold" style="font-weight: bold; color: #000000;">Ticket Details</h4>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <tr>
+                <th style="font-weight: bold; color: #000000;">Ticket ID</th>
+                <td th:text="${ticketId}"></td>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; color: #000000;">Train</th>
+                <td th:text="${trainName}"></td>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; color: #000000;">Departure</th>
+                <td th:text="${departureStation} + ' - ' + ${departureTime}"></td>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; color: #000000;">Arrival</th>
+                <td th:text="${arrivalStation} + ' - ' + ${arrivalTime}"></td>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; color: #000000;">Total Seats</th>
+                <td th:text="${childSeats + adultSeats + seniorSeats} + ' (Child: ' + ${childSeats} + ', Adult: ' + ${adultSeats} + ', Senior: ' + ${seniorSeats} + ')'"></td>
+            </tr>
+            <tr>
+                <th style="font-weight: bold; color: #000000;">Total Price</th>
+                <td th:text="${totalPrice} + ' ' + ${currency}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="barcode" style="text-align: center; margin-top: 20px;">
+        <svg id="barcode"></svg>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const barcodeElement = document.getElementById("barcode");
+
+        if (barcodeElement) {
+            const ticketId = "${ticketId}"; // This will be replaced with the actual ticket ID
+
+            JsBarcode("#barcode", ticketId, {
+                format: "CODE128",
+                lineColor: "#000000",
+                width: 2,
+                height: 50,
+                displayValue: true,
+                background: "#ffffff",
+                fontOptions: "bold",
+                font: "Arial",
+                fontSize: 14,
+                textMargin: 2,
+                margin: 10
+            });
+        }
+    });
+</script>
 </body>
 </html>
