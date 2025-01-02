@@ -4,8 +4,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.6"
 }
 
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
+group = "com.railgo"
+version = "1.0.0"
 
 java {
 	toolchain {
@@ -45,7 +45,6 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
-
 tasks.withType<Test> {
 	useJUnitPlatform()
 }

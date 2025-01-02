@@ -26,11 +26,15 @@
                 <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${trainName}"></td>
             </tr>
             <tr>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Departure</th>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">
+                    Departure
+                </th>
                 <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${departureStation} + ' - ' + ${departureTime}"></td>
             </tr>
             <tr>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Arrival</th>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">
+                    Arrival
+                </th>
                 <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${arrivalStation} + ' - ' + ${arrivalTime}"></td>
             </tr>
             <tr>
@@ -38,7 +42,9 @@
                 <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${childSeats + adultSeats + seniorSeats} + ${childSeats > 0 ? '(Child: ' + childSeats : '('}"></td>
             </tr>
             <tr>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Total Price</th>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">
+                    Total Price
+                </th>
                 <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${totalPrice} + ' ' + ${currency}"></td>
             </tr>
         </table>
@@ -49,7 +55,9 @@
         <p>Payment Method: Credit Card</p>
     </div>
     <div>
-        <a style="display: inline-block; background-color: #000000; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;" th:href="${paymentUrl}">Pay Now</a>
+        <a style="display: inline-block; background-color: #000000; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;" th:href="${paymentUrl}">
+            Pay Now
+        </a>
     </div>
 </div>
 </body>
