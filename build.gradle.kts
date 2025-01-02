@@ -4,8 +4,8 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.6"
 }
 
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
+group = "com.railgo"
+version = "1.0.0"
 
 java {
 	toolchain {
@@ -23,6 +23,9 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j")
 	implementation("org.springframework.data:spring-data-redis:3.4.1")
 	implementation("redis.clients:jedis:4.4.3")
+
+	implementation("org.springframework.boot:spring-boot-starter-mail:3.4.1")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.4.1")
 
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	implementation("org.mapstruct:mapstruct-processor:1.6.3")
@@ -42,7 +45,6 @@ dependencies {
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
-
 tasks.withType<Test> {
 	useJUnitPlatform()
 }

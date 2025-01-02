@@ -14,14 +14,18 @@ import com.railgo.application.ticket.mapper.TicketMapper;
 import com.railgo.application.ticket.service.ITicketUseCase;
 import com.railgo.domain.ticket.model.Ticket;
 import com.railgo.domain.ticket.service.ITicketService;
+import com.railgo.domain.train.model.Train;
 import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.train.service.ITrainScheduleService;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
+import com.railgo.infrastructure.service.messaging.EmailService;
+import com.railgo.infrastructure.util.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class TicketUseCaseImpl implements ITicketUseCase {
@@ -31,6 +35,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
     private final IPaymentService paymentService;
+    private final EmailService emailService;
 
     @Autowired
     public TicketUseCaseImpl(ITicketService ticketService,
@@ -38,13 +43,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                              IStationUseCase stationUseCase,
                              ITrainScheduleService trainScheduleService,
                              ITrainScheduleStopService trainScheduleStopService,
-                             IPaymentService paymentService) {
+                             IPaymentService paymentService,
+                             EmailService emailService) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
         this.stationUseCase = stationUseCase;
         this.trainScheduleService = trainScheduleService;
         this.trainScheduleStopService = trainScheduleStopService;
         this.paymentService = paymentService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -75,12 +82,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     }
 
     private TicketResponse buildTicketResponse(Ticket ticket) {
+        TrainSchedule trainSchedule = ticket.getTrainSchedule();
+
         StationResponse departureStation = stationUseCase.getStation(ticket.getStartStationId());
-        LocalDateTime departureTime = trainScheduleStopService.getDepartureTime(ticket.getTrainSchedule().getStops(), ticket.getStartStationId());
+        LocalDateTime departureTime = trainScheduleStopService.getDepartureTime(trainSchedule.getStops(), ticket.getStartStationId());
         StationResponse arrivalStation = stationUseCase.getStation(ticket.getEndStationId());
-        LocalDateTime arrivalTime = trainScheduleStopService.getArrivalTime(ticket.getTrainSchedule().getStops(), ticket.getEndStationId());
+        LocalDateTime arrivalTime = trainScheduleStopService.getArrivalTime(trainSchedule.getStops(), ticket.getEndStationId());
 
         TicketResponse ticketResponse = ticketMapper.toDTO(ticket);
+        ticketResponse.setTrainName(trainSchedule.getTrain().getName());
         ticketResponse.setDepartureStation(departureStation);
         ticketResponse.setArrivalStation(arrivalStation);
         ticketResponse.setDepartureTime(departureTime);
@@ -94,7 +104,6 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         Ticket existTicket = ticketService.getTicket(ticketId);
         existTicket.setContactEmail(request.getContactEmail());
         Ticket ticket = ticketService.confirm(existTicket);
-        TicketResponse ticketResponse = buildTicketResponse(ticket);
 
         InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
                 request.getIpAddress(),
@@ -102,8 +111,48 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                 ticketId,
                 existTicket.getTotalPrice()
         );
+
         InitPaymentResponse initPaymentResponse = paymentService.init(initPaymentRequest);
-        return new TicketConfirmationResponse(ticketResponse,initPaymentResponse);
+        TicketResponse ticketResponse = buildTicketResponse(ticket);
+        TicketConfirmationResponse response = new TicketConfirmationResponse(ticketResponse, initPaymentResponse);
+
+        sendConfirmEmail(response);
+
+        return response;
+    }
+
+    private void sendConfirmEmail(TicketConfirmationResponse response) {
+        TicketResponse ticketResponse = response.getTicket();
+
+
+        Map<String, Object> variables = buildEmailVariables(ticketResponse,response.getPayment());
+
+        emailService.send(ticketResponse.getContactEmail(),
+                "Your RailGo e-Ticket Confirmation",
+                Template.CONFIRM_TICKET,
+                variables);
+
+    }
+
+    private Map<String, Object> buildEmailVariables(TicketResponse ticketResponse, InitPaymentResponse paymentResponse) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("ticketId", ticketResponse.getId());
+        variables.put("trainName", ticketResponse.getTrainName());
+        variables.put("name", ticketResponse.getContactEmail());
+        variables.put("departureStation", ticketResponse.getDepartureStation().getName());
+        variables.put("departureTime", ticketResponse.getDepartureTime());
+        variables.put("arrivalStation", ticketResponse.getArrivalStation().getName());
+        variables.put("arrivalTime", ticketResponse.getArrivalTime());
+        variables.put("childSeats", ticketResponse.getChildSeats());
+        variables.put("adultSeats", ticketResponse.getAdultSeats());
+        variables.put("seniorSeats", ticketResponse.getSeniorSeats());
+        variables.put("totalPrice", ticketResponse.getTotalPrice().getValue().toString());
+        variables.put("currency", ticketResponse.getTotalPrice().getCurrency());
+        if (paymentResponse != null && paymentResponse.getPaymentUrl() != null) {
+            variables.put("paymentUrl", paymentResponse.getPaymentUrl());
+            variables.put("expiryTime",paymentResponse.getExpiryTime());
+        }
+        return variables;
     }
 
     @Override
@@ -111,7 +160,17 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         Ticket existTicket = ticketService.getTicket(ticketId);
         Ticket ticket = ticketService.confirmPayment(existTicket);
 
-        System.out.println("Confirm payment success!");
+        TicketResponse ticketResponse = buildTicketResponse(ticket);
+
+        sendETicket(ticketResponse);
+    }
+
+    private void sendETicket(TicketResponse ticketResponse) {
+        Map<String, Object> variables = buildEmailVariables(ticketResponse, null);
+        emailService.send(ticketResponse.getContactEmail(),
+                "Your RailGo e-Ticket - Payment Successful",
+                Template.TICKET_SUCCESS,
+                variables);
     }
 
     @Override

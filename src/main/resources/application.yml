@@ -18,17 +18,31 @@ spring:
       password: Hop2005@
       timeout: 2000
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dqhit999@gmail.com
+    password: gqua nyez oljm ygov
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+      default-encoding: UTF-8
+
   jwt:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60
-    secretKeyAccess: =
+    secretKeyAccess: c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=
 
 payment:
   VNPay:
-    tmn-code:
-    secret-key:
+    tmn-code: FPBMPL8F
+    secret-key: WMZMY19Z3K3OO6TQI89UBD0BY5HSP5MA
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-    return-url:
+    return-url: https://grand-hyena-overly.ngrok-free.app/
     time-out: 15
 
 logging:

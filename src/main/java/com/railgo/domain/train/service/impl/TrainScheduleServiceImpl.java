@@ -133,10 +133,10 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
                                                LocalDateTime departureTime,
                                                int pageNumber, int pageSize) {
         if (departureStationId.equals(arrivalStationId) || departureTime.isBefore(LocalDateTime.now())) {
-            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID);
+            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID_PARAM);
         }
         if (pageNumber < 1) {
-            throw new BusinessException();
+            throw new BusinessException(TrainExceptionCode.TRAIN_SCHEDULE_INVALID_PARAM);
         }
     }
 

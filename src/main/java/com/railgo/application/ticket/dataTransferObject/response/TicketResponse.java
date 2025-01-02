@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 public class TicketResponse {
     private String id;
+    private String trainName;
     private StationResponse departureStation;
     private LocalDateTime departureTime;
     private StationResponse arrivalStation;
@@ -15,12 +16,15 @@ public class TicketResponse {
     private Integer adultSeats = 0;
     private Integer seniorSeats = 0;
     private Money totalPrice;
+    private String customerName;
+    private String contactEmail;
     private String status;
 
     public TicketResponse() {}
 
-    public TicketResponse(String id, StationResponse departureStation, LocalDateTime departureTime, StationResponse arrivalStation, LocalDateTime arrivalTime, Integer childSeats, Integer adultSeats, Integer seniorSeats, Money totalPrice, String status) {
+    public TicketResponse(String id,String trainName, StationResponse departureStation, LocalDateTime departureTime, StationResponse arrivalStation, LocalDateTime arrivalTime, Integer childSeats, Integer adultSeats, Integer seniorSeats, Money totalPrice, String customerName,String contactEmail, String status) {
         this.id = id;
+        this.trainName = trainName;
         this.departureStation = departureStation;
         this.departureTime = departureTime;
         this.arrivalStation = arrivalStation;
@@ -29,6 +33,8 @@ public class TicketResponse {
         this.adultSeats = adultSeats;
         this.seniorSeats = seniorSeats;
         this.totalPrice = totalPrice;
+        this.customerName = customerName;
+        this.contactEmail = contactEmail;
         this.status = status;
     }
 
@@ -38,6 +44,14 @@ public class TicketResponse {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTrainName() {
+        return trainName;
+    }
+
+    public void setTrainName(String trainName) {
+        this.trainName = trainName;
     }
 
     public StationResponse getDepartureStation() {
@@ -102,6 +116,22 @@ public class TicketResponse {
 
     public void setTotalPrice(Money totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
     }
 
     public String getStatus() {
