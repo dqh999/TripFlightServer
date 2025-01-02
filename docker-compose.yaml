@@ -15,6 +15,14 @@ services:
     networks:
       - railgo-network
 
+#  ALTER USER 'root'@'147.93.29.117' IDENTIFIED BY 'Hop2005@';
+#  GRANT ALL PRIVILEGES ON *.* TO 'root'@'147.93.29.117' WITH GRANT OPTION;
+#
+#  ALTER USER 'root'@'192.168.1.13' IDENTIFIED BY 'Hop2005@';
+#  GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.13' WITH GRANT OPTION;
+#
+#  FLUSH PRIVILEGES;
+
   railgo-redis:
     container_name: railgo-redis
     image: redis:latest
