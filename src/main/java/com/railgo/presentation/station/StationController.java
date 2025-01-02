@@ -39,7 +39,7 @@ public class StationController {
     }
 
     @PostMapping("/route")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handleAddRouteStation(@AuthenticationPrincipal UserDetail userRequest,
                                                    @RequestBody List<AddStationRouteRequest> requests) {
         var result = requests.stream().map(request -> {

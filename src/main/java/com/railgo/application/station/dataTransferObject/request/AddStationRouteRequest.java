@@ -2,7 +2,6 @@ package com.railgo.application.station.dataTransferObject.request;
 
 public class AddStationRouteRequest {
     private String type;
-    private String st;
     private String stationAId;
     private String stationBId;
     private Double speedLimit;
@@ -12,9 +11,8 @@ public class AddStationRouteRequest {
     public AddStationRouteRequest() {
     }
 
-    public AddStationRouteRequest(String type, String st, String stationAId, String stationBId, Double speedLimit, Double distanceKm, String status) {
+    public AddStationRouteRequest(String type,  String stationAId, String stationBId, Double speedLimit, Double distanceKm, String status) {
         this.type = type;
-        this.st = st;
         this.stationAId = stationAId;
         this.stationBId = stationBId;
         this.speedLimit = speedLimit;
@@ -28,14 +26,6 @@ public class AddStationRouteRequest {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getSt() {
-        return st;
-    }
-
-    public void setSt(String st) {
-        this.st = st;
     }
 
     public String getStationAId() {

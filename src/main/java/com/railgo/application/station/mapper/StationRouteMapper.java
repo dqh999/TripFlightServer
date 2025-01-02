@@ -1,5 +1,6 @@
 package com.railgo.application.station.mapper;
 
+import com.railgo.application.station.dataTransferObject.request.AddStationRouteRequest;
 import com.railgo.application.station.dataTransferObject.response.StationRouteResponse;
 import com.railgo.domain.station.model.StationRoute;
 import com.railgo.infrastructure.config.GlobalMapperConfig;
@@ -11,8 +12,8 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         config = GlobalMapperConfig.class)
 public interface StationRouteMapper extends MapperEntity<StationRoute, StationRouteResponse> {
-    @Override
-    StationRoute toEntity(StationRouteResponse stationRouteResponse);
+
+    StationRoute toEntity(AddStationRouteRequest request);
 
     @Override
     StationRouteResponse toDTO(StationRoute route);
