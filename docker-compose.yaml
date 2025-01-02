@@ -8,8 +8,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: Hop2005@
       MYSQL_DATABASE: railgo_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: Hop2005@
     ports:
       - "3308:3306"
     volumes:
