@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  railgo-mysql:
+    container_name: railgo-mysql
+    image: mysql:8.2.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Hop2005@
+      MYSQL_DATABASE: railgo_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Hop2005@
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - railgo-network
+
+  railgo-redis:
+    container_name: railgo-redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - railgo-network
+
+  app:
+    image: railgo-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: railgo-app
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - railgo-mysql
+      - railgo-redis
+    environment:
+      MYSQL_URL: jdbc:mysql://railgo-mysql:3306/railgo_db
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: Hop2005@
+      SPRING_REDIS_HOST: railgo-redis
+      SPRING_REDIS_PORT: 6379
+    networks:
+      - railgo-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  railgo-network:
+    driver: bridge
+
+# docker-compose up -d railgo-mysql railgo-redis
+# docker-compose up -d app

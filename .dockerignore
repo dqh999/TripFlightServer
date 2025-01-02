@@ -1,0 +1,12 @@
+HELP.md
+README.md
+.gradle/
+build/
+
+.docker
+.idea
+
+.dockerignore
+Dockerfile
+docker-compose.yaml
+./database/database.sql

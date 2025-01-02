@@ -1,7 +1,7 @@
-CREATE
-DATABASE rail_go_db;
+-- CREATE
+-- DATABASE rail_go_db;
 USE
-rail_go_db;
+railgo_db;
 CREATE TABLE tbl_users
 (
     id              varchar(45) primary key,
