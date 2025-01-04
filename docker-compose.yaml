@@ -63,5 +63,6 @@ networks:
   railgo-network:
     driver: bridge
 
-# docker-compose up -d railgo-mysql railgo-redis
-# docker-compose up -d app
+# docker compose build app
+# docker compose up -d railgo-mysql railgo-redis
+# docker compose up -d app

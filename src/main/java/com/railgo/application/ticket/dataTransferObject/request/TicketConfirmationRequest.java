@@ -1,18 +1,24 @@
 package com.railgo.application.ticket.dataTransferObject.request;
 
+import com.railgo.application.ticket.dataTransferObject.PassengerDTO;
+
+import java.util.List;
+
 public class TicketConfirmationRequest {
     private String ipAddress;
     private String customerName;
     private String contactEmail;
+    private List<PassengerDTO> passengers;
 
     public TicketConfirmationRequest() {
     }
 
 
-    public TicketConfirmationRequest(String ipAddress,String customerName, String contactEmail) {
+    public TicketConfirmationRequest(String ipAddress,String customerName, String contactEmail, List<PassengerDTO> passengers) {
         this.ipAddress = ipAddress;
         this.customerName = customerName;
         this.contactEmail = contactEmail;
+        this.passengers = passengers;
     }
 
     public String getIpAddress() {
@@ -37,5 +43,9 @@ public class TicketConfirmationRequest {
 
     public void setContactEmail(String contactEmail) {
         this.contactEmail = contactEmail;
+    }
+
+    public TicketConfirmationRequest(List<PassengerDTO> passengers) {
+        this.passengers = passengers;
     }
 }

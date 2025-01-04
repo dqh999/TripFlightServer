@@ -2,7 +2,7 @@ package com.railgo.application.ticket.service.impl;
 
 import com.railgo.application.payment.dataTransferObject.request.InitPaymentRequest;
 import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
-import com.railgo.application.payment.service.IPaymentService;
+import com.railgo.application.payment.service.IPaymentGatewayService;
 import com.railgo.application.station.dataTransferObject.response.StationResponse;
 import com.railgo.application.station.service.IStationUseCase;
 import com.railgo.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
@@ -14,10 +14,10 @@ import com.railgo.application.ticket.mapper.TicketMapper;
 import com.railgo.application.ticket.service.ITicketUseCase;
 import com.railgo.domain.ticket.model.Ticket;
 import com.railgo.domain.ticket.service.ITicketService;
-import com.railgo.domain.train.model.Train;
 import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.train.service.ITrainScheduleService;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
+import com.railgo.domain.utils.DateTimeUtils;
 import com.railgo.infrastructure.service.messaging.EmailService;
 import com.railgo.infrastructure.util.Template;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private final IStationUseCase stationUseCase;
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
-    private final IPaymentService paymentService;
+    private final IPaymentGatewayService paymentService;
     private final EmailService emailService;
 
     @Autowired
@@ -43,7 +43,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                              IStationUseCase stationUseCase,
                              ITrainScheduleService trainScheduleService,
                              ITrainScheduleStopService trainScheduleStopService,
-                             IPaymentService paymentService,
+                             IPaymentGatewayService paymentService,
                              EmailService emailService) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
@@ -72,6 +72,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                 request.getChildSeats(),
                 request.getAdultSeats(),
                 request.getSeniorSeats(),
+                null,
                 null,
                 null,
                 null
@@ -103,7 +104,6 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                                               TicketConfirmationRequest request) {
         Ticket existTicket = ticketService.getTicket(ticketId);
         existTicket.setContactEmail(request.getContactEmail());
-        Ticket ticket = ticketService.confirm(existTicket);
 
         InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
                 request.getIpAddress(),
@@ -111,8 +111,11 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                 ticketId,
                 existTicket.getTotalPrice()
         );
-
         InitPaymentResponse initPaymentResponse = paymentService.init(initPaymentRequest);
+
+        existTicket.setPaymentId(initPaymentResponse.getPaymentId());
+        Ticket ticket = ticketService.confirm(existTicket);
+
         TicketResponse ticketResponse = buildTicketResponse(ticket);
         TicketConfirmationResponse response = new TicketConfirmationResponse(ticketResponse, initPaymentResponse);
 
@@ -124,14 +127,12 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private void sendConfirmEmail(TicketConfirmationResponse response) {
         TicketResponse ticketResponse = response.getTicket();
 
-
         Map<String, Object> variables = buildEmailVariables(ticketResponse,response.getPayment());
 
         emailService.send(ticketResponse.getContactEmail(),
                 "Your RailGo e-Ticket Confirmation",
                 Template.CONFIRM_TICKET,
                 variables);
-
     }
 
     private Map<String, Object> buildEmailVariables(TicketResponse ticketResponse, InitPaymentResponse paymentResponse) {
@@ -140,29 +141,31 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         variables.put("trainName", ticketResponse.getTrainName());
         variables.put("name", ticketResponse.getContactEmail());
         variables.put("departureStation", ticketResponse.getDepartureStation().getName());
-        variables.put("departureTime", ticketResponse.getDepartureTime());
+        variables.put("departureTime", DateTimeUtils.formatDateTime(ticketResponse.getDepartureTime()));
         variables.put("arrivalStation", ticketResponse.getArrivalStation().getName());
-        variables.put("arrivalTime", ticketResponse.getArrivalTime());
+        variables.put("arrivalTime", DateTimeUtils.formatDateTime(ticketResponse.getArrivalTime()));
         variables.put("childSeats", ticketResponse.getChildSeats());
         variables.put("adultSeats", ticketResponse.getAdultSeats());
         variables.put("seniorSeats", ticketResponse.getSeniorSeats());
         variables.put("totalPrice", ticketResponse.getTotalPrice().getValue().toString());
         variables.put("currency", ticketResponse.getTotalPrice().getCurrency());
         if (paymentResponse != null && paymentResponse.getPaymentUrl() != null) {
+            variables.put("paymentGateway", paymentResponse.getPaymentGateway());
             variables.put("paymentUrl", paymentResponse.getPaymentUrl());
-            variables.put("expiryTime",paymentResponse.getExpiryTime());
+            variables.put("expiryTime",DateTimeUtils.formatDateTime(paymentResponse.getExpiryTime()));
         }
         return variables;
     }
 
     @Override
-    public void finalizePayment(String ticketId) {
+    public Ticket finalizePayment(String ticketId) {
         Ticket existTicket = ticketService.getTicket(ticketId);
         Ticket ticket = ticketService.confirmPayment(existTicket);
 
         TicketResponse ticketResponse = buildTicketResponse(ticket);
 
         sendETicket(ticketResponse);
+        return ticket;
     }
 
     private void sendETicket(TicketResponse ticketResponse) {

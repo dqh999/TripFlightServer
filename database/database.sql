@@ -13,8 +13,8 @@ CREATE TABLE tbl_users
     phone_number    varchar(15)  not null unique,
     email           varchar(100) not null,
     hashed_password varchar(255) not null,
-    created_at      timestamp    not null,
-    updated_at      timestamp    not null
+    created_at      timestamp,
+    updated_at      timestamp
 );
 CREATE TABLE tbl_user_tokens
 (
@@ -28,8 +28,8 @@ CREATE TABLE tbl_user_tokens
     refresh_token_expires_at timestamp    not null,
     ip_address               varchar(45),
     user_agent               varchar(255),
-    created_at               timestamp    not null,
-    updated_at               timestamp    not null
+    created_at               timestamp,
+    updated_at               timestamp
 );
 CREATE TABLE tbl_stations
 (
@@ -44,8 +44,8 @@ CREATE TABLE tbl_stations
     website         varchar(100),
     operating_hours varchar(100),
     status          varchar(20),
-    created_at      timestamp    not null,
-    updated_at      timestamp    not null
+    created_at      timestamp,
+    updated_at      timestamp
 );
 CREATE TABLE tbl_station_routes
 (
@@ -56,8 +56,8 @@ CREATE TABLE tbl_station_routes
     speed_limit  decimal(5, 2),
     distance_km  decimal(10, 2) not null,
     status       varchar(20),
-    created_at   timestamp      not null,
-    updated_at   timestamp      not null
+    created_at   timestamp,
+    updated_at   timestamp
 );
 CREATE TABLE tbl_trains
 (
@@ -68,17 +68,17 @@ CREATE TABLE tbl_trains
     speed_limit       int          not null, -- Speed limit (km/h)
     total_seats       int          not null,
     status            varchar(20)  not null,
-    created_at        timestamp    not null,
-    updated_at        timestamp    not null
+    created_at        timestamp,
+    updated_at        timestamp
 );
 CREATE TABLE tbl_train_schedules
 (
-    id           varchar(45) primary key,
-    train_id     varchar(45)    not null,
-    total_stops  int default 0,
-    status       varchar(20)    not null,
-    created_at   timestamp      not null,
-    updated_at   timestamp      not null
+    id          varchar(45) primary key,
+    train_id    varchar(45) not null,
+    total_stops int default 0,
+    status      varchar(20) not null,
+    created_at  timestamp,
+    updated_at  timestamp
 );
 CREATE TABLE tbl_train_schedule_stops
 (
@@ -92,8 +92,8 @@ CREATE TABLE tbl_train_schedule_stops
     available_seats int            not null,
     ticket_price    decimal(10, 2) not null,
     currency        varchar(10)    not null,
-    created_at      timestamp      not null,
-    updated_at      timestamp      not null
+    created_at      timestamp,
+    updated_at      timestamp
 );
 CREATE TABLE tbl_tickets
 (
@@ -108,19 +108,31 @@ CREATE TABLE tbl_tickets
     currency          varchar(10)    not null,
     contact_email     varchar(100),
     expiration_time   datetime       not null,
+    payment_id        varchar(45),
     status            varchar(20)    not null,
-    created_at        timestamp      not null,
-    updated_at        timestamp      not null
+    created_at        timestamp,
+    updated_at        timestamp
 );
 CREATE TABLE tbl_ticket_passengers
 (
     id            varchar(45) primary key,
-    first_name    varchar(50) not null,
-    last_name     varchar(50) not null,
-    date_of_birth datetime    not null,
-    created_at    timestamp   not null,
-    updated_at    timestamp   not null
+    full_name     varchar(100) not null,
+    date_of_birth datetime     not null,
+    created_at    timestamp,
+    updated_at    timestamp
 );
-CREATE TABLE tbl_payments (
-
+CREATE TABLE tbl_payments
+(
+    id              varchar(45) primary key,
+    transaction_id  varchar(255),
+    payment_gateway varchar(100),
+    payment_method  varchar(50),
+    payment_time    datetime,
+    amount          decimal(10, 2) not null,
+    currency        varchar(10)    not null,
+    ip_address      varchar(45),
+    user_agent      varchar(255),
+    status          varchar(20)    not null,
+    created_at      timestamp,
+    updated_at      timestamp
 );

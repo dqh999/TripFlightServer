@@ -5,6 +5,8 @@ import com.railgo.application.payment.constant.VNPayParams;
 import com.railgo.application.payment.dataTransferObject.response.IpnResponse;
 import com.railgo.application.payment.service.IpnHandler;
 import com.railgo.application.ticket.service.ITicketUseCase;
+import com.railgo.domain.payment.model.Payment;
+import com.railgo.domain.payment.service.IPaymentService;
 import com.railgo.domain.utils.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +16,16 @@ import static com.railgo.domain.ticket.exception.TicketExceptionCode.TICKET_NOT_
 
 @Service
 public class VNPayIpnHandler implements IpnHandler {
-    private final VNPayServiceImpl vnPayService;
+    private final VNPayGatewayServiceImpl vnPayService;
     private final ITicketUseCase ticketUseCase;
+    private final IPaymentService paymentService;
 
-    public VNPayIpnHandler(VNPayServiceImpl vnPayService,
-                           ITicketUseCase ticketUseCase) {
+    public VNPayIpnHandler(VNPayGatewayServiceImpl vnPayService,
+                           ITicketUseCase ticketUseCase,
+                           IPaymentService paymentService) {
         this.vnPayService = vnPayService;
         this.ticketUseCase = ticketUseCase;
+        this.paymentService = paymentService;
     }
 
     @Override
@@ -32,7 +37,9 @@ public class VNPayIpnHandler implements IpnHandler {
         try {
             var txnRef = params.get(VNPayParams.TXN_REF);
 
-            ticketUseCase.finalizePayment(txnRef);
+            var ticket = ticketUseCase.finalizePayment(txnRef);
+            Payment payment = paymentService.getPayment(ticket.getId());
+            paymentService.confirmPayment(payment);
             response = VNPayIpnResponseConst.SUCCESS;
         } catch (BusinessException e) {
             switch (e.getExceptionCode()){

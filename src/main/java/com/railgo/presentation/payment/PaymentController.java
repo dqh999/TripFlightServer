@@ -22,6 +22,7 @@ public class PaymentController {
 
     @GetMapping("/VNPay_ipn")
     public IpnResponse processIpn(@RequestParam Map<String, String> params) {
+        System.out.println("vnpay ipn " + params );
         return ipnHandler.process(params);
     }
 }

@@ -20,6 +20,7 @@ public class Ticket extends BaseModel {
     private Integer seniorSeats = 0;
     private Email contactEmail;
     private LocalDateTime expirationTime;
+    private Id paymentId;
     private TicketStatus status;
 
     public Ticket() {
@@ -27,7 +28,7 @@ public class Ticket extends BaseModel {
     }
 
 
-    public Ticket(String id, TrainSchedule trainSchedule, String startStationId, String endStationId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail,LocalDateTime expirationTime, TicketStatus status) {
+    public Ticket(String id, TrainSchedule trainSchedule, String startStationId, String endStationId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail,LocalDateTime expirationTime,String paymentId, TicketStatus status) {
         this.id = new Id(id);
         this.trainSchedule = trainSchedule;
         this.startStationId = new Id(startStationId);
@@ -38,6 +39,7 @@ public class Ticket extends BaseModel {
         this.seniorSeats = seniorSeats;
         this.contactEmail = new Email(contactEmail);
         this.expirationTime = expirationTime;
+        this.paymentId = null;
         this.status = status;
     }
 
@@ -120,6 +122,14 @@ public class Ticket extends BaseModel {
 
     public void setExpirationTime(LocalDateTime expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+    public String getPaymentId() {
+        return paymentId != null ? paymentId.getValue() : null;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = new Id(paymentId);
     }
 
     public String getStatus() {

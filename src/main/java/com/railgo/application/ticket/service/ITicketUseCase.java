@@ -5,11 +5,12 @@ import com.railgo.application.ticket.dataTransferObject.request.TicketBookingReq
 import com.railgo.application.ticket.dataTransferObject.request.TicketConfirmationRequest;
 import com.railgo.application.ticket.dataTransferObject.response.TicketConfirmationResponse;
 import com.railgo.application.ticket.dataTransferObject.response.TicketResponse;
+import com.railgo.domain.ticket.model.Ticket;
 
 public interface ITicketUseCase {
     TicketResponse book(TicketBookingRequest request);
     TicketConfirmationResponse confirm(String ticketId, TicketConfirmationRequest request);
-    void finalizePayment(String ticketId);
+    Ticket finalizePayment(String ticketId);
     TicketResponse applyDiscount(String ticketId,
                                  ApplyDiscountRequest request);
 }

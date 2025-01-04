@@ -7,6 +7,7 @@ import com.railgo.domain.ticket.service.ITicketPricingService;
 import com.railgo.domain.ticket.service.ITicketService;
 import com.railgo.domain.ticket.type.TicketStatus;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
+import com.railgo.domain.utils.DateTimeUtils;
 import com.railgo.domain.utils.exception.BusinessException;
 import com.railgo.domain.utils.valueObject.Money;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ import java.time.LocalDateTime;
 
 @Service
 public class ITicketServiceImpl implements ITicketService {
-    private static final long CONFIRMATION_TIMEOUT_MINUTES = 15;
-    private static final long PAYMENT_TIMEOUT_MINUTES = 15;
+    private static final long CONFIRMATION_TIMEOUT_MINUTES = 10;
+    private static final long PAYMENT_TIMEOUT_MINUTES = 30;
 
     private final ITicketPricingService ticketPricingService;
     private final TicketRepository ticketRepository;
@@ -48,7 +49,7 @@ public class ITicketServiceImpl implements ITicketService {
         );
 
         ticket.setTotalPrice(totalPrice);
-        ticket.setExpirationTime(LocalDateTime.now().plusMinutes(CONFIRMATION_TIMEOUT_MINUTES));
+        ticket.setExpirationTime(DateTimeUtils.nowInVietnam().plusMinutes(CONFIRMATION_TIMEOUT_MINUTES));
         ticket.setStatus(TicketStatus.PENDING.getValue());
 
         ticketRepository.save(ticket);
@@ -69,7 +70,7 @@ public class ITicketServiceImpl implements ITicketService {
     public Ticket confirm(Ticket ticket) {
         validateTicketForConfirmation(ticket);
 
-        ticket.setExpirationTime(LocalDateTime.now().plusMinutes(PAYMENT_TIMEOUT_MINUTES));
+        ticket.setExpirationTime(DateTimeUtils.nowInVietnam().plusMinutes(PAYMENT_TIMEOUT_MINUTES));
         ticket.setStatus(TicketStatus.CONFIRMED.getValue());
         ticketRepository.save(ticket);
         return ticket;

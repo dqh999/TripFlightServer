@@ -33,12 +33,14 @@ public class TicketEntity extends BaseEntity {
     private String contactEmail;
     @Column(name = "expiration_time")
     private LocalDateTime expirationTime;
+    @Column(name = "payment_id")
+    private String paymentId;
     private String status;
 
     public TicketEntity() {
     }
 
-    public TicketEntity(String id, TrainScheduleEntity trainSchedule, String startStationId, String endStationId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String status) {
+    public TicketEntity(String id, TrainScheduleEntity trainSchedule, String startStationId, String endStationId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
         this.id = id;
         this.trainSchedule = trainSchedule;
         this.startStationId = startStationId;
@@ -50,6 +52,7 @@ public class TicketEntity extends BaseEntity {
         this.currency = totalPrice.getCurrency();
         this.contactEmail = contactEmail;
         this.expirationTime = expirationTime;
+        this.paymentId = paymentId;
         this.status = status;
     }
 
@@ -140,6 +143,14 @@ public class TicketEntity extends BaseEntity {
 
     public void setExpirationTime(LocalDateTime expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
     }
 
     public String getStatus() {

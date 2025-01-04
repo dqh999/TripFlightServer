@@ -43,6 +43,14 @@ public class TicketController {
                 .withData(result)
                 .toEntity();
     }
+    @GetMapping("/{ticketId}/status")
+    public ResponseEntity<?> handleGetTicketStatus(
+            @PathVariable String ticketId
+    ){
+        return ApiResponse.build()
+                .withData("OK rồi")
+                .toEntity();
+    }
     @PostMapping("/{ticketId}/apply-discount")
     public ResponseEntity<?> handleApplyDiscount(
             @PathVariable String ticketId,

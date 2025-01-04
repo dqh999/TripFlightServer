@@ -1,6 +1,7 @@
 package com.railgo.infrastructure.persistence.utils;
 
 
+import com.railgo.domain.utils.DateTimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -41,13 +42,13 @@ public abstract class BaseEntity {
 
     @PrePersist
     public void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = DateTimeUtils.nowInVietnam();
         this.createdAt = now;
         this.updatedAt = now;
     }
 
     @PreUpdate
     public void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.updatedAt = DateTimeUtils.nowInVietnam();
     }
 }

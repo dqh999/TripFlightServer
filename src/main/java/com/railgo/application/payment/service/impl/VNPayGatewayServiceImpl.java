@@ -3,8 +3,11 @@ package com.railgo.application.payment.service.impl;
 import com.railgo.application.payment.constant.VNPayParams;
 import com.railgo.application.payment.dataTransferObject.request.InitPaymentRequest;
 import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
-import com.railgo.application.payment.service.IPaymentService;
+import com.railgo.application.payment.service.IPaymentGatewayService;
 import com.railgo.application.utils.constant.Locale;
+import com.railgo.domain.payment.model.Payment;
+import com.railgo.domain.payment.service.IPaymentService;
+import com.railgo.domain.payment.type.PaymentStatus;
 import com.railgo.domain.utils.type.Currency;
 import com.railgo.infrastructure.service.crypto.CryptoService;
 import com.railgo.infrastructure.util.Symbol;
@@ -20,26 +23,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
-public class VNPayServiceImpl implements IPaymentService {
-    public static final String VERSION = "2.1.0";
-    public static final String COMMAND = "pay";
-    public static final String ORDER_TYPE = "190000";
-    public static final long DEFAULT_MULTIPLIER = 100L;
+public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
+    private static final String PAYMENT_GATEWAY = "VNPay";
+    private static final String VERSION = "2.1.0";
+    private static final String COMMAND = "pay";
+    private static final String ORDER_TYPE = "190000";
+    private static final long DEFAULT_MULTIPLIER = 100L;
 
     @Value("${payment.VNPay.tmn-code}")
     private String tmnCode;
-
     @Value("${payment.VNPay.init-payment-url}")
     private String initPaymentPrefixUrl;
-
     @Value("${payment.VNPay.return-url}")
     private String returnUrlFormat;
-
     @Value("${payment.VNPay.time-out}")
     private Integer paymentTimeout;
 
+    private final IPaymentService paymentService;
     private final CryptoService cryptoService;
-    public VNPayServiceImpl(CryptoService cryptoService) {
+    public VNPayGatewayServiceImpl(IPaymentService paymentService,
+                                   CryptoService cryptoService) {
+        this.paymentService = paymentService;
         this.cryptoService = cryptoService;
     }
 
@@ -83,7 +87,24 @@ public class VNPayServiceImpl implements IPaymentService {
 
         LocalDateTime expiryTime = LocalDateTime.parse(expiredDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
-        return new InitPaymentResponse(initPaymentUrl,expiryTime);
+        Payment initPayment = new Payment(
+                null,
+                null,
+                PAYMENT_GATEWAY,
+                null,
+                null,
+                request.getTotalAmount(),
+                request.getIpAddress(),
+                null,
+                PaymentStatus.PENDING.getValue()
+        );
+        paymentService.pay(initPayment);
+
+        return new InitPaymentResponse(
+                initPayment.getId(),
+                PAYMENT_GATEWAY,
+                initPaymentUrl,
+                expiryTime);
     }
     private String formatVnTime(Calendar calendar) {
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
