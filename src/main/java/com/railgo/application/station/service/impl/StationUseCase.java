@@ -56,8 +56,9 @@ public class StationUseCase implements IStationUseCase {
 
     @Override
     public PageResponse<StationResponse>  searchStation(String keyword, int pageNo, int pageSize) {
-        Page<Station> pageResult = stationService.search(keyword,pageNo,pageSize);
+        Page<Station> pageResult = stationService.search(keyword,pageNo-1,pageSize);
         List<StationResponse> stationResponses = pageResult.getContent().stream().map(stationMapper::toDTO).collect(Collectors.toList());
+
         return new PageResponse<>(
                 (int) pageResult.getTotalElements(),
                 pageResult.getTotalPages(),
