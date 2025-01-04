@@ -43,8 +43,19 @@ public class StationController {
                 .withData(result)
                 .toEntity();
     }
+    @GetMapping("/search")
+    public ResponseEntity<?> handleSearchStation(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "1") int pageNo,
+            @RequestParam(defaultValue = "5") int pageSize
+    ){
+        var result = stationUseCase.searchStation(keyword,pageNo,pageSize);
+        return ApiResponse.build()
+                .withData(result)
+                .toEntity();
+    }
     @PostMapping("/route")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handleAddRouteStation(@AuthenticationPrincipal UserDetail userRequest,
                                                    @RequestBody List<AddStationRouteRequest> requests) {
         var result = requests.stream().map(request -> {

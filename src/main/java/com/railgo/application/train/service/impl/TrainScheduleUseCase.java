@@ -4,7 +4,6 @@ import com.railgo.application.station.dataTransferObject.response.StationRespons
 import com.railgo.application.station.service.IStationUseCase;
 import com.railgo.application.train.dataTransferObject.request.AddTrainScheduleRequest;
 import com.railgo.application.train.dataTransferObject.response.TrainScheduleResponse;
-import com.railgo.application.train.dataTransferObject.response.TrainScheduleStopResponse;
 import com.railgo.application.train.mapper.TrainScheduleMapper;
 import com.railgo.application.train.service.ITrainScheduleUseCase;
 import com.railgo.application.utils.PageResponse;
@@ -19,14 +18,12 @@ import com.railgo.domain.train.model.schedule.TrainScheduleStop;
 import com.railgo.domain.train.service.ITrainScheduleService;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
 import com.railgo.domain.train.service.ITrainService;
-import com.railgo.domain.utils.type.Currency;
 import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.infrastructure.security.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -34,7 +31,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+
 public class TrainScheduleUseCase implements ITrainScheduleUseCase {
+//    private static final Logger logger = LoggerFactory.getLogger(TrainScheduleUseCase.class);
+
     private final ITrainService trainService;
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
@@ -124,14 +124,14 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
     private TrainScheduleResponse buildTrainScheduleResponse(TrainSchedule trainSchedule) {
         TrainScheduleResponse trainScheduleResponse = trainScheduleMapper.toDTO(trainSchedule);
 
-        List<TrainScheduleStopResponse> trainScheduleStops = trainScheduleResponse.getStops();
+        List<TrainScheduleStop> trainScheduleStops = trainSchedule.getStops();
 
-        TrainScheduleStopResponse trainScheduleStopFirst = trainScheduleStops.getFirst();
+        TrainScheduleStop trainScheduleStopFirst = trainScheduleStops.getFirst();
         StationResponse departureStation = stationUseCase.getStation(trainScheduleStopFirst.getStationId());
         trainScheduleResponse.setDepartureStation(departureStation);
         trainScheduleResponse.setDepartureTime(trainScheduleStopFirst.getDepartureTime());
 
-        TrainScheduleStopResponse trainScheduleStopLast = trainScheduleStops.getLast();
+        TrainScheduleStop trainScheduleStopLast = trainScheduleStops.getLast();
         StationResponse arrivalStation = stationUseCase.getStation(trainScheduleStopLast.getNextStationId());
         trainScheduleResponse.setArrivalStation(arrivalStation);
         trainScheduleResponse.setArrivalTime(trainScheduleStopLast.getArrivalTime());

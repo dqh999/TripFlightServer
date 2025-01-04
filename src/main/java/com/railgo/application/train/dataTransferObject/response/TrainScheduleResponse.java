@@ -16,14 +16,12 @@ public class TrainScheduleResponse {
     private LocalDateTime arrivalTime;
     private Integer totalSeats;
     private Money ticketPrice;
-    private Integer totalStops;
-    private List<TrainScheduleStopResponse> stops;
     private String status;
 
     public TrainScheduleResponse() {
     }
 
-    public TrainScheduleResponse(String id, TrainResponse train, StationResponse departureStation, StationResponse arrivalStation, LocalDateTime departureTime, LocalDateTime arrivalTime,Integer totalSeats, Money ticketPrice, Integer totalStops, List<TrainScheduleStopResponse> stops, String status) {
+    public TrainScheduleResponse(String id, TrainResponse train, StationResponse departureStation, StationResponse arrivalStation, LocalDateTime departureTime, LocalDateTime arrivalTime,Integer totalSeats, Money ticketPrice, String status) {
         this.id = id;
         this.train = train;
         this.departureStation = departureStation;
@@ -32,8 +30,6 @@ public class TrainScheduleResponse {
         this.arrivalTime = arrivalTime;
         this.totalSeats = totalSeats;
         this.ticketPrice = ticketPrice;
-        this.totalStops = totalStops;
-        this.stops = stops;
         this.status = status;
     }
 
@@ -99,22 +95,6 @@ public class TrainScheduleResponse {
 
     public void setTicketPrice(Money ticketPrice) {
         this.ticketPrice = ticketPrice;
-    }
-
-    public Integer getTotalStops() {
-        return totalStops;
-    }
-
-    public void setTotalStops(Integer totalStops) {
-        this.totalStops = totalStops;
-    }
-
-    public List<TrainScheduleStopResponse> getStops() {
-        return stops;
-    }
-
-    public void setStops(List<TrainScheduleStopResponse> stops) {
-        this.stops = stops;
     }
 
     public String getStatus() {

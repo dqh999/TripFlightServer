@@ -20,9 +20,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
 @Service
 public class TrainScheduleServiceImpl implements ITrainScheduleService {
+
     private final TrainScheduleRepository trainScheduleRepository;
     private final TrainScheduleStopRepository trainScheduleStopRepository;
 

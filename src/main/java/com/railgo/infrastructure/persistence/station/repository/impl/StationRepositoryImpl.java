@@ -6,6 +6,8 @@ import com.railgo.infrastructure.persistence.station.mapper.StationEntityMapper;
 import com.railgo.infrastructure.persistence.station.model.StationEntity;
 import com.railgo.infrastructure.persistence.station.repository.StationEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -32,5 +34,10 @@ public class StationRepositoryImpl implements StationRepository {
     @Override
     public Optional<Station> findById(String id) {
         return repository.findById(id).map(mapper::toDTO);
+    }
+
+    @Override
+    public Page<Station> search(String keyword, Pageable pageable) {
+        return repository.searchByKeyword(keyword, pageable).map(mapper::toDTO);
     }
 }
