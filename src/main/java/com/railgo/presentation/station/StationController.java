@@ -2,6 +2,7 @@ package com.railgo.presentation.station;
 
 import com.railgo.application.station.dataTransferObject.request.AddStationRequest;
 import com.railgo.application.station.dataTransferObject.request.AddStationRouteRequest;
+import com.railgo.application.station.dataTransferObject.response.StationResponse;
 import com.railgo.application.station.service.IStationUseCase;
 import com.railgo.infrastructure.exception.ApiResponse;
 import com.railgo.infrastructure.security.UserDetail;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,6 +36,13 @@ public class StationController {
                 .toEntity();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getStationById(@PathVariable("id") String id) {
+        var result = stationUseCase.getStation(id);
+        return ApiResponse.build()
+                .withData(result)
+                .toEntity();
+    }
     @PostMapping("/route")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> handleAddRouteStation(@AuthenticationPrincipal UserDetail userRequest,

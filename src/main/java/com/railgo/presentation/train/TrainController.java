@@ -56,8 +56,8 @@ public class TrainController {
             @RequestParam(defaultValue = "1") int adultSeats,
             @RequestParam(defaultValue = "0") int seniorSeats,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam String sortBy) {
+            @RequestParam(defaultValue = "5") int pageSize,
+            @RequestParam(defaultValue = "s") String sortBy) {
         var result = trainScheduleUseCase.getAllSchedules(departureStationId, arrivalStationId, departureTime, childSeats, adultSeats, seniorSeats, page, pageSize, sortBy);
         return ApiResponse.build()
                 .withData(result)

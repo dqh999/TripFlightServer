@@ -7,18 +7,18 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL:jdbc:mysql://localhost:3308/railgo_db}
+    url: ${MYSQL_URL:jdbc:mysql://dqhdev.io.vn:3308/railgo_db}
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:Hop2005@}
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: update
+#    hibernate:
+#      ddl-auto: update
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:localhost}
+      host: ${SPRING_REDIS_HOST:dqhdev.io.vn}
       port: ${SPRING_REDIS_PORT:6379}
       password: Hop2005@
       timeout: 2000
