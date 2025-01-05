@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloWord {
     @GetMapping
     public ResponseEntity<?> hello() {
-        return ResponseEntity.ok("VERSION V1");
+        return ResponseEntity.ok("test ci/cd successfully!");
     }
 }

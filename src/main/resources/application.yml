@@ -47,7 +47,7 @@ payment:
     tmn-code: FPBMPL8F
     secret-key: WMZMY19Z3K3OO6TQI89UBD0BY5HSP5MA
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-    return-url: http://railgo.dqhdev.io.vn/order/%s/status
+    return-url: https://railgo.dqhdev.io.vn/order/%s/status
     time-out: 15
 
 logging:
