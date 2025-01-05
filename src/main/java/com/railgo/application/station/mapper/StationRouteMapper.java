@@ -12,7 +12,6 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         config = GlobalMapperConfig.class)
 public interface StationRouteMapper extends MapperEntity<StationRoute, StationRouteResponse> {
-
     StationRoute toEntity(AddStationRouteRequest request);
 
     @Override

@@ -2,7 +2,6 @@ package com.railgo.domain.station.service;
 
 import com.railgo.domain.station.model.Station;
 import com.railgo.domain.station.model.StationRoute;
-import com.railgo.domain.station.valueObject.Distance;
 import com.railgo.domain.train.model.Train;
 
 import java.util.List;

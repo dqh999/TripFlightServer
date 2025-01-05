@@ -6,7 +6,6 @@ import com.railgo.domain.station.model.StationRoute;
 import com.railgo.domain.station.repository.StationRouteRepository;
 import com.railgo.domain.station.service.IStationRouteService;
 import com.railgo.domain.station.service.StationRouteFinder;
-import com.railgo.domain.station.valueObject.Distance;
 import com.railgo.domain.train.model.Train;
 import com.railgo.domain.utils.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +34,9 @@ public class StationRouteServiceImpl implements IStationRouteService {
         List<StationRoute> allRoutes = stationRouteRepository.findAll();
 
         StationRouteFinder stationRouteFinder = new DFSRouteFinder(allRoutes);
-
         stationRouteFinder.buildGraph();
 
         List<StationRoute> path = stationRouteFinder.findPath(train, startStation.getId(), endStation.getId());
-
         if (path.isEmpty()) {
             throw new BusinessException(StationExceptionCode.STATION_ROUTE_NOT_FOUND);
         }

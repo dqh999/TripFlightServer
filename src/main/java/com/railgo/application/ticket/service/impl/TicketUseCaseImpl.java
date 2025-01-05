@@ -18,9 +18,12 @@ import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.train.service.ITrainScheduleService;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
 import com.railgo.domain.utils.DateTimeUtils;
-import com.railgo.infrastructure.service.messaging.EmailService;
+import com.railgo.infrastructure.dataTransferObject.request.EmailRequest;
+import com.railgo.infrastructure.component.KafkaProducer;
+import com.railgo.infrastructure.service.cache.CacheService;
 import com.railgo.infrastructure.util.Template;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +38,11 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private final ITrainScheduleService trainScheduleService;
     private final ITrainScheduleStopService trainScheduleStopService;
     private final IPaymentGatewayService paymentService;
-    private final EmailService emailService;
+    private final KafkaProducer kafkaProducer;
+    private final CacheService cacheService;
+
+    @Value("${spring.kafka.topic.email}")
+    private String topicEmail;
 
     @Autowired
     public TicketUseCaseImpl(ITicketService ticketService,
@@ -44,14 +51,16 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                              ITrainScheduleService trainScheduleService,
                              ITrainScheduleStopService trainScheduleStopService,
                              IPaymentGatewayService paymentService,
-                             EmailService emailService) {
+                             KafkaProducer kafkaProducer,
+                             CacheService cacheService) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
         this.stationUseCase = stationUseCase;
         this.trainScheduleService = trainScheduleService;
         this.trainScheduleStopService = trainScheduleStopService;
         this.paymentService = paymentService;
-        this.emailService = emailService;
+        this.kafkaProducer = kafkaProducer;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -127,12 +136,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private void sendConfirmEmail(TicketConfirmationResponse response) {
         TicketResponse ticketResponse = response.getTicket();
 
-        Map<String, Object> variables = buildEmailVariables(ticketResponse,response.getPayment());
+        Map<String, Object> variables = buildEmailVariables(ticketResponse, response.getPayment());
 
-        emailService.send(ticketResponse.getContactEmail(),
+        var emailRequest = new EmailRequest(
+                ticketResponse.getContactEmail(),
                 "Your RailGo e-Ticket Confirmation",
                 Template.CONFIRM_TICKET,
-                variables);
+                variables
+        );
+        kafkaProducer.send(topicEmail, emailRequest);
     }
 
     private Map<String, Object> buildEmailVariables(TicketResponse ticketResponse, InitPaymentResponse paymentResponse) {
@@ -152,7 +164,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         if (paymentResponse != null && paymentResponse.getPaymentUrl() != null) {
             variables.put("paymentGateway", paymentResponse.getPaymentGateway());
             variables.put("paymentUrl", paymentResponse.getPaymentUrl());
-            variables.put("expiryTime",DateTimeUtils.formatDateTime(paymentResponse.getExpiryTime()));
+            variables.put("expiryTime", DateTimeUtils.formatDateTime(paymentResponse.getExpiryTime()));
         }
         return variables;
     }
@@ -170,10 +182,13 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
     private void sendETicket(TicketResponse ticketResponse) {
         Map<String, Object> variables = buildEmailVariables(ticketResponse, null);
-        emailService.send(ticketResponse.getContactEmail(),
+        var emailRequest = new EmailRequest(
+                ticketResponse.getContactEmail(),
                 "Your RailGo e-Ticket - Payment Successful",
                 Template.TICKET_SUCCESS,
-                variables);
+                variables
+        );
+        kafkaProducer.send(topicEmail, emailRequest);
     }
 
     @Override

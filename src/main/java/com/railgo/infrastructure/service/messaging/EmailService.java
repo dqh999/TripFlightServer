@@ -1,7 +1,7 @@
 package com.railgo.infrastructure.service.messaging;
 
 import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.infrastructure.util.Template;
+import com.railgo.infrastructure.dataTransferObject.request.EmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.TemplateEngine;
 
-import java.util.Map;
 
 @Service
 public class EmailService {
@@ -22,6 +21,9 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String from;
+    @Value("${spring.kafka.topic.email}")
+    private String topicEmail;
+
     @Autowired
     public EmailService(JavaMailSender mailSender,
                         TemplateEngine templateEngine) {
@@ -29,25 +31,22 @@ public class EmailService {
         this.templateEngine = templateEngine;
     }
 
-    public void send(String to,
-                     String subject,
-                     String template,
-                     Map<String, Object> variables) {
+    public void send(EmailRequest request) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
             Context context = new Context();
-            context.setVariables(variables);
-            String htmlContent = templateEngine.process(template, context);
+//            context.setVariables(request.getVariables());
+            String htmlContent = templateEngine.process(request.getTemplate(), context);
 
-            helper.setTo(to);
-            helper.setSubject(subject);
+            helper.setTo(request.getTo());
+            helper.setSubject(request.getSubject());
             helper.setFrom(from);
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-        } catch (MessagingException e){
+        } catch (MessagingException e) {
             throw new BusinessException();
         }
     }

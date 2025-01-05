@@ -6,6 +6,7 @@ import com.railgo.application.station.dataTransferObject.response.StationRespons
 import com.railgo.application.station.service.IStationUseCase;
 import com.railgo.infrastructure.exception.ApiResponse;
 import com.railgo.infrastructure.security.UserDetail;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/station")
+@RequestMapping("/${api.prefix}/station")
+@Tag(name = "Station Controller")
 public class StationController {
     private final IStationUseCase stationUseCase;
 

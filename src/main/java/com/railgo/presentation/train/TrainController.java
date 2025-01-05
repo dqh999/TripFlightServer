@@ -6,6 +6,7 @@ import com.railgo.application.train.service.ITrainScheduleUseCase;
 import com.railgo.application.train.service.ITrainUseCase;
 import com.railgo.infrastructure.exception.ApiResponse;
 import com.railgo.infrastructure.security.UserDetail;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/train")
+@RequestMapping("/${api.prefix}/train")
+@Tag(name = "Train Controller")
 public class TrainController {
     private final ITrainUseCase trainUseCase;
     private final ITrainScheduleUseCase trainScheduleUseCase;

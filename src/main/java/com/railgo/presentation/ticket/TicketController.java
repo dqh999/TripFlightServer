@@ -6,13 +6,15 @@ import com.railgo.application.ticket.dataTransferObject.request.TicketConfirmati
 import com.railgo.application.ticket.service.ITicketUseCase;
 import com.railgo.application.utils.RequestUtil;
 import com.railgo.infrastructure.exception.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/ticket")
+@RequestMapping("/${api.prefix}/ticket")
+@Tag(name = "Ticket Controller")
 public class TicketController {
     private final ITicketUseCase ticketUseCase;
 

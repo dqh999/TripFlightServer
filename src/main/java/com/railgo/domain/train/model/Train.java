@@ -4,7 +4,6 @@ import com.railgo.domain.train.type.TrainStatus;
 import com.railgo.domain.train.type.TrainType;
 import com.railgo.domain.utils.model.BaseModel;
 import com.railgo.domain.utils.valueObject.Id;
-import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.domain.utils.valueObject.Speed;
 
 import java.math.BigDecimal;

@@ -5,7 +5,6 @@ import com.railgo.domain.station.repository.StationRouteRepository;
 import com.railgo.infrastructure.persistence.station.mapper.StationRouteEntityMapper;
 import com.railgo.infrastructure.persistence.station.model.StationRouteEntity;
 import com.railgo.infrastructure.persistence.station.repository.StationRouteEntityRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

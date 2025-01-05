@@ -14,14 +14,20 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-#    hibernate:
-#      ddl-auto: update
+  #    hibernate:
+  #      ddl-auto: update
   data:
     redis:
       host: ${SPRING_REDIS_HOST:dqhdev.io.vn}
       port: ${SPRING_REDIS_PORT:6379}
       password: Hop2005@
       timeout: 2000
+
+  kafka:
+    bootstrap-servers: dqhdev.io.vn:9092
+    topic:
+      email: email-topic
+
 
   mail:
     host: smtp.gmail.com
@@ -40,20 +46,30 @@ spring:
   jwt:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60
-    secretKeyAccess: c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=
+    secretKeyAccess: ${SECRET_KEY_ACCESS:c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=}
 
 payment:
   VNPay:
-    tmn-code: FPBMPL8F
-    secret-key: WMZMY19Z3K3OO6TQI89UBD0BY5HSP5MA
+    tmn-code: ${VNPAY_TMN_CODE:FPBMPL8F}
+    secret-key: ${VNPAY_SECRET_KEY:WMZMY19Z3K3OO6TQI89UBD0BY5HSP5MA}
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
     return-url: https://railgo.dqhdev.io.vn/order/%s/status
     time-out: 15
+
+openapi:
+  service:
+    api-docs: railgo-server
+    server: http://api.railgo.dqhdev.io.vn
+    title: API Service
+    version: 1.0.0
+
+api:
+  prefix: /api
 
 logging:
   level:
     com:
       railgo: DEBUG
-  
+
     org:
       springframework.security: DEBUG

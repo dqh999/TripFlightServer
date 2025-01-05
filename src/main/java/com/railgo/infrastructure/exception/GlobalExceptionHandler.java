@@ -1,5 +1,6 @@
 package com.railgo.infrastructure.exception;
 
+import com.railgo.application.utils.exception.ApplicationException;
 import com.railgo.domain.utils.exception.BusinessException;
 import com.railgo.domain.utils.exception.ExceptionCode;
 import org.springframework.http.HttpStatus;

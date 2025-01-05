@@ -8,7 +8,7 @@ import com.railgo.application.account.dataTransferObject.request.RegisterRequest
 import com.railgo.application.account.exception.AccountApplicationExceptionCode;
 import com.railgo.application.account.mapper.AccountMapper;
 import com.railgo.application.account.service.UserUseCase;
-import com.railgo.infrastructure.exception.ApplicationException;
+import com.railgo.application.utils.exception.ApplicationException;
 import com.railgo.infrastructure.mapper.ObjectMapper;
 import com.railgo.domain.account.component.UserValidator;
 import com.railgo.domain.account.model.Token;
@@ -55,15 +55,11 @@ public class UserUseCaseImpl implements UserUseCase {
         if (!isLocked) {
             throw new ApplicationException(AccountApplicationExceptionCode.LOCK_ALREADY_ACQUIRED);
         }
-
         try {
-
             User userRegister = accountMapper.toDTO(request);
-
             User newUser = userService.register(userRegister);
 
             Token token = tokenService.generateToken(newUser);
-
             String accessToken = token.getValue();
 
             AccountDTO accountDTO = AccountDTO.from(newUser, token);
@@ -71,7 +67,6 @@ public class UserUseCaseImpl implements UserUseCase {
             storeAccessTokenInCache(accessToken, accountDTO);
 
             return accountDTO;
-
         } catch (BusinessException e) {
             throw new BusinessException(e.getExceptionCode());
         } finally {

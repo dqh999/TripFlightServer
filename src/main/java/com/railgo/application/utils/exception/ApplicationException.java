@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.exception;
+package com.railgo.application.utils.exception;
 
 import com.railgo.domain.utils.exception.ExceptionCode;
 

@@ -7,6 +7,7 @@ import com.railgo.application.account.dataTransferObject.request.RegisterRequest
 import com.railgo.application.account.service.UserUseCase;
 import com.railgo.infrastructure.exception.ApiResponse;
 import com.railgo.infrastructure.security.UserDetail;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,7 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/${api.prefix}/account")
+@Tag(name = "Account Controller")
 public class AccountController {
     private final UserUseCase userUseCase;
 
