@@ -83,6 +83,8 @@ jobs:
           ssh -o StrictHostKeyChecking=no root@147.93.29.117 << 'EOF'
             cd railgo-server
             git pull origin main
-            docker compose down app
+            docker stop railgo-app
+            docker rm railgo-app
+            docker compose build app
             docker compose up -d app
           EOF
