@@ -59,7 +59,7 @@ services:
       - "9999:9999" #Cho phép truy cập JMX (Java Management Extensions) của Kafka qua port 9999 trên máy chủ
     environment:
       #Định nghĩa các listener của Kafka và địa chỉ truy cập
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-01:19092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://host.docker.internal:29092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-01:19092,EXTERNAL://147.93.29.117:9092,DOCKER://host.docker.internal:29092
       #INTERNAL://kafka-broker-01:19092: Listener nội bộ cho giao tiếp giữa các container Kafka
       #EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092: Listener bên ngoài cho phép client bên ngoài truy cập Kafka thông qua port 9092 trên máy chủ
       #DOCKER://host.docker.internal:29092: Listener cho phép giao tiếp giữa các container Kafka trong cluster docker
@@ -82,7 +82,7 @@ services:
 
       #Thiết lập port và hostname cho JMX của Kafka
       KAFKA_JMX_PORT: 9999
-      KAFKA_JMX_HOSTNAME: ${DOCKER_HOST_IP:-127.0.0.1}
+      KAFKA_JMX_HOSTNAME: 147.93.29.117
       
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
 
@@ -104,7 +104,7 @@ services:
       - "9093:9093"
       - "29093:29093"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-02:19093,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093,DOCKER://host.docker.internal:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker-02:19093,EXTERNAL://147.93.29.117:9093,DOCKER://host.docker.internal:29093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper-01:2181,zookeeper-02:2182,zookeeper-03:2183"
@@ -133,10 +133,10 @@ volumes:
 
 #docker rm -f zookeeper-01 zookeeper-02 zookeeper-03 kafka-broker-01
 
-#docker-compose -f kafka-deployment.yaml up -d zookeeper-01
-#docker-compose -f kafka-deployment.yaml up -d zookeeper-02
-#docker-compose -f kafka-deployment.yaml up -d zookeeper-03
+#docker compose -f kafka-deployment.yaml up -d zookeeper-01
+#docker compose -f kafka-deployment.yaml up -d zookeeper-02
+#docker compose -f kafka-deployment.yaml up -d zookeeper-03
 
-#docker-compose -f kafka-deployment.yaml up -d kafka-broker-01
-#docker-compose -f kafka-deployment.yaml up -d kafka-broker-02
+#docker compose -f kafka-deployment.yaml up -d kafka-broker-01
+#docker compose -f kafka-deployment.yaml up -d kafka-broker-02
 
