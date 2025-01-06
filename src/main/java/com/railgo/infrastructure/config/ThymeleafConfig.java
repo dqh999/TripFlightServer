@@ -9,7 +9,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 public class ThymeleafConfig {
 
     @Bean
-    public SpringTemplateEngine templateEngine() { // Sử dụng SpringTemplateEngine
+    public SpringTemplateEngine templateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         return templateEngine;
