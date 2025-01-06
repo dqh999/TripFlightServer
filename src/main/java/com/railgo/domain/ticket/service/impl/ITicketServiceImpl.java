@@ -38,11 +38,6 @@ public class ITicketServiceImpl implements ITicketService {
     public Ticket book(Ticket ticket) {
         validateTicketForBooking(ticket);
 
-        int totalSeats = getTotalSeats(ticket);
-        int availableSeats = trainScheduleStopService.calculateAvailableSeats(ticket.getTrainSchedule().getStops(), ticket.getStartStationId(), ticket.getEndStationId());
-        if (totalSeats > availableSeats) {
-            throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
-        }
         Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(ticket.getTrainSchedule());
         Money totalPrice = ticketPricingService.calculateTicketPriceForPassengers(
                 standardTicketPrice, ticket.getChildSeats(), ticket.getAdultSeats(), ticket.getSeniorSeats()
@@ -94,7 +89,6 @@ public class ITicketServiceImpl implements ITicketService {
 
         trainScheduleStopService.updateAvailableSeats(
                 ticket.getTrainSchedule().getStops(),
-                ticket.getStartStationId(), ticket.getEndStationId(),
                 totalSeats);
 
         ticket.setStatus(TicketStatus.PAID.getValue());

@@ -92,6 +92,7 @@ CREATE TABLE tbl_train_schedule_stops
     available_seats int            not null,
     ticket_price    decimal(10, 2) not null,
     currency        varchar(10)    not null,
+    version         int auto_increment,
     created_at      timestamp,
     updated_at      timestamp
 );

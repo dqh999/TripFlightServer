@@ -3,10 +3,7 @@ package com.railgo.infrastructure.persistence.train.model.schedule;
 
 import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.infrastructure.persistence.utils.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,11 +30,13 @@ public class TrainScheduleStopEntity extends BaseEntity {
     @Column(name = "ticket_price")
     private BigDecimal ticketPrice;
     private String currency;
+    @Version
+    private int version;
 
     public TrainScheduleStopEntity() {
     }
 
-    public TrainScheduleStopEntity(String id, String scheduleId, Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice) {
+    public TrainScheduleStopEntity(String id, String scheduleId, Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice,int version) {
         this.id = id;
         this.scheduleId = scheduleId;
         this.stopOrder = stopOrder;
@@ -48,6 +47,7 @@ public class TrainScheduleStopEntity extends BaseEntity {
         this.availableSeats = availableSeats;
         this.ticketPrice = ticketPrice.getValue();
         this.currency = ticketPrice.getCurrency();
+        this.version = version;
     }
 
     public String getId() {
@@ -121,5 +121,13 @@ public class TrainScheduleStopEntity extends BaseEntity {
     public void setTicketPrice(Money ticketPrice) {
         this.ticketPrice = ticketPrice.getValue();
         this.currency = ticketPrice.getCurrency();
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 }

@@ -16,6 +16,7 @@ public class TrainScheduleStop extends BaseModel {
     private LocalDateTime arrivalTime;
     private Integer availableSeats;
     private Money ticketPrice;
+    private int vesion;
 
     public TrainScheduleStop() {
         this.id = new Id();
@@ -33,7 +34,7 @@ public class TrainScheduleStop extends BaseModel {
         this.ticketPrice = ticketPrice;
     }
 
-    public TrainScheduleStop(String id, String scheduleId, Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice) {
+    public TrainScheduleStop(String id, String scheduleId, Integer stopOrder, String stationId, LocalDateTime departureTime, String nextStationId, LocalDateTime arrivalTime, Integer availableSeats, Money ticketPrice, int vesion) {
         this.id = new Id(id);
         this.scheduleId = new Id(scheduleId);
         this.stopOrder = stopOrder;
@@ -43,6 +44,7 @@ public class TrainScheduleStop extends BaseModel {
         this.arrivalTime = arrivalTime;
         this.availableSeats = availableSeats;
         this.ticketPrice = ticketPrice;
+        this.vesion = vesion;
     }
 
     public String getId() {
@@ -115,5 +117,13 @@ public class TrainScheduleStop extends BaseModel {
 
     public void setTicketPrice(Money ticketPrice) {
         this.ticketPrice = ticketPrice;
+    }
+
+    public int getVesion() {
+        return vesion;
+    }
+
+    public void setVesion(int vesion) {
+        this.vesion = vesion;
     }
 }

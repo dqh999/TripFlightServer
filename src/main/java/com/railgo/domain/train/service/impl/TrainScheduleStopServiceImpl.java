@@ -42,62 +42,27 @@ public class TrainScheduleStopServiceImpl implements ITrainScheduleStopService {
 
     @Override
     public void updateAvailableSeats(List<TrainScheduleStop> trainScheduleStops,
-                                     String startStation, String endStation,
                                      int seatsBooked) {
-        validateUpdateAvailableSeats(trainScheduleStops, startStation, endStation, seatsBooked);
-
-        List<TrainScheduleStop> updatedStops = new ArrayList<>();
-
-        boolean hasStartStation = false;
+        validateUpdateAvailableSeats(trainScheduleStops, seatsBooked);
         for (TrainScheduleStop trainScheduleStop : trainScheduleStops) {
-            int availableSeats = trainScheduleStop.getAvailableSeats();
-            if (trainScheduleStop.getStationId().equals(startStation)) {
-                hasStartStation = true;
-                trainScheduleStop.setAvailableSeats(availableSeats - seatsBooked);
-                if (trainScheduleStop.getNextStationId().equals(endStation)) {
-                    trainScheduleStopRepository.save(trainScheduleStop);
-                    return;
-                }
-                updatedStops.add(trainScheduleStop);
-                continue;
-            }
-            if (trainScheduleStop.getNextStationId().equals(endStation) && hasStartStation) {
-                trainScheduleStop.setAvailableSeats(availableSeats - seatsBooked);
-                updatedStops.add(trainScheduleStop);
-                trainScheduleStopRepository.saveAll(updatedStops);
-                return;
-            }
-            if (hasStartStation) {
-                trainScheduleStop.setAvailableSeats(availableSeats - seatsBooked);
-                updatedStops.add(trainScheduleStop);
-            }
+            trainScheduleStop.setAvailableSeats(trainScheduleStop.getAvailableSeats() - seatsBooked);
         }
+        trainScheduleStopRepository.saveAll(trainScheduleStops);
     }
 
-    private void validateUpdateAvailableSeats(List<TrainScheduleStop> trainScheduleStops, String startStation, String endStation, int seatsBooked) {
-        if (calculateAvailableSeats(trainScheduleStops,startStation,endStation) < seatsBooked) {
+    private void validateUpdateAvailableSeats(List<TrainScheduleStop> trainScheduleStops, int seatsBooked) {
+        if (calculateAvailableSeats(trainScheduleStops) < seatsBooked) {
             throw new BusinessException();
         }
     }
 
     @Override
-    public int calculateAvailableSeats(List<TrainScheduleStop> trainScheduleStops,
-                                 String startStation, String endStation) {
+    public int calculateAvailableSeats(List<TrainScheduleStop> trainScheduleStops) {
         int availableSeats = MAX_SEAT;
-        boolean hasStartStation = false;
         for (TrainScheduleStop trainScheduleStop : trainScheduleStops) {
-            if (hasStartStation) {
-                availableSeats = calculateMin(availableSeats, trainScheduleStop.getAvailableSeats());
-            }
-            if (trainScheduleStop.getStationId().equals(startStation)) {
-                availableSeats = trainScheduleStop.getAvailableSeats();
-                hasStartStation = true;
-            }
-            if (trainScheduleStop.getNextStationId().equals(endStation) && hasStartStation) {
-                return availableSeats;
-            }
+            availableSeats = calculateMin(availableSeats, trainScheduleStop.getAvailableSeats());
         }
-        return 0;
+        return availableSeats != MAX_SEAT ? availableSeats : 0;
     }
 
     private Integer calculateMin(int x, int y) {

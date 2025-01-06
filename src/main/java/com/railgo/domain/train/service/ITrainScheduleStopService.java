@@ -13,9 +13,7 @@ public interface ITrainScheduleStopService {
                                  String endStation);
 
     void updateAvailableSeats(List<TrainScheduleStop> trainScheduleStops,
-                              String startStation, String endStation,
                               int seatsBooked);
 
-    int calculateAvailableSeats(List<TrainScheduleStop> trainScheduleStops,
-                                String startStation, String endStation);
+    int calculateAvailableSeats(List<TrainScheduleStop> trainScheduleStops);
 }

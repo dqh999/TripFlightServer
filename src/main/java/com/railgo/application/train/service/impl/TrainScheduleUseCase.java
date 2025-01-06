@@ -148,7 +148,7 @@ public class TrainScheduleUseCase implements ITrainScheduleUseCase {
 
         List<TrainScheduleResponse> trainScheduleResponses = trainSchedulePage.stream()
                 .filter(trainSchedule -> {
-                    int totalAvailableSeat = trainScheduleStopService.calculateAvailableSeats(trainSchedule.getStops(),departureStationId, arrivalStationId);
+                    int totalAvailableSeat = trainScheduleStopService.calculateAvailableSeats(trainSchedule.getStops());
                     int totalRequestSeat = childSeats + adultSeats + seniorSeats;
                     return totalAvailableSeat >= totalRequestSeat;
                 })
