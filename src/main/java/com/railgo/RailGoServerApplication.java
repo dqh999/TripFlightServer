@@ -1,16 +1,14 @@
 package com.railgo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import redis.clients.jedis.Jedis;
-
 @SpringBootApplication
 public class RailGoServerApplication {
+    private static final Logger logger = LoggerFactory.getLogger(RailGoServerApplication.class);
     public static void main(String[] args) {
         SpringApplication.run(RailGoServerApplication.class, args);
-
-        Jedis jedis = new Jedis("dqhdev.io.vn", 6379);
-        String segment = "seats:A-B";
-        jedis.set(segment, "1");
+        logger.info("RailGoServerApplication started");
     }
 }

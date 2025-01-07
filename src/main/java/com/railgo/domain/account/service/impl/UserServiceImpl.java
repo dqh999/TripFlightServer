@@ -8,6 +8,7 @@ import com.railgo.domain.account.repository.UserRepository;
 import com.railgo.domain.account.service.IUserService;
 import com.railgo.domain.account.valueObject.Role;
 import com.railgo.domain.utils.exception.BusinessException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +85,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public User changePassword(String phoneNumber,
                                String oldPassword, String newPassword) {
         validateChangePasswordRequest(phoneNumber,oldPassword, newPassword);

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class TrainScheduleStopRepositoryImpl implements TrainScheduleStopRepository {
@@ -33,6 +34,12 @@ public class TrainScheduleStopRepositoryImpl implements TrainScheduleStopReposit
     public void saveAll(List<TrainScheduleStop> trainScheduleStops) {
         List<TrainScheduleStopEntity> trainScheduleStopEntities = trainScheduleStopEntityMapper.toEntities(trainScheduleStops);
         trainScheduleStopEntityRepository.saveAll(trainScheduleStopEntities);
+    }
+
+    @Override
+    public List<TrainScheduleStop> findByScheduleId(String scheduleId) {
+        return trainScheduleStopEntityRepository.findAllByScheduleId(scheduleId)
+                .stream().map(trainScheduleStopEntityMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.component;
+package com.railgo.application.component;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

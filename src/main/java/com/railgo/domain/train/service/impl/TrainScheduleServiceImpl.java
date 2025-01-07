@@ -75,7 +75,8 @@ public class TrainScheduleServiceImpl implements ITrainScheduleService {
         return existTrainSchedule;
     }
 
-    private void filterTrainSchedule(TrainSchedule trainSchedule, String departureStationId, String arrivalStationId) {
+    private void filterTrainSchedule(TrainSchedule trainSchedule,
+                                     String departureStationId, String arrivalStationId) {
         List<TrainScheduleStop> trainScheduleStops = trainSchedule.getStops();
 
         if (trainScheduleStops.getFirst().getStationId().equals(departureStationId)

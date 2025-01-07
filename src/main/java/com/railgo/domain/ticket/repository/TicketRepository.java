@@ -5,6 +5,7 @@ import com.railgo.domain.ticket.model.Ticket;
 import java.util.Optional;
 
 public interface TicketRepository {
-    void save(Ticket ticket);
+    Ticket save(Ticket ticket);
     Optional<Ticket> findById(String id);
+    Optional<Ticket> findByPaymentId(String paymentId);
 }

@@ -7,4 +7,5 @@ public interface ITicketService {
     Ticket confirm(Ticket ticket);
     Ticket confirmPayment(Ticket ticket);
     Ticket getTicket(String id);
+    Ticket getTicketWithPaymentId(String id);
 }

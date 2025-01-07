@@ -5,8 +5,9 @@ build/
 
 .docker
 .idea
+./logs/
 
 .dockerignore
 Dockerfile
 docker-compose.yaml
-./database/database.sql
+./database/

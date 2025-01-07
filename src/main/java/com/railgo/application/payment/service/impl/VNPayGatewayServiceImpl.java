@@ -9,8 +9,11 @@ import com.railgo.domain.payment.model.Payment;
 import com.railgo.domain.payment.service.IPaymentService;
 import com.railgo.domain.payment.type.PaymentStatus;
 import com.railgo.domain.utils.type.Currency;
+import com.railgo.infrastructure.service.cache.CacheService;
 import com.railgo.infrastructure.service.crypto.CryptoService;
 import com.railgo.infrastructure.util.Symbol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,8 @@ import java.util.*;
 
 @Service
 public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
+    private static final Logger logger = LoggerFactory.getLogger(VNPayGatewayServiceImpl.class);
+
     private static final String PAYMENT_GATEWAY = "VNPay";
     private static final String VERSION = "2.1.0";
     private static final String COMMAND = "pay";
@@ -41,10 +46,13 @@ public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
 
     private final IPaymentService paymentService;
     private final CryptoService cryptoService;
+    private final CacheService cacheService;
     public VNPayGatewayServiceImpl(IPaymentService paymentService,
-                                   CryptoService cryptoService) {
+                                   CryptoService cryptoService,
+                                   CacheService cacheService) {
         this.paymentService = paymentService;
         this.cryptoService = cryptoService;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -99,7 +107,7 @@ public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
                 PaymentStatus.PENDING.getValue()
         );
         paymentService.pay(initPayment);
-
+        cacheService.put("payment_pending_%s".formatted(initPayment.getId()), expiryTime);
         return new InitPaymentResponse(
                 initPayment.getId(),
                 PAYMENT_GATEWAY,

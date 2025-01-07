@@ -11,6 +11,7 @@ public interface ITicketUseCase {
     TicketResponse book(TicketBookingRequest request);
     TicketConfirmationResponse confirm(String ticketId, TicketConfirmationRequest request);
     Ticket finalizePayment(String ticketId);
+    void cancelTicket(String ticketId);
     TicketResponse applyDiscount(String ticketId,
                                  ApplyDiscountRequest request);
 }

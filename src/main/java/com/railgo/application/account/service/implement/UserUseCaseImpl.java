@@ -130,8 +130,7 @@ public class UserUseCaseImpl implements UserUseCase {
         }
 
         if (cacheService.exists(accessToken)) {
-            Object cachedObject = cacheService.get(accessToken);
-            AccountDTO accountDTO = ObjectMapper.convert(cachedObject, AccountDTO.class);
+            AccountDTO accountDTO = cacheService.get(accessToken,AccountDTO.class);
             return accountMapper.toEntity(accountDTO);
         }
         User existUser = userService.getUserByPhoneNumber(userName);

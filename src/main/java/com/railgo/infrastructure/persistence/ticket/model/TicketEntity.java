@@ -13,9 +13,8 @@ import java.time.LocalDateTime;
 public class TicketEntity extends BaseEntity {
     @Id
     private String id;
-    @ManyToOne
-    @JoinColumn(name = "train_schedule_id")
-    private TrainScheduleEntity trainSchedule;
+    @Column(name = "train_schedule_id")
+    private String trainScheduleId;
     @Column(name = "start_station_id")
     private String startStationId;
     @Column(name = "end_station_id")
@@ -40,9 +39,9 @@ public class TicketEntity extends BaseEntity {
     public TicketEntity() {
     }
 
-    public TicketEntity(String id, TrainScheduleEntity trainSchedule, String startStationId, String endStationId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
+    public TicketEntity(String id, String trainScheduleId, String startStationId, String endStationId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
         this.id = id;
-        this.trainSchedule = trainSchedule;
+        this.trainScheduleId = trainScheduleId;
         this.startStationId = startStationId;
         this.endStationId = endStationId;
         this.childSeats = childSeats;
@@ -64,12 +63,12 @@ public class TicketEntity extends BaseEntity {
         this.id = id;
     }
 
-    public TrainScheduleEntity getTrainSchedule() {
-        return trainSchedule;
+    public String getTrainScheduleId() {
+        return trainScheduleId;
     }
 
-    public void setTrainSchedule(TrainScheduleEntity trainSchedule) {
-        this.trainSchedule = trainSchedule;
+    public void setTrainScheduleId(String trainScheduleId) {
+        this.trainScheduleId = trainScheduleId;
     }
 
     public String getStartStationId() {

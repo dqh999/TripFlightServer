@@ -1,33 +1,55 @@
 package com.railgo.presentation;
 
 
+import com.railgo.application.payment.dataTransferObject.request.InitPaymentRequest;
+import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
+import com.railgo.application.payment.service.IPaymentGatewayService;
+import com.railgo.application.utils.RequestUtil;
+import com.railgo.domain.utils.type.Currency;
+import com.railgo.domain.utils.valueObject.Money;
 import com.railgo.infrastructure.dataTransferObject.request.EmailRequest;
-import com.railgo.infrastructure.component.KafkaProducer;
-import com.railgo.infrastructure.persistence.test.Test;
+import com.railgo.application.component.KafkaProducer;
 import com.railgo.infrastructure.persistence.test.TestRepository;
 import com.railgo.infrastructure.util.Template;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 @RestController
 public class HelloWord {
     private final TestRepository testRepository;
     private final KafkaProducer kafkaProducer;
+    private final IPaymentGatewayService paymentService;
 
     @Value("${spring.kafka.topic.email}")
     private String topicEmail;
 
     public HelloWord(KafkaProducer kafkaProducer,
-                     TestRepository testRepository) {
+                     TestRepository testRepository,
+                     IPaymentGatewayService paymentService) {
         this.kafkaProducer = kafkaProducer;
         this.testRepository = testRepository;
+        this.paymentService = paymentService;
     }
-
+    @GetMapping("/testPayment")
+    public InitPaymentResponse testPayment(
+            HttpServletRequest httpServletRequest
+    ) {
+        InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
+                RequestUtil.getIpAddress(httpServletRequest),
+                "dqhit999@gmail.com",
+                "233423432",
+                new Money(BigDecimal.TEN, Currency.VND.getValue())
+        );
+        InitPaymentResponse initPaymentResponse = paymentService.init(initPaymentRequest);
+        return initPaymentResponse;
+    }
     @GetMapping("/")
     public String hello() {
         return "index";

@@ -41,7 +41,7 @@ public interface CacheService {
      * @param key The key of the data to retrieve.
      * @return The value stored in the cache, or null if not found.
      */
-    Object get(String key);
+    <T> T get(String key, Class<T> clazz);
 
     /**
      * Remove a value from the cache by key.

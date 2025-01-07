@@ -1,5 +1,6 @@
 package com.railgo.domain.train.service.impl;
 
+import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.train.model.schedule.TrainScheduleStop;
 import com.railgo.domain.train.repository.schedule.TrainScheduleStopRepository;
 import com.railgo.domain.train.service.ITrainScheduleStopService;
@@ -19,26 +20,6 @@ public class TrainScheduleStopServiceImpl implements ITrainScheduleStopService {
         this.trainScheduleStopRepository = trainScheduleStopRepository;
     }
 
-    @Override
-    public LocalDateTime getDepartureTime(List<TrainScheduleStop> trainScheduleStops, String startStation) {
-        for (TrainScheduleStop trainScheduleStop : trainScheduleStops) {
-            if (trainScheduleStop.getStationId().equals(startStation)) {
-                return trainScheduleStop.getDepartureTime();
-            }
-        }
-        throw new BusinessException();
-    }
-
-    @Override
-    public LocalDateTime getArrivalTime(List<TrainScheduleStop> trainScheduleStops,
-                                        String endStation) {
-        for (TrainScheduleStop trainScheduleStop : trainScheduleStops.reversed()) {
-            if (trainScheduleStop.getNextStationId().equals(endStation)) {
-                return trainScheduleStop.getArrivalTime();
-            }
-        }
-        throw new BusinessException();
-    }
 
     @Override
     public void updateAvailableSeats(List<TrainScheduleStop> trainScheduleStops,
@@ -54,6 +35,16 @@ public class TrainScheduleStopServiceImpl implements ITrainScheduleStopService {
         if (calculateAvailableSeats(trainScheduleStops) < seatsBooked) {
             throw new BusinessException();
         }
+    }
+
+    @Override
+    public void rollbackSeats(List<TrainScheduleStop> trainScheduleStops,
+                              int seatsToRollback) {
+        for (TrainScheduleStop trainScheduleStop : trainScheduleStops) {
+            int currentAvailableSeats = trainScheduleStop.getAvailableSeats();
+            trainScheduleStop.setAvailableSeats(currentAvailableSeats + seatsToRollback);
+        }
+        trainScheduleStopRepository.saveAll(trainScheduleStops);
     }
 
     @Override

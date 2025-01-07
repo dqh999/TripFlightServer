@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: RailGoServer
+  jmx:
+    enabled: false
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -27,6 +29,8 @@ spring:
     bootstrap-servers: dqhdev.io.vn:9092
     topic:
       email: email-topic
+      ticket:
+        ticket-cancel: ticket-cancel
 
 
   mail:
@@ -48,13 +52,23 @@ spring:
     expiration-refresh-token: 86400 #days =  24 * 60 * 60
     secretKeyAccess: ${SECRET_KEY_ACCESS:c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=}
 
+ticket:
+  confirm:
+    key: "ticket_comfirm_%s"
+    timeout: 900
+    max-retries: 3
+    retry-delay: 1000
+  payment:
+    key: "ticket_payment_%s"
+    timeout: 900
+
 payment:
   VNPay:
     tmn-code: ${VNPAY_TMN_CODE:FPBMPL8F}
-    secret-key: ${VNPAY_SECRET_KEY:WMZMY19Z3K3OO6TQI89UBD0BY5HSP5MA}
+    secret-key: ${VNPAY_SECRET_KEY:8YDK2KXJ6Q56KEJBOF3UBO96D8X3H134}
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
     return-url: https://railgo.dqhdev.io.vn/order/%s/status
-    time-out: 15
+    time-out: 1
 
 openapi:
   service:
@@ -64,7 +78,7 @@ openapi:
     version: 1.0.0
 
 api:
-  prefix: /api
+  prefix: api
 
 logging:
   level:

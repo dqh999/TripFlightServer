@@ -21,35 +21,23 @@ public class ITicketServiceImpl implements ITicketService {
     private static final long CONFIRMATION_TIMEOUT_MINUTES = 10;
     private static final long PAYMENT_TIMEOUT_MINUTES = 30;
 
-    private final ITicketPricingService ticketPricingService;
     private final TicketRepository ticketRepository;
-    private final ITrainScheduleStopService trainScheduleStopService;
 
     @Autowired
-    public ITicketServiceImpl(ITicketPricingService ticketPricingService,
-                              TicketRepository ticketRepository,
-                              ITrainScheduleStopService trainScheduleStopService) {
-        this.ticketPricingService = ticketPricingService;
+    public ITicketServiceImpl(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
-        this.trainScheduleStopService = trainScheduleStopService;
     }
 
     @Override
     public Ticket book(Ticket ticket) {
         validateTicketForBooking(ticket);
 
-        Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(ticket.getTrainSchedule());
-        Money totalPrice = ticketPricingService.calculateTicketPriceForPassengers(
-                standardTicketPrice, ticket.getChildSeats(), ticket.getAdultSeats(), ticket.getSeniorSeats()
-        );
-
-        ticket.setTotalPrice(totalPrice);
         ticket.setExpirationTime(DateTimeUtils.nowInVietnam().plusMinutes(CONFIRMATION_TIMEOUT_MINUTES));
         ticket.setStatus(TicketStatus.PENDING.getValue());
 
-        ticketRepository.save(ticket);
-        return ticket;
+        return ticketRepository.save(ticket);
     }
+
     private void validateTicketForBooking(Ticket ticket) {
         int totalSeats = getTotalSeats(ticket);
 
@@ -57,6 +45,7 @@ public class ITicketServiceImpl implements ITicketService {
             throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
         }
     }
+
     private int getTotalSeats(Ticket ticket) {
         return ticket.getChildSeats() + ticket.getAdultSeats() + ticket.getSeniorSeats();
     }
@@ -87,9 +76,9 @@ public class ITicketServiceImpl implements ITicketService {
     public Ticket confirmPayment(Ticket ticket) {
         int totalSeats = getTotalSeats(ticket);
 
-        trainScheduleStopService.updateAvailableSeats(
-                ticket.getTrainSchedule().getStops(),
-                totalSeats);
+//        trainScheduleStopService.updateAvailableSeats(
+//                ticket.getTrainSchedule().getStops(),
+//                totalSeats);
 
         ticket.setStatus(TicketStatus.PAID.getValue());
         ticketRepository.save(ticket);
@@ -100,5 +89,10 @@ public class ITicketServiceImpl implements ITicketService {
     public Ticket getTicket(String id) {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(TicketExceptionCode.TICKET_NOT_FOUND));
+    }
+
+    @Override
+    public Ticket getTicketWithPaymentId(String id) {
+        return null;
     }
 }

@@ -22,13 +22,19 @@ public class TicketRepositoryImpl implements TicketRepository {
     }
 
     @Override
-    public void save(Ticket ticket) {
+    public Ticket save(Ticket ticket) {
         TicketEntity ticketEntity = mapper.toEntity(ticket);
-        repository.save(ticketEntity);
+        TicketEntity savedTicket = repository.save(ticketEntity);
+        return mapper.toDTO(savedTicket);
     }
 
     @Override
     public Optional<Ticket> findById(String id) {
         return repository.findById(id).map(mapper::toDTO);
+    }
+
+    @Override
+    public Optional<Ticket> findByPaymentId(String paymentId) {
+        return repository.findByPaymentId(paymentId).map(mapper::toDTO);
     }
 }

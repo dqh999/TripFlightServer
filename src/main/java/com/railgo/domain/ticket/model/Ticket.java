@@ -1,7 +1,6 @@
 package com.railgo.domain.ticket.model;
 
 import com.railgo.domain.ticket.type.TicketStatus;
-import com.railgo.domain.train.model.schedule.TrainSchedule;
 import com.railgo.domain.utils.model.BaseModel;
 import com.railgo.domain.utils.valueObject.Email;
 import com.railgo.domain.utils.valueObject.Id;
@@ -11,12 +10,12 @@ import java.time.LocalDateTime;
 
 public class Ticket extends BaseModel {
     private Id id;
-    private TrainSchedule trainSchedule;
+    private Id trainScheduleId;
     private Id startStationId;
     private Id endStationId;
     private Money totalPrice;
     private Integer childSeats = 0;
-    private Integer adultSeats = 0;
+    private Integer adultSeats = 1;
     private Integer seniorSeats = 0;
     private Email contactEmail;
     private LocalDateTime expirationTime;
@@ -27,20 +26,19 @@ public class Ticket extends BaseModel {
         this.id = new Id();
     }
 
-
-    public Ticket(String id, TrainSchedule trainSchedule, String startStationId, String endStationId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail,LocalDateTime expirationTime,String paymentId, TicketStatus status) {
-        this.id = new Id(id);
-        this.trainSchedule = trainSchedule;
+    public Ticket(String id, String trainScheduleId, String startStationId, String endStationId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail, LocalDateTime expirationTime, String paymentId, String status) {
+        this.id =  new Id(id);
+        this.trainScheduleId = new Id(trainScheduleId);
         this.startStationId = new Id(startStationId);
         this.endStationId = new Id(endStationId);
         this.totalPrice = totalPrice;
         this.childSeats = childSeats;
         this.adultSeats = adultSeats;
         this.seniorSeats = seniorSeats;
-        this.contactEmail = new Email(contactEmail);
+        this.contactEmail = contactEmail != null && !contactEmail.isEmpty() ? new Email(contactEmail) : null;
         this.expirationTime = expirationTime;
-        this.paymentId = null;
-        this.status = status;
+        this.paymentId = paymentId != null ? new Id(paymentId) : null;
+        this.status = status != null ? TicketStatus.valueOf(status) : null;
     }
 
 
@@ -52,12 +50,12 @@ public class Ticket extends BaseModel {
         this.id = new Id(id);
     }
 
-    public TrainSchedule getTrainSchedule() {
-        return trainSchedule;
+    public String getTrainScheduleId() {
+        return trainScheduleId.getValue();
     }
 
-    public void setTrainSchedule(TrainSchedule trainSchedule) {
-        this.trainSchedule = trainSchedule;
+    public void setTrainScheduleId(String trainScheduleId) {
+        this.trainScheduleId = new Id(trainScheduleId);
     }
 
     public String getStartStationId() {
@@ -108,12 +106,15 @@ public class Ticket extends BaseModel {
         this.seniorSeats = seniorSeats;
     }
 
+    public Integer calculateTotalSeats() {
+        return this.childSeats  + this.adultSeats + this.seniorSeats;
+    }
     public String getContactEmail() {
-        return contactEmail.getValue();
+        return contactEmail != null ? contactEmail.getValue() : "";
     }
 
     public void setContactEmail(String contactEmail) {
-        this.contactEmail = new Email(contactEmail);
+        this.contactEmail = contactEmail != null && !contactEmail.isEmpty() ? new Email(contactEmail) : null;
     }
 
     public LocalDateTime getExpirationTime() {

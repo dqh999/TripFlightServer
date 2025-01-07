@@ -10,6 +10,10 @@ public class Money {
     private final BigDecimal value;
     private final Currency currency;
 
+    public Money() {
+        this.value = new BigDecimal(0);
+        this.currency = Currency.VND;
+    }
 
     public Money(BigDecimal value, String currency) {
         if (value == null || value.compareTo(BigDecimal.ZERO) < 0) {

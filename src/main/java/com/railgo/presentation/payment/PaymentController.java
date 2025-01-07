@@ -3,6 +3,8 @@ package com.railgo.presentation.payment;
 import com.railgo.application.payment.dataTransferObject.response.IpnResponse;
 import com.railgo.application.payment.service.IpnHandler;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,8 @@ import java.util.Map;
 @RequestMapping("/${api.prefix}/payment")
 @Tag(name = "Payment Controller")
 public class PaymentController {
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
     private final IpnHandler ipnHandler;
 
     @Autowired
@@ -23,8 +27,10 @@ public class PaymentController {
     }
 
     @GetMapping("/VNPay_ipn")
-    public IpnResponse processIpn(@RequestParam Map<String, String> params) {
-        System.out.println("vnpay ipn " + params );
+    public IpnResponse processIpn(
+            @RequestParam Map<String, String> params
+    ) {
+        logger.info("Received IPN request with params: {}", params);
         return ipnHandler.process(params);
     }
 }
