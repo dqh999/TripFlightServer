@@ -1,4 +1,4 @@
-package com.railgo.domain.utils.type;
+package com.airline.domain.utils.type;
 
 public enum Currency {
     USD("USD"),

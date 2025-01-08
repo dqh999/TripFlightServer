@@ -1,9 +1,9 @@
-package com.railgo.application.ticket.mapper;
+package com.airline.application.ticket.mapper;
 
-import com.railgo.application.ticket.dataTransferObject.response.TicketResponse;
-import com.railgo.domain.ticket.model.Ticket;
-import com.railgo.infrastructure.config.GlobalMapperConfig;
-import com.railgo.infrastructure.mapper.MapperEntity;
+import com.airline.application.ticket.dataTransferObject.response.TicketResponse;
+import com.airline.domain.ticket.model.Ticket;
+import com.airline.infrastructure.config.GlobalMapperConfig;
+import com.airline.infrastructure.mapper.MapperEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RailGo e-Ticket</title>
+    <title>airline e-Ticket</title>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
         body {
@@ -65,7 +65,7 @@
 <body>
 <div class="ticket">
     <div class="ticket-header">
-        <h1 class="ticket-title">RailGo e-Ticket</h1>
+        <h1 class="ticket-title">airline e-Ticket</h1>
         <p class="ticket-description">Your ticket has been successfully booked.</p>
     </div>
     <div class="ticket-content">
@@ -79,16 +79,16 @@
                 <td th:text="${ticketId}"></td>
             </tr>
             <tr>
-                <th>Train</th>
-                <td th:text="${trainName}"></td>
+                <th>Flight</th>
+                <td th:text="${FlightName}"></td>
             </tr>
             <tr>
                 <th>Departure</th>
-                <td th:text="${departureStation} + ' - ' + ${departureTime}"></td>
+                <td th:text="${departureairline} + ' - ' + ${departureTime}"></td>
             </tr>
             <tr>
                 <th>Arrival</th>
-                <td th:text="${arrivalStation} + ' - ' + ${arrivalTime}"></td>
+                <td th:text="${arrivalairline} + ' - ' + ${arrivalTime}"></td>
             </tr>
             <tr>
                 <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${seatsInfo}"></td>

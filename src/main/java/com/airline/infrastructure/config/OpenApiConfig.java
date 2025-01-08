@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.config;
+package com.airline.infrastructure.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -19,7 +19,7 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder()
                 .group(apiDocs)
                 .pathsToMatch("/**")
-                .packagesToScan("com.railgo.presentation")
+                .packagesToScan("com.airline.presentation")
                 .build();
     }
 

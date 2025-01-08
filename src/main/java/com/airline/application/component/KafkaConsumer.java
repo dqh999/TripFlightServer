@@ -1,8 +1,8 @@
-package com.railgo.application.component;
+package com.airline.application.component;
 
-import com.railgo.application.ticket.service.ITicketUseCase;
-import com.railgo.infrastructure.dataTransferObject.request.EmailRequest;
-import com.railgo.infrastructure.service.messaging.EmailService;
+import com.airline.application.ticket.service.ITicketUseCase;
+import com.airline.infrastructure.dataTransferObject.request.EmailRequest;
+import com.airline.infrastructure.service.messaging.EmailService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;

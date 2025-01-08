@@ -1,13 +1,13 @@
-package com.railgo.presentation.account;
+package com.airline.presentation.account;
 
-import com.railgo.application.account.dataTransferObject.AccountDTO;
-import com.railgo.application.account.dataTransferObject.request.ChangePasswordRequest;
-import com.railgo.application.account.dataTransferObject.request.LoginRequest;
-import com.railgo.application.account.dataTransferObject.request.RefreshTokenRequest;
-import com.railgo.application.account.dataTransferObject.request.RegisterRequest;
-import com.railgo.application.account.service.UserUseCase;
-import com.railgo.infrastructure.exception.ApiResponse;
-import com.railgo.infrastructure.security.UserDetail;
+import com.airline.application.account.dataTransferObject.AccountDTO;
+import com.airline.application.account.dataTransferObject.request.ChangePasswordRequest;
+import com.airline.application.account.dataTransferObject.request.LoginRequest;
+import com.airline.application.account.dataTransferObject.request.RefreshTokenRequest;
+import com.airline.application.account.dataTransferObject.request.RegisterRequest;
+import com.airline.application.account.service.UserUseCase;
+import com.airline.infrastructure.exception.ApiResponse;
+import com.airline.infrastructure.security.UserDetail;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

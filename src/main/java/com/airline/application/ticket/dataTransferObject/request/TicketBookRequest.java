@@ -1,6 +1,6 @@
-package com.railgo.application.ticket.dataTransferObject.request;
+package com.airline.application.ticket.dataTransferObject.request;
 
-import com.railgo.application.ticket.dataTransferObject.PassengerDTO;
+import com.airline.application.ticket.dataTransferObject.PassengerDTO;
 
 import java.util.List;
 

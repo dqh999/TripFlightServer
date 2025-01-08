@@ -1,4 +1,4 @@
-package com.railgo.domain.utils;
+package com.airline.domain.utils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

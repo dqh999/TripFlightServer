@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.util;
+package com.airline.infrastructure.util;
 
 public class Template {
     public final static String CONFIRM_TICKET = "confirm-ticket";

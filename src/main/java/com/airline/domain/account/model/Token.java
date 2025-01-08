@@ -1,8 +1,8 @@
-package com.railgo.domain.account.model;
+package com.airline.domain.account.model;
 
 
-import com.railgo.domain.utils.model.BaseModel;
-import com.railgo.domain.utils.valueObject.Id;
+import com.airline.domain.utils.model.BaseModel;
+import com.airline.domain.utils.valueObject.Id;
 
 import java.util.Date;
 

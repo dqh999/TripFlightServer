@@ -1,6 +1,6 @@
-package com.railgo.domain.ticket.repository;
+package com.airline.domain.ticket.repository;
 
-import com.railgo.domain.ticket.model.Ticket;
+import com.airline.domain.ticket.model.Ticket;
 
 import java.util.Optional;
 

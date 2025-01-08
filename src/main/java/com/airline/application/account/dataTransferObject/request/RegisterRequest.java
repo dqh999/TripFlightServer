@@ -1,4 +1,4 @@
-package com.railgo.application.account.dataTransferObject.request;
+package com.airline.application.account.dataTransferObject.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

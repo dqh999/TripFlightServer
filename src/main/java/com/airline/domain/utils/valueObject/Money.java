@@ -1,8 +1,8 @@
-package com.railgo.domain.utils.valueObject;
+package com.airline.domain.utils.valueObject;
 
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.domain.utils.service.CurrencyConverter;
-import com.railgo.domain.utils.type.Currency;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.domain.utils.service.CurrencyConverter;
+import com.airline.domain.utils.type.Currency;
 
 import java.math.BigDecimal;
 

@@ -1,8 +1,8 @@
-package com.railgo.infrastructure.persistence.ticket.model;
+package com.airline.infrastructure.persistence.ticket.model;
 
-import com.railgo.domain.utils.valueObject.Money;
-import com.railgo.infrastructure.persistence.train.model.schedule.TrainScheduleEntity;
-import com.railgo.infrastructure.persistence.utils.BaseEntity;
+import com.airline.domain.utils.valueObject.Money;
+import com.airline.infrastructure.persistence.Flight.model.schedule.FlightScheduleEntity;
+import com.airline.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 public class TicketEntity extends BaseEntity {
     @Id
     private String id;
-    @Column(name = "train_schedule_id")
-    private String trainScheduleId;
-    @Column(name = "start_station_id")
-    private String startStationId;
-    @Column(name = "end_station_id")
-    private String endStationId;
+    @Column(name = "Flight_schedule_id")
+    private String FlightScheduleId;
+    @Column(name = "start_airline_id")
+    private String startairlineId;
+    @Column(name = "end_airline_id")
+    private String endairlineId;
     @Column(name = "child_seats", columnDefinition = "0")
     private Integer childSeats;
     @Column(name = "adult_seats", columnDefinition = "0")
@@ -39,11 +39,11 @@ public class TicketEntity extends BaseEntity {
     public TicketEntity() {
     }
 
-    public TicketEntity(String id, String trainScheduleId, String startStationId, String endStationId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
+    public TicketEntity(String id, String FlightScheduleId, String startairlineId, String endairlineId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
         this.id = id;
-        this.trainScheduleId = trainScheduleId;
-        this.startStationId = startStationId;
-        this.endStationId = endStationId;
+        this.FlightScheduleId = FlightScheduleId;
+        this.startairlineId = startairlineId;
+        this.endairlineId = endairlineId;
         this.childSeats = childSeats;
         this.adultSeats = adultSeats;
         this.seniorSeats = seniorSeats;
@@ -63,28 +63,28 @@ public class TicketEntity extends BaseEntity {
         this.id = id;
     }
 
-    public String getTrainScheduleId() {
-        return trainScheduleId;
+    public String getFlightScheduleId() {
+        return FlightScheduleId;
     }
 
-    public void setTrainScheduleId(String trainScheduleId) {
-        this.trainScheduleId = trainScheduleId;
+    public void setFlightScheduleId(String FlightScheduleId) {
+        this.FlightScheduleId = FlightScheduleId;
     }
 
-    public String getStartStationId() {
-        return startStationId;
+    public String getStartairlineId() {
+        return startairlineId;
     }
 
-    public void setStartStationId(String startStationId) {
-        this.startStationId = startStationId;
+    public void setStartairlineId(String startairlineId) {
+        this.startairlineId = startairlineId;
     }
 
-    public String getEndStationId() {
-        return endStationId;
+    public String getEndairlineId() {
+        return endairlineId;
     }
 
-    public void setEndStationId(String endStationId) {
-        this.endStationId = endStationId;
+    public void setEndairlineId(String endairlineId) {
+        this.endairlineId = endairlineId;
     }
 
     public Integer getChildSeats() {

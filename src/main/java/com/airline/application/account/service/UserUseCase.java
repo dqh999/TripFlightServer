@@ -1,12 +1,12 @@
-package com.railgo.application.account.service;
+package com.airline.application.account.service;
 
 
-import com.railgo.application.account.dataTransferObject.AccountDTO;
-import com.railgo.application.account.dataTransferObject.request.ChangePasswordRequest;
-import com.railgo.application.account.dataTransferObject.request.LoginRequest;
-import com.railgo.application.account.dataTransferObject.request.RefreshTokenRequest;
-import com.railgo.application.account.dataTransferObject.request.RegisterRequest;
-import com.railgo.infrastructure.security.UserDetail;
+import com.airline.application.account.dataTransferObject.AccountDTO;
+import com.airline.application.account.dataTransferObject.request.ChangePasswordRequest;
+import com.airline.application.account.dataTransferObject.request.LoginRequest;
+import com.airline.application.account.dataTransferObject.request.RefreshTokenRequest;
+import com.airline.application.account.dataTransferObject.request.RegisterRequest;
+import com.airline.infrastructure.security.UserDetail;
 
 public interface UserUseCase {
     AccountDTO login(LoginRequest request);

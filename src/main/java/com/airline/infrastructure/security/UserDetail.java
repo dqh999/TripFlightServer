@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.security;
+package com.airline.infrastructure.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

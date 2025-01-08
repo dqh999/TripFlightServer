@@ -1,28 +1,28 @@
-package com.railgo.application.ticket.utils;
+package com.airline.application.ticket.utils;
 
-import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
-import com.railgo.application.station.dataTransferObject.response.StationResponse;
-import com.railgo.application.station.service.IStationUseCase;
-import com.railgo.application.ticket.dataTransferObject.response.TicketResponse;
-import com.railgo.application.ticket.mapper.TicketMapper;
-import com.railgo.domain.ticket.model.Ticket;
-import com.railgo.domain.train.model.schedule.TrainSchedule;
-import com.railgo.domain.utils.DateTimeUtils;
+import com.airline.application.payment.dataTransferObject.response.InitPaymentResponse;
+import com.airline.application.airline.dataTransferObject.response.airlineResponse;
+import com.airline.application.airline.service.IairlineUseCase;
+import com.airline.application.ticket.dataTransferObject.response.TicketResponse;
+import com.airline.application.ticket.mapper.TicketMapper;
+import com.airline.domain.ticket.model.Ticket;
+import com.airline.domain.Flight.model.schedule.FlightSchedule;
+import com.airline.domain.utils.DateTimeUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TicketUtils {
-    public static TicketResponse buildTicketResponse(Ticket ticket, TrainSchedule trainSchedule, IStationUseCase stationUseCase, TicketMapper ticketMapper) {
-        StationResponse departureStation = stationUseCase.getStation(ticket.getStartStationId());
-        LocalDateTime departureTime = trainSchedule.getStops().getFirst().getDepartureTime();
-        StationResponse arrivalStation = stationUseCase.getStation(ticket.getEndStationId());
-        LocalDateTime arrivalTime = trainSchedule.getStops().getLast().getArrivalTime();
+    public static TicketResponse buildTicketResponse(Ticket ticket, FlightSchedule FlightSchedule, IairlineUseCase airlineUseCase, TicketMapper ticketMapper) {
+        airlineResponse departureairline = airlineUseCase.getairline(ticket.getStartairlineId());
+        LocalDateTime departureTime = FlightSchedule.getStops().getFirst().getDepartureTime();
+        airlineResponse arrivalairline = airlineUseCase.getairline(ticket.getEndairlineId());
+        LocalDateTime arrivalTime = FlightSchedule.getStops().getLast().getArrivalTime();
         TicketResponse ticketResponse = ticketMapper.toDTO(ticket);
-        ticketResponse.setTrainName(trainSchedule.getTrain().getName());
-        ticketResponse.setDepartureStation(departureStation);
-        ticketResponse.setArrivalStation(arrivalStation);
+        ticketResponse.setFlightName(FlightSchedule.getFlight().getName());
+        ticketResponse.setDepartureairline(departureairline);
+        ticketResponse.setArrivalairline(arrivalairline);
         ticketResponse.setDepartureTime(departureTime);
         ticketResponse.setArrivalTime(arrivalTime);
         ticketResponse.setTotalSeats(ticket.calculateTotalSeats());
@@ -32,11 +32,11 @@ public class TicketUtils {
     public static Map<String, Object> buildEmailVariables(TicketResponse ticketResponse, InitPaymentResponse paymentResponse) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("ticketId", ticketResponse.getId());
-        variables.put("trainName", ticketResponse.getTrainName());
+        variables.put("FlightName", ticketResponse.getFlightName());
         variables.put("name", ticketResponse.getContactEmail());
-        variables.put("departureStation", ticketResponse.getDepartureStation().getName());
+        variables.put("departureairline", ticketResponse.getDepartureairline().getName());
         variables.put("departureTime", DateTimeUtils.formatDateTime(ticketResponse.getDepartureTime()));
-        variables.put("arrivalStation", ticketResponse.getArrivalStation().getName());
+        variables.put("arrivalairline", ticketResponse.getArrivalairline().getName());
         variables.put("arrivalTime", DateTimeUtils.formatDateTime(ticketResponse.getArrivalTime()));
 
         StringBuilder seatsInfo = new StringBuilder("Total Seats: " + ticketResponse.getTotalSeats());

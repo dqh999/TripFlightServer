@@ -1,4 +1,4 @@
-package com.railgo.application.utils;
+package com.airline.application.utils;
 
 import java.io.Serializable;
 import java.util.List;

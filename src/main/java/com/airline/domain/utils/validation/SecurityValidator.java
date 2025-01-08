@@ -1,4 +1,4 @@
-package com.railgo.domain.utils.validation;
+package com.airline.domain.utils.validation;
 
 public class SecurityValidator {
 

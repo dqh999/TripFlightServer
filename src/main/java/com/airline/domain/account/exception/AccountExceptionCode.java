@@ -1,6 +1,6 @@
-package com.railgo.domain.account.exception;
+package com.airline.domain.account.exception;
 
-import com.railgo.domain.utils.exception.ExceptionCode;
+import com.airline.domain.utils.exception.ExceptionCode;
 
 public enum AccountExceptionCode implements ExceptionCode {
     ACCOUNT_NOT_FOUND("ACCOUNT_NOT_FOUND", 404),

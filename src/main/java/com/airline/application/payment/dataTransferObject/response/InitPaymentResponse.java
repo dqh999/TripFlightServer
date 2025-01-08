@@ -1,4 +1,4 @@
-package com.railgo.application.payment.dataTransferObject.response;
+package com.airline.application.payment.dataTransferObject.response;
 
 import java.time.LocalDateTime;
 

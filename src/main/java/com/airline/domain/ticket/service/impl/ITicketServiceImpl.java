@@ -1,15 +1,13 @@
-package com.railgo.domain.ticket.service.impl;
+package com.airline.domain.ticket.service.impl;
 
-import com.railgo.domain.ticket.exception.TicketExceptionCode;
-import com.railgo.domain.ticket.model.Ticket;
-import com.railgo.domain.ticket.repository.TicketRepository;
-import com.railgo.domain.ticket.service.ITicketPricingService;
-import com.railgo.domain.ticket.service.ITicketService;
-import com.railgo.domain.ticket.type.TicketStatus;
-import com.railgo.domain.train.service.ITrainScheduleStopService;
-import com.railgo.domain.utils.DateTimeUtils;
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.domain.utils.valueObject.Money;
+import com.airline.domain.ticket.exception.TicketExceptionCode;
+import com.airline.domain.ticket.model.Ticket;
+import com.airline.domain.ticket.repository.TicketRepository;
+import com.airline.domain.ticket.service.ITicketService;
+import com.airline.domain.ticket.type.TicketStatus;
+import com.airline.domain.Flight.service.IFlightScheduleStopService;
+import com.airline.domain.utils.DateTimeUtils;
+import com.airline.domain.utils.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,8 +74,8 @@ public class ITicketServiceImpl implements ITicketService {
     public Ticket confirmPayment(Ticket ticket) {
         int totalSeats = getTotalSeats(ticket);
 
-//        trainScheduleStopService.updateAvailableSeats(
-//                ticket.getTrainSchedule().getStops(),
+//        FlightScheduleStopService.updateAvailableSeats(
+//                ticket.getFlightSchedule().getStops(),
 //                totalSeats);
 
         ticket.setStatus(TicketStatus.PAID.getValue());

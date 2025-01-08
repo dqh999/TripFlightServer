@@ -1,10 +1,10 @@
-package com.railgo.domain.payment.service.impl;
+package com.airline.domain.payment.service.impl;
 
-import com.railgo.domain.payment.model.Payment;
-import com.railgo.domain.payment.repository.PaymentRepository;
-import com.railgo.domain.payment.service.IPaymentService;
-import com.railgo.domain.payment.type.PaymentStatus;
-import com.railgo.domain.utils.exception.BusinessException;
+import com.airline.domain.payment.model.Payment;
+import com.airline.domain.payment.repository.PaymentRepository;
+import com.airline.domain.payment.service.IPaymentService;
+import com.airline.domain.payment.type.PaymentStatus;
+import com.airline.domain.utils.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

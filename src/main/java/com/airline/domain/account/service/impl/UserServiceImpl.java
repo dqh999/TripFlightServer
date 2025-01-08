@@ -1,13 +1,13 @@
-package com.railgo.domain.account.service.impl;
+package com.airline.domain.account.service.impl;
 
 
-import com.railgo.domain.account.component.UserValidator;
-import com.railgo.domain.account.exception.AccountExceptionCode;
-import com.railgo.domain.account.model.User;
-import com.railgo.domain.account.repository.UserRepository;
-import com.railgo.domain.account.service.IUserService;
-import com.railgo.domain.account.valueObject.Role;
-import com.railgo.domain.utils.exception.BusinessException;
+import com.airline.domain.account.component.UserValidator;
+import com.airline.domain.account.exception.AccountExceptionCode;
+import com.airline.domain.account.model.User;
+import com.airline.domain.account.repository.UserRepository;
+import com.airline.domain.account.service.IUserService;
+import com.airline.domain.account.valueObject.Role;
+import com.airline.domain.utils.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

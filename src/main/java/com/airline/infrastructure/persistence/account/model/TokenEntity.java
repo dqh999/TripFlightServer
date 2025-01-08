@@ -1,6 +1,6 @@
-package com.railgo.infrastructure.persistence.account.model;
+package com.airline.infrastructure.persistence.account.model;
 
-import com.railgo.infrastructure.persistence.utils.BaseEntity;
+import com.airline.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,11 +1,11 @@
-package com.railgo.domain.account.model;
+package com.airline.domain.account.model;
 
-import com.railgo.domain.utils.valueObject.Email;
-import com.railgo.domain.account.valueObject.HashPassword;
-import com.railgo.domain.utils.valueObject.PhoneNumber;
-import com.railgo.domain.account.valueObject.Role;
-import com.railgo.domain.utils.model.BaseModel;
-import com.railgo.domain.utils.valueObject.Id;
+import com.airline.domain.utils.valueObject.Email;
+import com.airline.domain.account.valueObject.HashPassword;
+import com.airline.domain.utils.valueObject.PhoneNumber;
+import com.airline.domain.account.valueObject.Role;
+import com.airline.domain.utils.model.BaseModel;
+import com.airline.domain.utils.valueObject.Id;
 
 import java.time.LocalDate;
 

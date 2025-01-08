@@ -1,8 +1,8 @@
-package com.railgo.infrastructure.exception;
+package com.airline.infrastructure.exception;
 
-import com.railgo.application.utils.exception.ApplicationException;
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.domain.utils.exception.ExceptionCode;
+import com.airline.application.utils.exception.ApplicationException;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.domain.utils.exception.ExceptionCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

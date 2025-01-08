@@ -1,6 +1,6 @@
-package com.railgo.domain.account.repository;
+package com.airline.domain.account.repository;
 
-import com.railgo.domain.account.model.User;
+import com.airline.domain.account.model.User;
 
 import java.util.Optional;
 

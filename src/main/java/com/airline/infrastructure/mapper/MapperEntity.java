@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.mapper;
+package com.airline.infrastructure.mapper;
 
 import java.util.List;
 

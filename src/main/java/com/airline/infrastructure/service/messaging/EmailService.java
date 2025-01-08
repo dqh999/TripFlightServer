@@ -1,7 +1,7 @@
-package com.railgo.infrastructure.service.messaging;
+package com.airline.infrastructure.service.messaging;
 
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.infrastructure.dataTransferObject.request.EmailRequest;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.infrastructure.dataTransferObject.request.EmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

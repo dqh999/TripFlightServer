@@ -1,6 +1,6 @@
-package com.railgo.infrastructure.service.crypto;
+package com.airline.infrastructure.service.crypto;
 
-import com.railgo.domain.utils.exception.BusinessException;
+import com.airline.domain.utils.exception.BusinessException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
-package com.railgo.domain.utils.service;
+package com.airline.domain.utils.service;
 
-import com.railgo.domain.utils.type.Currency;
+import com.airline.domain.utils.type.Currency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

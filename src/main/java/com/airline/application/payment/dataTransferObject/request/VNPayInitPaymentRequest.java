@@ -1,4 +1,4 @@
-package com.railgo.application.payment.dataTransferObject.request;
+package com.airline.application.payment.dataTransferObject.request;
 
 public class VNPayInitPaymentRequest {
 }

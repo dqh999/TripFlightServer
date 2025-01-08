@@ -9,6 +9,6 @@ public class AirLineServerApplication {
     private static final Logger logger = LoggerFactory.getLogger(AirLineServerApplication.class);
     public static void main(String[] args) {
         SpringApplication.run(AirLineServerApplication.class, args);
-        logger.info("RailGoServerApplication started");
+        logger.info("airlineServerApplication started");
     }
 }

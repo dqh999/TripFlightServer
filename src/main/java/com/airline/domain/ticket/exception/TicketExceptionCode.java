@@ -1,6 +1,6 @@
-package com.railgo.domain.ticket.exception;
+package com.airline.domain.ticket.exception;
 
-import com.railgo.domain.utils.exception.ExceptionCode;
+import com.airline.domain.utils.exception.ExceptionCode;
 
 public enum TicketExceptionCode implements ExceptionCode {
     TICKET_NOT_FOUND("TICKET_NOT_FOUND", 404),

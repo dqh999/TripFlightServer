@@ -1,11 +1,11 @@
-package com.railgo.application.ticket.service;
+package com.airline.application.ticket.service;
 
-import com.railgo.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
-import com.railgo.application.ticket.dataTransferObject.request.TicketBookingRequest;
-import com.railgo.application.ticket.dataTransferObject.request.TicketBookRequest;
-import com.railgo.application.ticket.dataTransferObject.response.TicketBookResponse;
-import com.railgo.application.ticket.dataTransferObject.response.TicketResponse;
-import com.railgo.domain.ticket.model.Ticket;
+import com.airline.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
+import com.airline.application.ticket.dataTransferObject.request.TicketBookingRequest;
+import com.airline.application.ticket.dataTransferObject.request.TicketBookRequest;
+import com.airline.application.ticket.dataTransferObject.response.TicketBookResponse;
+import com.airline.application.ticket.dataTransferObject.response.TicketResponse;
+import com.airline.domain.ticket.model.Ticket;
 
 public interface ITicketUseCase {
     TicketResponse create(TicketBookingRequest request);

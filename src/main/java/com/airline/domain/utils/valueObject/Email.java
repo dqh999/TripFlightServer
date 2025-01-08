@@ -1,7 +1,7 @@
-package com.railgo.domain.utils.valueObject;
+package com.airline.domain.utils.valueObject;
 
 
-import com.railgo.domain.account.component.UserValidator;
+import com.airline.domain.account.component.UserValidator;
 
 public class Email {
     private static final UserValidator userValidator = new UserValidator();

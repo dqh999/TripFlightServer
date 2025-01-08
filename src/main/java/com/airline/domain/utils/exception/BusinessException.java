@@ -1,4 +1,4 @@
-package com.railgo.domain.utils.exception;
+package com.airline.domain.utils.exception;
 
 
 public class BusinessException extends RuntimeException {

@@ -1,11 +1,11 @@
-package com.railgo.presentation.ticket;
+package com.airline.presentation.ticket;
 
-import com.railgo.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
-import com.railgo.application.ticket.dataTransferObject.request.TicketBookingRequest;
-import com.railgo.application.ticket.dataTransferObject.request.TicketBookRequest;
-import com.railgo.application.ticket.service.ITicketUseCase;
-import com.railgo.application.utils.RequestUtil;
-import com.railgo.infrastructure.exception.ApiResponse;
+import com.airline.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
+import com.airline.application.ticket.dataTransferObject.request.TicketBookingRequest;
+import com.airline.application.ticket.dataTransferObject.request.TicketBookRequest;
+import com.airline.application.ticket.service.ITicketUseCase;
+import com.airline.application.utils.RequestUtil;
+import com.airline.infrastructure.exception.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

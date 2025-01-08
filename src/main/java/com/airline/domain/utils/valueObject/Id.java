@@ -1,4 +1,4 @@
-package com.railgo.domain.utils.valueObject;
+package com.airline.domain.utils.valueObject;
 
 import java.util.UUID;
 

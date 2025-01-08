@@ -1,6 +1,6 @@
-package com.railgo.application.utils.exception;
+package com.airline.application.utils.exception;
 
-import com.railgo.domain.utils.exception.ExceptionCode;
+import com.airline.domain.utils.exception.ExceptionCode;
 
 public class ApplicationException extends RuntimeException {
     ExceptionCode responseCode;

@@ -1,4 +1,4 @@
-package com.railgo.application.ticket.dataTransferObject;
+package com.airline.application.ticket.dataTransferObject;
 
 import java.time.LocalDate;
 

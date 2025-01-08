@@ -1,10 +1,10 @@
-package com.railgo.infrastructure.persistence.ticket.repository.impl;
+package com.airline.infrastructure.persistence.ticket.repository.impl;
 
-import com.railgo.domain.ticket.model.Ticket;
-import com.railgo.domain.ticket.repository.TicketRepository;
-import com.railgo.infrastructure.persistence.ticket.mapper.TicketEntityMapper;
-import com.railgo.infrastructure.persistence.ticket.model.TicketEntity;
-import com.railgo.infrastructure.persistence.ticket.repository.TicketEntityRepository;
+import com.airline.domain.ticket.model.Ticket;
+import com.airline.domain.ticket.repository.TicketRepository;
+import com.airline.infrastructure.persistence.ticket.mapper.TicketEntityMapper;
+import com.airline.infrastructure.persistence.ticket.model.TicketEntity;
+import com.airline.infrastructure.persistence.ticket.repository.TicketEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

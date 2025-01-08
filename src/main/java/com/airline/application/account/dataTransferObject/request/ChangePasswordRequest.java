@@ -1,4 +1,4 @@
-package com.railgo.application.account.dataTransferObject.request;
+package com.airline.application.account.dataTransferObject.request;
 
 public class ChangePasswordRequest {
     private String oldPassword;

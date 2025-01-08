@@ -1,4 +1,4 @@
-package com.railgo.domain.payment.type;
+package com.airline.domain.payment.type;
 
 public enum PaymentStatus {
     PENDING("PENDING"),

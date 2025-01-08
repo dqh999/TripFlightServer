@@ -1,7 +1,7 @@
-package com.railgo.domain.account.repository;
+package com.airline.domain.account.repository;
 
 
-import com.railgo.domain.account.model.Token;
+import com.airline.domain.account.model.Token;
 
 import java.util.List;
 import java.util.Optional;

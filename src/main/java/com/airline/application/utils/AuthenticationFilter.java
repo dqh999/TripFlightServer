@@ -1,8 +1,8 @@
-package com.railgo.application.utils;
+package com.airline.application.utils;
 
-import com.railgo.application.account.service.UserUseCase;
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.infrastructure.security.UserDetail;
+import com.airline.application.account.service.UserUseCase;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.infrastructure.security.UserDetail;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

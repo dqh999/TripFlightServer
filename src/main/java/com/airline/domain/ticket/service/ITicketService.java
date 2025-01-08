@@ -1,6 +1,6 @@
-package com.railgo.domain.ticket.service;
+package com.airline.domain.ticket.service;
 
-import com.railgo.domain.ticket.model.Ticket;
+import com.airline.domain.ticket.model.Ticket;
 
 public interface ITicketService {
     Ticket create(Ticket ticket);

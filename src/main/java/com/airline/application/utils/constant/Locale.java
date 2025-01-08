@@ -1,4 +1,4 @@
-package com.railgo.application.utils.constant;
+package com.airline.application.utils.constant;
 
 public enum Locale {
     VIETNAM("vn");

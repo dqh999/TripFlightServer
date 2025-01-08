@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.config;
+package com.airline.infrastructure.config;
 
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.MapperConfig;

@@ -1,7 +1,7 @@
-package com.railgo.infrastructure.persistence.payment.model;
+package com.airline.infrastructure.persistence.payment.model;
 
-import com.railgo.domain.utils.valueObject.Money;
-import com.railgo.infrastructure.persistence.utils.BaseEntity;
+import com.airline.domain.utils.valueObject.Money;
+import com.airline.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

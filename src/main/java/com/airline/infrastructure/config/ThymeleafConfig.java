@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.config;
+package com.airline.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

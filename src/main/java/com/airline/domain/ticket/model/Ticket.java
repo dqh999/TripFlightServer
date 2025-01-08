@@ -1,18 +1,16 @@
-package com.railgo.domain.ticket.model;
+package com.airline.domain.ticket.model;
 
-import com.railgo.domain.ticket.type.TicketStatus;
-import com.railgo.domain.utils.model.BaseModel;
-import com.railgo.domain.utils.valueObject.Email;
-import com.railgo.domain.utils.valueObject.Id;
-import com.railgo.domain.utils.valueObject.Money;
+import com.airline.domain.ticket.type.TicketStatus;
+import com.airline.domain.utils.model.BaseModel;
+import com.airline.domain.utils.valueObject.Email;
+import com.airline.domain.utils.valueObject.Id;
+import com.airline.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
 
 public class Ticket extends BaseModel {
     private Id id;
-    private Id trainScheduleId;
-    private Id startStationId;
-    private Id endStationId;
+    private Id flightScheduleId;
     private Money totalPrice;
     private Integer childSeats = 0;
     private Integer adultSeats = 1;
@@ -26,11 +24,9 @@ public class Ticket extends BaseModel {
         this.id = new Id();
     }
 
-    public Ticket(String id, String trainScheduleId, String startStationId, String endStationId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail, LocalDateTime expirationTime, String paymentId, String status) {
+    public Ticket(String id, String flightScheduleId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail, LocalDateTime expirationTime, String paymentId, String status) {
         this.id =  new Id(id);
-        this.trainScheduleId = new Id(trainScheduleId);
-        this.startStationId = new Id(startStationId);
-        this.endStationId = new Id(endStationId);
+        this.flightScheduleId = new Id(flightScheduleId);
         this.totalPrice = totalPrice;
         this.childSeats = childSeats;
         this.adultSeats = adultSeats;
@@ -50,28 +46,12 @@ public class Ticket extends BaseModel {
         this.id = new Id(id);
     }
 
-    public String getTrainScheduleId() {
-        return trainScheduleId.getValue();
+    public String getFlightScheduleId() {
+        return flightScheduleId.getValue();
     }
 
-    public void setTrainScheduleId(String trainScheduleId) {
-        this.trainScheduleId = new Id(trainScheduleId);
-    }
-
-    public String getStartStationId() {
-        return startStationId.getValue();
-    }
-
-    public void setStartStationId(String startStationId) {
-        this.startStationId = new Id(startStationId);
-    }
-
-    public String getEndStationId() {
-        return endStationId.getValue();
-    }
-
-    public void setEndStationId(String endStationId) {
-        this.endStationId = new Id(endStationId);
+    public void setFlightScheduleId(String flightScheduleId) {
+        this.flightScheduleId = new Id(flightScheduleId);
     }
 
     public Money getTotalPrice() {

@@ -1,9 +1,9 @@
-package com.railgo.domain.payment.model;
+package com.airline.domain.payment.model;
 
-import com.railgo.domain.payment.type.PaymentStatus;
-import com.railgo.domain.utils.model.BaseModel;
-import com.railgo.domain.utils.valueObject.Id;
-import com.railgo.domain.utils.valueObject.Money;
+import com.airline.domain.payment.type.PaymentStatus;
+import com.airline.domain.utils.model.BaseModel;
+import com.airline.domain.utils.valueObject.Id;
+import com.airline.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
 

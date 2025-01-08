@@ -1,6 +1,6 @@
-package com.railgo.application.payment.dataTransferObject.request;
+package com.airline.application.payment.dataTransferObject.request;
 
-import com.railgo.domain.utils.valueObject.Money;
+import com.airline.domain.utils.valueObject.Money;
 
 
 public class InitPaymentRequest {

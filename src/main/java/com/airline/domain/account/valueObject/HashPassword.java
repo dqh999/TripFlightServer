@@ -1,7 +1,7 @@
-package com.railgo.domain.account.valueObject;
+package com.airline.domain.account.valueObject;
 
 
-import com.railgo.domain.account.component.UserValidator;
+import com.airline.domain.account.component.UserValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class HashPassword {

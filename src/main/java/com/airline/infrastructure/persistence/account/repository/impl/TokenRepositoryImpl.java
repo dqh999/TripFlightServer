@@ -1,10 +1,10 @@
-package com.railgo.infrastructure.persistence.account.repository.impl;
+package com.airline.infrastructure.persistence.account.repository.impl;
 
-import com.railgo.domain.account.model.Token;
-import com.railgo.domain.account.repository.TokenRepository;
-import com.railgo.infrastructure.persistence.account.mapper.TokenEntityMapper;
-import com.railgo.infrastructure.persistence.account.model.TokenEntity;
-import com.railgo.infrastructure.persistence.account.repository.TokenEntityRepository;
+import com.airline.domain.account.model.Token;
+import com.airline.domain.account.repository.TokenRepository;
+import com.airline.infrastructure.persistence.account.mapper.TokenEntityMapper;
+import com.airline.infrastructure.persistence.account.model.TokenEntity;
+import com.airline.infrastructure.persistence.account.repository.TokenEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

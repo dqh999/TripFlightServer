@@ -1,4 +1,4 @@
-package com.railgo.application.ticket.dataTransferObject.request;
+package com.airline.application.ticket.dataTransferObject.request;
 
 public class ApplyDiscountRequest {
     private String discountCode;

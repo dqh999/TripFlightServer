@@ -1,7 +1,7 @@
-package com.railgo.presentation.payment;
+package com.airline.presentation.payment;
 
-import com.railgo.application.payment.dataTransferObject.response.IpnResponse;
-import com.railgo.application.payment.service.IpnHandler;
+import com.airline.application.payment.dataTransferObject.response.IpnResponse;
+import com.airline.application.payment.service.IpnHandler;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

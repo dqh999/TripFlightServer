@@ -1,11 +1,11 @@
-package com.railgo.infrastructure.persistence.account.repository.impl;
+package com.airline.infrastructure.persistence.account.repository.impl;
 
 
-import com.railgo.domain.account.model.User;
-import com.railgo.domain.account.repository.UserRepository;
-import com.railgo.infrastructure.persistence.account.mapper.UserEntityMapper;
-import com.railgo.infrastructure.persistence.account.model.UserEntity;
-import com.railgo.infrastructure.persistence.account.repository.UserEntityRepository;
+import com.airline.domain.account.model.User;
+import com.airline.domain.account.repository.UserRepository;
+import com.airline.infrastructure.persistence.account.mapper.UserEntityMapper;
+import com.airline.infrastructure.persistence.account.model.UserEntity;
+import com.airline.infrastructure.persistence.account.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,11 +1,11 @@
-package com.railgo.application.ticket.dataTransferObject.request;
+package com.airline.application.ticket.dataTransferObject.request;
 
 
 
 public class TicketBookingRequest {
-    private String trainScheduleId;
-    private String startStationId;
-    private String endStationId;
+    private String FlightScheduleId;
+    private String startairlineId;
+    private String endairlineId;
     private Integer childSeats = 0;
     private Integer adultSeats = 0;
     private Integer seniorSeats = 0;
@@ -13,37 +13,37 @@ public class TicketBookingRequest {
     public TicketBookingRequest() {
     }
 
-    public TicketBookingRequest(String trainScheduleId, String startStationId, String endStationId, Integer childSeats, Integer adultSeats, Integer seniorSeats) {
-        this.trainScheduleId = trainScheduleId;
-        this.startStationId = startStationId;
-        this.endStationId = endStationId;
+    public TicketBookingRequest(String FlightScheduleId, String startairlineId, String endairlineId, Integer childSeats, Integer adultSeats, Integer seniorSeats) {
+        this.FlightScheduleId = FlightScheduleId;
+        this.startairlineId = startairlineId;
+        this.endairlineId = endairlineId;
         this.childSeats = childSeats;
         this.adultSeats = adultSeats;
         this.seniorSeats = seniorSeats;
     }
 
-    public String getTrainScheduleId() {
-        return trainScheduleId;
+    public String getFlightScheduleId() {
+        return FlightScheduleId;
     }
 
-    public void setTrainScheduleId(String trainScheduleId) {
-        this.trainScheduleId = trainScheduleId;
+    public void setFlightScheduleId(String FlightScheduleId) {
+        this.FlightScheduleId = FlightScheduleId;
     }
 
-    public String getStartStationId() {
-        return startStationId;
+    public String getStartairlineId() {
+        return startairlineId;
     }
 
-    public void setStartStationId(String startStationId) {
-        this.startStationId = startStationId;
+    public void setStartairlineId(String startairlineId) {
+        this.startairlineId = startairlineId;
     }
 
-    public String getEndStationId() {
-        return endStationId;
+    public String getEndairlineId() {
+        return endairlineId;
     }
 
-    public void setEndStationId(String endStationId) {
-        this.endStationId = endStationId;
+    public void setEndairlineId(String endairlineId) {
+        this.endairlineId = endairlineId;
     }
 
     public Integer getChildSeats() {

@@ -1,6 +1,6 @@
-package com.railgo.domain.payment.service;
+package com.airline.domain.payment.service;
 
-import com.railgo.domain.payment.model.Payment;
+import com.airline.domain.payment.model.Payment;
 
 import java.util.List;
 

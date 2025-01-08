@@ -1,4 +1,4 @@
-package com.railgo.domain.account.valueObject;
+package com.airline.domain.account.valueObject;
 
 import java.util.Objects;
 

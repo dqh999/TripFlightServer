@@ -1,10 +1,10 @@
-package com.railgo.domain.account.component;
+package com.airline.domain.account.component;
 
-import com.railgo.domain.account.exception.AccountExceptionCode;
-import com.railgo.domain.account.model.User;
-import com.railgo.domain.account.valueObject.Role;
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.domain.utils.validation.SecurityValidator;
+import com.airline.domain.account.exception.AccountExceptionCode;
+import com.airline.domain.account.model.User;
+import com.airline.domain.account.valueObject.Role;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.domain.utils.validation.SecurityValidator;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

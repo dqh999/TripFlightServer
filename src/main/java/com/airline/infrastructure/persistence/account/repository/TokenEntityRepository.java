@@ -1,6 +1,6 @@
-package com.railgo.infrastructure.persistence.account.repository;
+package com.airline.infrastructure.persistence.account.repository;
 
-import com.railgo.infrastructure.persistence.account.model.TokenEntity;
+import com.airline.infrastructure.persistence.account.model.TokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

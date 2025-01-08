@@ -1,4 +1,4 @@
-package com.railgo.domain.ticket.type;
+package com.airline.domain.ticket.type;
 
 public enum TicketStatus {
     PENDING("PENDING"),

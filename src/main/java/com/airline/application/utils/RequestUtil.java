@@ -1,4 +1,4 @@
-package com.railgo.application.utils;
+package com.airline.application.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 

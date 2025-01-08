@@ -1,4 +1,4 @@
-package com.railgo.application.utils;
+package com.airline.application.utils;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

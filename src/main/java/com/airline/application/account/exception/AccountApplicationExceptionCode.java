@@ -1,6 +1,6 @@
-package com.railgo.application.account.exception;
+package com.airline.application.account.exception;
 
-import com.railgo.domain.utils.exception.ExceptionCode;
+import com.airline.domain.utils.exception.ExceptionCode;
 
 public enum AccountApplicationExceptionCode implements ExceptionCode {
     LOCK_ALREADY_ACQUIRED("CACHE_LOCK", 3001),

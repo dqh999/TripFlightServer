@@ -1,14 +1,14 @@
-package com.railgo.application.payment.service.impl;
+package com.airline.application.payment.service.impl;
 
-import com.railgo.application.payment.constant.VNPayIpnResponseConst;
-import com.railgo.application.payment.constant.VNPayParams;
-import com.railgo.application.payment.dataTransferObject.response.IpnResponse;
-import com.railgo.application.payment.service.IpnHandler;
-import com.railgo.application.ticket.service.ITicketUseCase;
-import com.railgo.domain.payment.model.Payment;
-import com.railgo.domain.payment.service.IPaymentService;
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.application.component.KafkaProducer;
+import com.airline.application.payment.constant.VNPayIpnResponseConst;
+import com.airline.application.payment.constant.VNPayParams;
+import com.airline.application.payment.dataTransferObject.response.IpnResponse;
+import com.airline.application.payment.service.IpnHandler;
+import com.airline.application.ticket.service.ITicketUseCase;
+import com.airline.domain.payment.model.Payment;
+import com.airline.domain.payment.service.IPaymentService;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.application.component.KafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.railgo.domain.ticket.exception.TicketExceptionCode.TICKET_NOT_FOUND;
+import static com.airline.domain.ticket.exception.TicketExceptionCode.TICKET_NOT_FOUND;
 
 @Service
 public class VNPayIpnHandler implements IpnHandler {

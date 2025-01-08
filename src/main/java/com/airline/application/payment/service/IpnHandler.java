@@ -1,6 +1,6 @@
-package com.railgo.application.payment.service;
+package com.airline.application.payment.service;
 
-import com.railgo.application.payment.dataTransferObject.response.IpnResponse;
+import com.airline.application.payment.dataTransferObject.response.IpnResponse;
 
 import java.util.Map;
 

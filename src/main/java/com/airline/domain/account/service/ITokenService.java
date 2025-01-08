@@ -1,7 +1,7 @@
-package com.railgo.domain.account.service;
+package com.airline.domain.account.service;
 
-import com.railgo.domain.account.model.Token;
-import com.railgo.domain.account.model.User;
+import com.airline.domain.account.model.Token;
+import com.airline.domain.account.model.User;
 
 public interface ITokenService {
     Token generateToken(User user);

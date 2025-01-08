@@ -1,6 +1,6 @@
-package com.railgo.application.payment.constant;
+package com.airline.application.payment.constant;
 
-import com.railgo.application.payment.dataTransferObject.response.IpnResponse;
+import com.airline.application.payment.dataTransferObject.response.IpnResponse;
 
 public class VNPayIpnResponseConst {
     public static final IpnResponse SUCCESS = new IpnResponse("00", "Successful");

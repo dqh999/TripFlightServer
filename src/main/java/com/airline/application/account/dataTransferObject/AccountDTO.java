@@ -1,8 +1,8 @@
-package com.railgo.application.account.dataTransferObject;
+package com.airline.application.account.dataTransferObject;
 
 
-import com.railgo.domain.account.model.Token;
-import com.railgo.domain.account.model.User;
+import com.airline.domain.account.model.Token;
+import com.airline.domain.account.model.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;

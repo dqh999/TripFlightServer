@@ -1,6 +1,6 @@
-package com.railgo.application.ticket.dataTransferObject.response;
+package com.airline.application.ticket.dataTransferObject.response;
 
-import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
+import com.airline.application.payment.dataTransferObject.response.InitPaymentResponse;
 
 public class TicketBookResponse {
     private TicketResponse ticket;

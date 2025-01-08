@@ -1,31 +1,27 @@
-package com.railgo.application.ticket.service.impl;
+package com.airline.application.ticket.service.impl;
 
-import com.railgo.application.payment.dataTransferObject.request.InitPaymentRequest;
-import com.railgo.application.payment.dataTransferObject.response.InitPaymentResponse;
-import com.railgo.application.payment.service.IPaymentGatewayService;
-import com.railgo.application.station.service.IStationUseCase;
-import com.railgo.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
-import com.railgo.application.ticket.dataTransferObject.request.TicketBookingRequest;
-import com.railgo.application.ticket.dataTransferObject.request.TicketBookRequest;
-import com.railgo.application.ticket.dataTransferObject.response.TicketBookResponse;
-import com.railgo.application.ticket.dataTransferObject.response.TicketResponse;
-import com.railgo.application.ticket.mapper.TicketMapper;
-import com.railgo.application.ticket.service.ITicketUseCase;
-import com.railgo.application.ticket.utils.TicketUtils;
-import com.railgo.application.utils.exception.ApplicationException;
-import com.railgo.domain.ticket.model.Ticket;
-import com.railgo.domain.ticket.service.ITicketPricingService;
-import com.railgo.domain.ticket.service.ITicketService;
-import com.railgo.domain.ticket.type.TicketStatus;
-import com.railgo.domain.train.model.schedule.TrainSchedule;
-import com.railgo.domain.train.model.schedule.TrainScheduleStop;
-import com.railgo.domain.train.service.ITrainScheduleService;
-import com.railgo.domain.train.service.ITrainScheduleStopService;
-import com.railgo.domain.utils.valueObject.Money;
-import com.railgo.infrastructure.dataTransferObject.request.EmailRequest;
-import com.railgo.application.component.KafkaProducer;
-import com.railgo.infrastructure.service.cache.CacheService;
-import com.railgo.infrastructure.util.Template;
+import com.airline.application.airport.service.IAirportUseCase;
+import com.airline.application.payment.dataTransferObject.request.InitPaymentRequest;
+import com.airline.application.payment.dataTransferObject.response.InitPaymentResponse;
+import com.airline.application.payment.service.IPaymentGatewayService;
+import com.airline.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
+import com.airline.application.ticket.dataTransferObject.request.TicketBookingRequest;
+import com.airline.application.ticket.dataTransferObject.request.TicketBookRequest;
+import com.airline.application.ticket.dataTransferObject.response.TicketBookResponse;
+import com.airline.application.ticket.dataTransferObject.response.TicketResponse;
+import com.airline.application.ticket.mapper.TicketMapper;
+import com.airline.application.ticket.service.ITicketUseCase;
+import com.airline.application.ticket.utils.TicketUtils;
+import com.airline.application.utils.exception.ApplicationException;
+import com.airline.domain.airplane.model.Flight;
+import com.airline.domain.airplane.service.IFlightScheduleService;
+import com.airline.domain.ticket.model.Ticket;
+import com.airline.domain.ticket.service.ITicketService;
+import com.airline.domain.utils.valueObject.Money;
+import com.airline.infrastructure.dataTransferObject.request.EmailRequest;
+import com.airline.application.component.KafkaProducer;
+import com.airline.infrastructure.service.cache.CacheService;
+import com.airline.infrastructure.util.Template;
 import jakarta.persistence.OptimisticLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +36,9 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     private static final Logger logger = LoggerFactory.getLogger(TicketUseCaseImpl.class);
 
     private final ITicketService ticketService;
-    private final ITicketPricingService ticketPricingService;
     private final TicketMapper ticketMapper;
-    private final IStationUseCase stationUseCase;
-    private final ITrainScheduleService trainScheduleService;
-    private final ITrainScheduleStopService trainScheduleStopService;
+    private final IAirportUseCase airportUseCase;
+    private final IFlightScheduleService flightScheduleService;
     private final IPaymentGatewayService paymentGatewayService;
     private final KafkaProducer kafkaProducer;
     private final CacheService cacheService;
@@ -66,20 +60,16 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
 
     public TicketUseCaseImpl(ITicketService ticketService,
-                             ITicketPricingService ticketPricingService,
                              TicketMapper ticketMapper,
-                             IStationUseCase stationUseCase,
-                             ITrainScheduleService trainScheduleService,
-                             ITrainScheduleStopService trainScheduleStopService,
+                             IAirportUseCase airportUseCase,
+                             IFlightScheduleService flightScheduleService,
                              IPaymentGatewayService paymentGatewayService,
                              KafkaProducer kafkaProducer,
                              CacheService cacheService) {
         this.ticketService = ticketService;
-        this.ticketPricingService = ticketPricingService;
         this.ticketMapper = ticketMapper;
-        this.stationUseCase = stationUseCase;
-        this.trainScheduleService = trainScheduleService;
-        this.trainScheduleStopService = trainScheduleStopService;
+        this.airportUseCase = airportUseCase;
+        this.flightScheduleService = flightScheduleService;
         this.paymentGatewayService = paymentGatewayService;
         this.kafkaProducer = kafkaProducer;
         this.cacheService = cacheService;
@@ -87,17 +77,17 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
     @Override
     public TicketResponse create(TicketBookingRequest request) {
-        String trainScheduleId = request.getTrainScheduleId();
+        String FlightScheduleId = request.getFlightScheduleId();
 
-        String startStationId = request.getStartStationId();
-        String endStationId = request.getEndStationId();
+        String startairlineId = request.getStartairlineId();
+        String endairlineId = request.getEndairlineId();
 
-        TrainSchedule trainSchedule = trainScheduleService
-                .getScheduleByIdAndStations(
-                        trainScheduleId,
-                        startStationId,
-                        endStationId);
-        Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(trainSchedule);
+        Flight Flight = flightScheduleService
+                .g(
+                        FlightScheduleId,
+                        startairlineId,
+                        endairlineId);
+        Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(Flight);
 
         Money totalPrice = ticketPricingService.calculateTicketPriceForPassengers(
                 standardTicketPrice,
@@ -107,9 +97,9 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         );
         Ticket ticket = new Ticket(
                 null,
-                trainScheduleId,
-                startStationId,
-                endStationId,
+                FlightScheduleId,
+                startairlineId,
+                endairlineId,
                 totalPrice,
                 request.getChildSeats(),
                 request.getAdultSeats(),
@@ -124,7 +114,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         cacheService.put(key, newTicket, confirmTimeout);
 
         logger.info("Ticket creating successful. Ticket ID: {}", newTicket.getId());
-        return TicketUtils.buildTicketResponse(newTicket, trainSchedule, stationUseCase, ticketMapper);
+        return TicketUtils.buildTicketResponse(newTicket, Flight, airlineUseCase, ticketMapper);
 
     }
 
@@ -141,7 +131,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         existTicket.setContactEmail(request.getContactEmail());
         logger.info("Ticket booked. Ticket: {}", existTicket);
 
-        TrainSchedule trainSchedule = confirmTicketWithRetry(existTicket, cacheKey);
+        Flight Flight = confirmTicketWithRetry(existTicket, cacheKey);
 
         InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
                 request.getIpAddress(),
@@ -156,7 +146,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
         cacheService.put(String.format(paymentKey, existTicket.getId()), ticket);
 
-        TicketResponse ticketResponse = TicketUtils.buildTicketResponse(ticket, trainSchedule, stationUseCase, ticketMapper);
+        TicketResponse ticketResponse = TicketUtils.buildTicketResponse(ticket, Flight, airlineUseCase, ticketMapper);
         TicketBookResponse response = new TicketBookResponse(ticketResponse, initPaymentResponse);
 
         sendConfirmEmail(response);
@@ -164,21 +154,21 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         return response;
     }
 
-    private TrainSchedule confirmTicketWithRetry(Ticket existTicket, String cacheKey) {
+    private Flight confirmTicketWithRetry(Ticket existTicket, String cacheKey) {
         int retries = 0;
         boolean isConfirmed = false;
         while (retries < confirmMaxRetries && !isConfirmed) {
             try {
-                TrainSchedule trainSchedule = getTrainSchedule(
-                        existTicket.getTrainScheduleId(),
-                        existTicket.getStartStationId(),
-                        existTicket.getEndStationId()
+                Flight Flight = getFlightSchedule(
+                        existTicket.getFlightScheduleId(),
+                        existTicket.getStartairlineId(),
+                        existTicket.getEndairlineId()
                 );
-                List<TrainScheduleStop> trainScheduleStops = trainSchedule.getStops();
-                trainScheduleStopService.updateAvailableSeats(trainScheduleStops, existTicket.calculateTotalSeats());
-                logger.info("Ticket with ticketId={} update available seats successfully for trainScheduleId={}.",
-                        existTicket.getId(), trainSchedule.getId());
-                return trainSchedule;
+                List<FlightScheduleStop> FlightScheduleStops = Flight.getStops();
+                FlightScheduleStopService.updateAvailableSeats(FlightScheduleStops, existTicket.calculateTotalSeats());
+                logger.info("Ticket with ticketId={} update available seats successfully for FlightScheduleId={}.",
+                        existTicket.getId(), Flight.getId());
+                return Flight;
             } catch (OptimisticLockException e) {
                 logger.warn("OptimisticLockException encountered on attempt {}/{} for ticketId={}. Retrying...",
                         retries, confirmMaxRetries, existTicket.getId(), e);
@@ -193,11 +183,11 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         throw new ApplicationException("");
     }
 
-    private TrainSchedule getTrainSchedule(String trainScheduleId, String startStationId, String endStationId) {
-        return trainScheduleService.getScheduleByIdAndStations(
-                trainScheduleId,
-                startStationId,
-                endStationId);
+    private Flight getFlightSchedule(String FlightScheduleId, String startairlineId, String endairlineId) {
+        return FlightScheduleService.getScheduleByIdAndairlines(
+                FlightScheduleId,
+                startairlineId,
+                endairlineId);
     }
 
     private void sendConfirmEmail(TicketBookResponse response) {
@@ -207,7 +197,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
         var emailRequest = new EmailRequest(
                 ticketResponse.getContactEmail(),
-                "Your RailGo e-Ticket Confirmation",
+                "Your airline e-Ticket Confirmation",
                 Template.CONFIRM_TICKET,
                 variables
         );
@@ -236,15 +226,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         }
         Ticket ticket = ticketService.confirmPayment(existTicket);
 
-        TrainSchedule trainSchedule = getTrainSchedule(
+        Flight flight = getFlightSchedule(
                 ticket.getId(),
-                ticket.getStartStationId(),
-                ticket.getEndStationId()
+                ticket.getStartairlineId(),
+                ticket.getEndairlineId()
         );
         TicketResponse ticketResponse = TicketUtils.buildTicketResponse(
                 ticket,
-                trainSchedule,
-                stationUseCase,
+                flight,
+                airlineUseCase,
                 ticketMapper
         );
 
@@ -256,7 +246,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         Map<String, Object> variables = TicketUtils.buildEmailVariables(ticketResponse, null);
         var emailRequest = new EmailRequest(
                 ticketResponse.getContactEmail(),
-                "Your RailGo e-Ticket - Payment Successful",
+                "Your airline e-Ticket - Payment Successful",
                 Template.TICKET_SUCCESS,
                 variables
         );
@@ -267,15 +257,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     public void cancelTicket(String ticketId) {
         Ticket ticket = ticketService.getTicket(ticketId);
         try {
-            TrainSchedule trainSchedule = trainScheduleService
-                    .getScheduleByIdAndStations(
-                            ticket.getTrainScheduleId(),
-                            ticket.getStartStationId(),
-                            ticket.getEndStationId());
-            List<TrainScheduleStop> trainScheduleStops = trainSchedule.getStops();
-            trainScheduleStopService.rollbackSeats(trainScheduleStops, ticket.calculateTotalSeats());
-            logger.info("Ticket with ticketId={} rollback seats successfully for trainScheduleId={}.",
-                    ticket.getId(), trainSchedule.getId());
+            Flight flight = FlightScheduleService
+                    .getScheduleByIdAndairlines(
+                            ticket.getFlightScheduleId(),
+                            ticket.getStartairlineId(),
+                            ticket.getEndairlineId());
+            List<FlightScheduleStop> FlightScheduleStops = Flight.getStops();
+            FlightScheduleStopService.rollbackSeats(FlightScheduleStops, ticket.calculateTotalSeats());
+            logger.info("Ticket with ticketId={} rollback seats successfully for FlightScheduleId={}.",
+                    ticket.getId(), flight.getId());
         } catch (OptimisticLockException e) {
             throw new ApplicationException(e.getMessage());
         }

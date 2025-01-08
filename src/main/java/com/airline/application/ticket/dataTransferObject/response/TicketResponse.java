@@ -1,16 +1,16 @@
-package com.railgo.application.ticket.dataTransferObject.response;
+package com.airline.application.ticket.dataTransferObject.response;
 
-import com.railgo.application.station.dataTransferObject.response.StationResponse;
-import com.railgo.domain.utils.valueObject.Money;
+import com.airline.application.airline.dataTransferObject.response.airlineResponse;
+import com.airline.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
 
 public class TicketResponse {
     private String id;
-    private String trainName;
-    private StationResponse departureStation;
+    private String FlightName;
+    private airlineResponse departureairline;
     private LocalDateTime departureTime;
-    private StationResponse arrivalStation;
+    private airlineResponse arrivalairline;
     private LocalDateTime arrivalTime;
     private Integer totalSeats;
     private Integer childSeats = 0;
@@ -23,12 +23,12 @@ public class TicketResponse {
 
     public TicketResponse() {}
 
-    public TicketResponse(String id,String trainName, StationResponse departureStation, LocalDateTime departureTime, StationResponse arrivalStation, LocalDateTime arrivalTime,Integer totalSeats, Integer childSeats, Integer adultSeats, Integer seniorSeats, Money totalPrice, String customerName,String contactEmail, String status) {
+    public TicketResponse(String id,String FlightName, airlineResponse departureairline, LocalDateTime departureTime, airlineResponse arrivalairline, LocalDateTime arrivalTime,Integer totalSeats, Integer childSeats, Integer adultSeats, Integer seniorSeats, Money totalPrice, String customerName,String contactEmail, String status) {
         this.id = id;
-        this.trainName = trainName;
-        this.departureStation = departureStation;
+        this.FlightName = FlightName;
+        this.departureairline = departureairline;
         this.departureTime = departureTime;
-        this.arrivalStation = arrivalStation;
+        this.arrivalairline = arrivalairline;
         this.arrivalTime = arrivalTime;
         this.totalSeats = totalSeats;
         this.childSeats = childSeats;
@@ -48,20 +48,20 @@ public class TicketResponse {
         this.id = id;
     }
 
-    public String getTrainName() {
-        return trainName;
+    public String getFlightName() {
+        return FlightName;
     }
 
-    public void setTrainName(String trainName) {
-        this.trainName = trainName;
+    public void setFlightName(String FlightName) {
+        this.FlightName = FlightName;
     }
 
-    public StationResponse getDepartureStation() {
-        return departureStation;
+    public airlineResponse getDepartureairline() {
+        return departureairline;
     }
 
-    public void setDepartureStation(StationResponse departureStation) {
-        this.departureStation = departureStation;
+    public void setDepartureairline(airlineResponse departureairline) {
+        this.departureairline = departureairline;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -72,12 +72,12 @@ public class TicketResponse {
         this.departureTime = departureTime;
     }
 
-    public StationResponse getArrivalStation() {
-        return arrivalStation;
+    public airlineResponse getArrivalairline() {
+        return arrivalairline;
     }
 
-    public void setArrivalStation(StationResponse arrivalStation) {
-        this.arrivalStation = arrivalStation;
+    public void setArrivalairline(airlineResponse arrivalairline) {
+        this.arrivalairline = arrivalairline;
     }
 
     public LocalDateTime getArrivalTime() {

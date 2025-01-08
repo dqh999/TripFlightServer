@@ -1,7 +1,7 @@
-package com.railgo.infrastructure.persistence.utils;
+package com.airline.infrastructure.persistence.utils;
 
 
-import com.railgo.domain.utils.DateTimeUtils;
+import com.airline.domain.utils.DateTimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;

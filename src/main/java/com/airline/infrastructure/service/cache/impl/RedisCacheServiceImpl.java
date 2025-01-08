@@ -1,8 +1,8 @@
-package com.railgo.infrastructure.service.cache.impl;
+package com.airline.infrastructure.service.cache.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.railgo.infrastructure.service.cache.CacheService;
+import com.airline.infrastructure.service.cache.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

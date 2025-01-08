@@ -1,8 +1,8 @@
-package com.railgo.application.payment.service;
+package com.airline.application.payment.service;
 
-import com.railgo.application.component.KafkaProducer;
-import com.railgo.domain.ticket.model.Ticket;
-import com.railgo.infrastructure.service.cache.CacheService;
+import com.airline.application.component.KafkaProducer;
+import com.airline.domain.ticket.model.Ticket;
+import com.airline.infrastructure.service.cache.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

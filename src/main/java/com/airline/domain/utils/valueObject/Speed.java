@@ -1,4 +1,4 @@
-package com.railgo.domain.utils.valueObject;
+package com.airline.domain.utils.valueObject;
 
 public class Speed {
     private final double value;

@@ -1,4 +1,4 @@
-package com.railgo.application.payment.constant;
+package com.airline.application.payment.constant;
 
 public class VNPayParams {
     public static final String VERSION = "vnp_Version";

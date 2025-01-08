@@ -1,11 +1,11 @@
-package com.railgo.application.account.mapper;
+package com.airline.application.account.mapper;
 
 
-import com.railgo.application.account.dataTransferObject.AccountDTO;
-import com.railgo.application.account.dataTransferObject.request.RegisterRequest;
-import com.railgo.domain.account.model.User;
-import com.railgo.infrastructure.config.GlobalMapperConfig;
-import com.railgo.infrastructure.security.UserDetail;
+import com.airline.application.account.dataTransferObject.AccountDTO;
+import com.airline.application.account.dataTransferObject.request.RegisterRequest;
+import com.airline.domain.account.model.User;
+import com.airline.infrastructure.config.GlobalMapperConfig;
+import com.airline.infrastructure.security.UserDetail;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",

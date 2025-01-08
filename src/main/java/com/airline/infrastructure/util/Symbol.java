@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.util;
+package com.airline.infrastructure.util;
 
 public class Symbol {
     public static final String VERTICAL_BAR = "|";

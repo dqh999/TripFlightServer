@@ -1,4 +1,4 @@
-package com.railgo.infrastructure.dataTransferObject.request;
+package com.airline.infrastructure.dataTransferObject.request;
 
 import java.util.Map;
 

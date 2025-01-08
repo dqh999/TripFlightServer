@@ -1,9 +1,9 @@
-package com.railgo.infrastructure.persistence.payment.mapper;
+package com.airline.infrastructure.persistence.payment.mapper;
 
-import com.railgo.domain.payment.model.Payment;
-import com.railgo.infrastructure.config.GlobalMapperConfig;
-import com.railgo.infrastructure.mapper.MapperEntity;
-import com.railgo.infrastructure.persistence.payment.model.PaymentEntity;
+import com.airline.domain.payment.model.Payment;
+import com.airline.infrastructure.config.GlobalMapperConfig;
+import com.airline.infrastructure.mapper.MapperEntity;
+import com.airline.infrastructure.persistence.payment.model.PaymentEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring",

@@ -1,10 +1,10 @@
-package com.railgo.infrastructure.persistence.payment.repository.impl;
+package com.airline.infrastructure.persistence.payment.repository.impl;
 
-import com.railgo.domain.payment.model.Payment;
-import com.railgo.domain.payment.repository.PaymentRepository;
-import com.railgo.infrastructure.persistence.payment.mapper.PaymentMapper;
-import com.railgo.infrastructure.persistence.payment.model.PaymentEntity;
-import com.railgo.infrastructure.persistence.payment.repository.PaymentEntityRepository;
+import com.airline.domain.payment.model.Payment;
+import com.airline.domain.payment.repository.PaymentRepository;
+import com.airline.infrastructure.persistence.payment.mapper.PaymentMapper;
+import com.airline.infrastructure.persistence.payment.model.PaymentEntity;
+import com.airline.infrastructure.persistence.payment.repository.PaymentEntityRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

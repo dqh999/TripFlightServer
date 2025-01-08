@@ -1,6 +1,6 @@
-package com.railgo.infrastructure.persistence.ticket.repository;
+package com.airline.infrastructure.persistence.ticket.repository;
 
-import com.railgo.infrastructure.persistence.ticket.model.TicketEntity;
+import com.airline.infrastructure.persistence.ticket.model.TicketEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

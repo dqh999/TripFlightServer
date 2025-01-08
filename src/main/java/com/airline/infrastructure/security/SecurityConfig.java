@@ -1,9 +1,9 @@
-package com.railgo.infrastructure.security;
+package com.airline.infrastructure.security;
 
-import com.railgo.domain.account.exception.AccountExceptionCode;
-import com.railgo.domain.utils.exception.BusinessException;
-import com.railgo.infrastructure.persistence.account.model.UserEntity;
-import com.railgo.infrastructure.persistence.account.repository.UserEntityRepository;
+import com.airline.domain.account.exception.AccountExceptionCode;
+import com.airline.domain.utils.exception.BusinessException;
+import com.airline.infrastructure.persistence.account.model.UserEntity;
+import com.airline.infrastructure.persistence.account.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,11 +1,11 @@
-package com.railgo.domain.account.service.impl;
+package com.airline.domain.account.service.impl;
 
-import com.railgo.domain.account.exception.AccountExceptionCode;
-import com.railgo.domain.account.model.Token;
-import com.railgo.domain.account.model.User;
-import com.railgo.domain.account.repository.TokenRepository;
-import com.railgo.domain.account.service.ITokenService;
-import com.railgo.domain.utils.exception.BusinessException;
+import com.airline.domain.account.exception.AccountExceptionCode;
+import com.airline.domain.account.model.Token;
+import com.airline.domain.account.model.User;
+import com.airline.domain.account.repository.TokenRepository;
+import com.airline.domain.account.service.ITokenService;
+import com.airline.domain.utils.exception.BusinessException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

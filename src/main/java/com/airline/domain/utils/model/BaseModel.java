@@ -1,4 +1,4 @@
-package com.railgo.domain.utils.model;
+package com.airline.domain.utils.model;
 
 import java.time.LocalDateTime;
 
