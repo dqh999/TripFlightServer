@@ -1,1 +1,1 @@
-rootProject.name = "RailGoServer"
+rootProject.name = "TravelokaServer"

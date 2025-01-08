@@ -11,7 +11,7 @@ EXPOSE 8080
 
 CMD ["java", "-jar", "app.jar"]
 
-# docker build -t railgo-server:1.0.0 -f ./Dockerfile .
+# docker build -t airline-server:1.0.0 -f ./Dockerfile .
 #docker login
 #docker create dqh999/railgo-server:1.0.0 repository on DockerHub
 #docker tag railgo-server:1.0.0 dqh999/railgo-server:1.0.0

@@ -25,6 +25,14 @@ spring:
       password: Hop2005@
       timeout: 2000
 
+      key:
+        ticket:
+          ticket-confirm:
+            value:  ticket_confirm:%s
+            timout: 900
+          ticket-payment:
+            value: ticket_payment:%s
+
   kafka:
     bootstrap-servers: dqhdev.io.vn:9092
     topic:
@@ -51,16 +59,6 @@ spring:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60
     secretKeyAccess: ${SECRET_KEY_ACCESS:c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=}
-
-ticket:
-  confirm:
-    key: "ticket_comfirm_%s"
-    timeout: 900
-    max-retries: 3
-    retry-delay: 1000
-  payment:
-    key: "ticket_payment_%s"
-    timeout: 900
 
 payment:
   VNPay:

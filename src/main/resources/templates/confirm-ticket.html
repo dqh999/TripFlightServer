@@ -37,7 +37,7 @@
                 <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap">
                     Total Seats
                 </th>
-                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${childSeats > 0 ? '(Child: ' + childSeats + ') ' : ''}${adultSeats > 0 ? '(Adult: ' + adultSeats + ') ' : ''}${seniorSeats > 0 ? '(Senior: ' + seniorSeats + ') ' : ''}"></td>
+                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${seatsInfo}"></td>
             </tr>
             <tr>
                 <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap">
