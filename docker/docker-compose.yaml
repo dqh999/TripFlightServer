@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  airline-mysql:
+    container_name: airline-mysql
+    image: mysql:8.2.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Hop2005@
+      MYSQL_DATABASE: airline_db
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - airline-network
+
+#  ALTER USER 'root'@'147.93.29.117' IDENTIFIED BY 'Hop2005@';
+#  GRANT ALL PRIVILEGES ON *.* TO 'root'@'147.93.29.117' WITH GRANT OPTION;
+#
+#  ALTER USER 'root'@'192.168.1.13' IDENTIFIED BY 'Hop2005@';
+#  GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.1.13' WITH GRANT OPTION;
+#
+#  FLUSH PRIVILEGES;
+
+  airline-redis:
+    container_name: airline-redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - airline-network
+
+  app:
+    image: airline-server:latest
+    build:
+      context: ..
+      dockerfile: ../Dockerfile
+    container_name: airline-app
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - airline-mysql
+      - airline-redis
+    environment:
+      MYSQL_URL: jdbc:mysql://airline-mysql:3306/airline_db
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: Hop2005@
+      SPRING_REDIS_HOST: airline-redis
+      SPRING_REDIS_PORT: 6379
+    networks:
+      - airline-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  airline-network:
+    driver: bridge
+
+# docker compose build app
+# docker compose up -d airline-mysql airline-redis
+# docker compose up -d app

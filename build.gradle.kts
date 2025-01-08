@@ -4,7 +4,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.6"
 }
 
-group = "com.railgo"
+group = "com.airline"
 version = "1.0.0"
 
 java {
@@ -20,6 +20,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 
+	implementation("org.springframework.boot:spring-boot-starter-logging")
 
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	runtimeOnly("com.mysql:mysql-connector-j")
@@ -46,8 +47,9 @@ dependencies {
 
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.4.1")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
