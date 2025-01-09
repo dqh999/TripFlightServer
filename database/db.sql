@@ -1,6 +1,6 @@
 CREATE
 DATABASE airline_db;
-USE
+use
 airline_db;
 create table tbl_users
 (
@@ -31,6 +31,20 @@ create table tbl_user_tokens
     created_at               timestamp,
     updated_at               timestamp
 );
+CREATE TABLE tbl_airlines
+(
+    id           varchar(45) PRIMARY KEY,
+    name         varchar(100) NOT NULL,
+    country      varchar(100) NOT NULL,
+    phone_number varchar(15),
+    email        varchar(100),
+    website      varchar(100),
+    logo_url     varchar(255),
+    status       tinyint      not null,
+    created_at   timestamp,
+    updated_at   timestamp
+);
+
 create table tbl_airports
 (
     id              varchar(45) primary key,
@@ -43,51 +57,42 @@ create table tbl_airports
     email           varchar(100),
     website         varchar(100),
     operating_hours varchar(100),
-    status          varchar(20),
+    status          tinyint      not null,
     created_at      timestamp,
     updated_at      timestamp
 );
-create table tbl_airplanes
-(
-    id                varchar(45) primary key,
-    type              varchar(20)  not null,
-    name              varchar(100) not null,
-    year_manufactured int          not null,
-    speed_limit       int          not null,
-    total_seats       int          not null,
-    status            varchar(20)  not null,
-    created_at        timestamp,
-    updated_at        timestamp
-);
-CREATE TABLE tbL_airplane_seat_classes
+create table tbL_airplane_seat_classes
 (
     id          varchar(45) primary key,
     type        varchar(25) not null,
     name        varchar(50) NOT NULL,
-    description varchar(255)
+    description varchar(255),
+    created_at  timestamp,
+    updated_at  timestamp
 );
 create table tbl_flights
 (
     id                   varchar(45) primary key,
-    airplane_id          varchar(45) not null,
+    airline_id           varchar(45) not null,
+    code                 varchar(45) not null,
     departure_airport_id varchar(45) not null,
     arrival_airport_id   varchar(45) not null,
     departure_time       DATETIME    NOT NULL,
     arrival_time         DATETIME    NOT NULL,
     description          varchar(255),
-    status               varchar(20) not null,
+    status               tinyint     not null,
     created_at           timestamp,
     updated_at           timestamp
 );
-create table tbl_flight_schedule_seat_classes
+CREATE TABLE tbl_flight_seats
 (
-    id                 varchar(45) primary key,
-    flight_schedule_id varchar(45)    not null,
-    seat_class         varchar(50)    not null,
-    price              decimal(10, 2) not null,
-    currency           varchar(10)    not null,
-    created_at         timestamp,
-    updated_at         timestamp
+    id              varchar(45) PRIMARY KEY,
+    flight_id       varchar(45) NOT NULL,
+    class_id        varchar(45) NOT NULL,
+    total_seats     INT         NOT NULL,
+    available_seats INT         NOT NULL,
+    created_at      timestamp,
+    updated_at      timestamp
 );
 create table tbl_tickets
 (
@@ -100,7 +105,7 @@ create table tbl_tickets
     contact_email      varchar(100),
     expiration_time    datetime       not null,
     payment_id         varchar(45),
-    status             varchar(20)    not null,
+    status             tinyint        not null,
     created_at         timestamp,
     updated_at         timestamp
 );
@@ -125,7 +130,7 @@ create table tbl_discounts
     usage_limit         int,
     usage_count         int default 0,
     conditions          text,
-    status              varchar(20)    not null,
+    status              tinyint        not null,
     created_at          timestamp,
     updated_at          timestamp
 );
@@ -140,7 +145,6 @@ create table tbl_user_discounts
     created_at  timestamp,
     updated_at  timestamp
 );
--
 create table tbl_payments
 (
     id              varchar(45) primary key,
@@ -152,7 +156,7 @@ create table tbl_payments
     currency        varchar(10)    not null,
     ip_address      varchar(45),
     user_agent      varchar(255),
-    status          varchar(20)    not null,
+    status          tinyint        not null,
     created_at      timestamp,
     updated_at      timestamp
 );
