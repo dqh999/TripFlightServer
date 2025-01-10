@@ -6,4 +6,5 @@ import com.flight.server.application.airline.dataTransferObject.response.Airline
 
 public interface IAirlineUseCase {
     AirlineResponse add(AddAirlineRequest request);
+    AirlineResponse get(String id);
 }

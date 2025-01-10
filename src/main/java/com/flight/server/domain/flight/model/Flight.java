@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 public class Flight extends BaseModel {
     private Id id;
-    private Id flightId;
+    private Id airlineId;
     private String code;
     private Id departureAirportId;
     private LocalDateTime departureTime;
@@ -29,7 +29,7 @@ public class Flight extends BaseModel {
 
     public Flight(
             String id,
-            String flightId,
+            String airlineId,
             String code,
             String departureAirportId, LocalDateTime departureTime,
             String arrivalAirportId, LocalDateTime arrivalTime,
@@ -40,7 +40,7 @@ public class Flight extends BaseModel {
             String version
     ) {
         this.id = new Id(id);
-        this.flightId = new Id(flightId);
+        this.airlineId = new Id(airlineId);
         this.code = code;
         this.departureAirportId = new Id(departureAirportId);
         this.departureTime = departureTime;
@@ -62,12 +62,12 @@ public class Flight extends BaseModel {
         this.id = new Id(id);
     }
 
-    public String getFlightId() {
-        return flightId.getValue();
+    public String getAirlineId() {
+        return airlineId.getValue();
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = new Id(flightId);
+    public void setAirlineId(String airlineId) {
+        this.airlineId = new Id(airlineId);
     }
 
     public String getCode() {

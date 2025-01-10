@@ -26,4 +26,10 @@ public class ArlineUseCaseImpl implements IAirlineUseCase {
         Airline newAirline = airlineService.create(airline);
         return airlineMapper.toResponse(newAirline);
     }
+
+    @Override
+    public AirlineResponse get(String id) {
+        Airline existAirline = airlineService.getById(id);
+        return airlineMapper.toResponse(existAirline);
+    }
 }

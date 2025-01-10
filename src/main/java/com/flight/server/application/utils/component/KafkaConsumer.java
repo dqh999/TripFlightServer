@@ -52,7 +52,7 @@ public class KafkaConsumer {
         ticketUseCase.cancelTicket(ticketId);
     }
     @DltHandler
-    void retryTicketCancelCommand(@Payload String message) {
+    void handleTicketCancelDlt(@Payload String message) {
         logger.error("Alert Booking Command: {}", message);
     }
 }

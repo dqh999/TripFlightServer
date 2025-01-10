@@ -56,6 +56,10 @@ public class FlightController {
                 .toEntity();
     }
 
+    @Tag(
+            name = "Search Flight",
+            description = ""
+    )
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<PageResponse<FlightResponse>>> handelSearchFlight(
 //            @RequestParam(defaultValue = "one-way") String tripType,
