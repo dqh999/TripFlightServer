@@ -26,9 +26,15 @@ public class FlightRepositoryImpl implements FlightRepository {
     }
 
     @Override
-    public void save(Flight s) {
+    public Flight save(Flight s) {
         FlightEntity entity = mapper.toEntity(s);
-        repository.save(entity);
+        FlightEntity saved = repository.save(entity);
+        return mapper.toDTO(saved);
+    }
+
+    @Override
+    public boolean existByCode(String code) {
+        return repository.existsByCode(code);
     }
 
     @Override
@@ -38,10 +44,18 @@ public class FlightRepositoryImpl implements FlightRepository {
 
 
     @Override
-    public Page<Flight> findFlights(String departureAirportId, String arrivalAirportId,
-                                         LocalDateTime startDate, LocalDateTime endDate,
-                                         Pageable pageable) {
-        return repository.findFlights(departureAirportId,arrivalAirportId,startDate,endDate,pageable)
+    public Page<Flight> findFlights(
+            String departureAirportId, String arrivalAirportId,
+            Integer totalSeats,
+            LocalDateTime startDate, LocalDateTime endDate,
+            Pageable pageable
+    ) {
+        return repository.findFlights(
+                        departureAirportId, arrivalAirportId,
+                        totalSeats,
+                        startDate, endDate,
+                        pageable
+                )
                 .map(mapper::toDTO);
     }
 }

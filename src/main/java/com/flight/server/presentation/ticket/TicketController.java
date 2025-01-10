@@ -3,11 +3,14 @@ package com.flight.server.presentation.ticket;
 import com.flight.server.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
 import com.flight.server.application.ticket.dataTransferObject.request.TicketBookingRequest;
 import com.flight.server.application.ticket.dataTransferObject.request.TicketBookRequest;
+import com.flight.server.application.ticket.dataTransferObject.response.TicketBookResponse;
+import com.flight.server.application.ticket.dataTransferObject.response.TicketResponse;
 import com.flight.server.application.ticket.service.ITicketUseCase;
 import com.flight.server.application.utils.RequestUtil;
 import com.flight.server.infrastructure.exception.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.kafka.shaded.com.google.protobuf.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +31,19 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> handleCreateTicket(@RequestBody TicketBookingRequest request) {
+    public ResponseEntity<ApiResponse<TicketResponse>> handleCreateTicket(
+            @RequestBody TicketBookingRequest request
+    ) {
         logger.info("Received request to create ticket: {}", request);
 
         var result = ticketUseCase.create(request);
-        return ApiResponse.build()
+        return ApiResponse.<TicketResponse>build()
                 .withData(result)
                 .toEntity();
     }
 
     @PostMapping("/{ticketId}/book")
-    public ResponseEntity<?> handleBookingTicket(
+    public ResponseEntity<ApiResponse<TicketBookResponse>> handleBookingTicket(
             @PathVariable String ticketId,
             @RequestBody TicketBookRequest request,
             HttpServletRequest httpServletRequest
@@ -50,17 +55,18 @@ public class TicketController {
                 ticketId, request, ipAddress);
 
         var result = ticketUseCase.book(ticketId, request);
-        return ApiResponse.build()
+        return ApiResponse.<TicketBookResponse>build()
                 .withData(result)
                 .toEntity();
     }
 
     @PostMapping("/{ticketId}/apply-discount")
-    public ResponseEntity<?> handleApplyDiscount(
+    public ResponseEntity<ApiResponse<TicketResponse>> handleApplyDiscount(
             @PathVariable String ticketId,
-            @RequestBody ApplyDiscountRequest request) {
+            @RequestBody ApplyDiscountRequest request
+    ) {
         var result = ticketUseCase.applyDiscount(ticketId, request);
-        return ApiResponse.build()
+        return ApiResponse.<TicketResponse>build()
                 .withData(result)
                 .toEntity();
     }

@@ -29,7 +29,7 @@ public class Airport extends BaseModel {
         this.email = new Email(email);
         this.website = website;
         this.operatingHours = operatingHours;
-        this.status = AirportStatus.valueOf(status);
+        this.status = status != null ? AirportStatus.valueOf(status) : null;
     }
 
     public String getId() {
@@ -117,6 +117,6 @@ public class Airport extends BaseModel {
     }
 
     public void setStatus(String status) {
-        this.status = AirportStatus.valueOf(status);
+        this.status = status != null ? AirportStatus.valueOf(status) : null;
     }
 }

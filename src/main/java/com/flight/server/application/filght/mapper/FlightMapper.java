@@ -7,8 +7,12 @@ import com.flight.server.infrastructure.config.GlobalMapperConfig;
 import com.flight.server.infrastructure.mapper.MapperEntity;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         config = GlobalMapperConfig.class)
-public interface FlightMapper extends MapperEntity<Flight, FlightResponse> {
+public interface FlightMapper {
     Flight toFlight(AddFlightRequest request);
+    FlightResponse toResponse(Flight flights);
+    List<FlightResponse> toResponses(List<Flight> flights);
 }

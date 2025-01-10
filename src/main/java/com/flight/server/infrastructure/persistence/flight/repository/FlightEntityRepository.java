@@ -10,16 +10,17 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 
 public interface FlightEntityRepository extends JpaRepository<FlightEntity,String> {
+    boolean existsByCode(String code);
     @Query("SELECT s " +
             "FROM FlightEntity s " +
-            "JOIN FlightSeatEntity st " +
-            "   ON s.id = st.flightId " +
             "WHERE s.departureAirportId = :departureAirportId " +
             "AND s.arrivalAirportId = :arrivalAirportId " +
+            "AND s.availableSeats >= :totalSeats " +
             "AND s.departureTime BETWEEN :startDate AND :endDate")
     Page<FlightEntity> findFlights(
             @Param("departureAirportId") String departureAirportId,
             @Param("arrivalAirportId") String arrivalAirportId,
+            @Param("totalSeats") Integer totalSeats,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable

@@ -1,6 +1,5 @@
 package com.flight.server.application.ticket.service.impl;
 
-import com.flight.server.application.airport.service.IAirportUseCase;
 import com.flight.server.application.payment.dataTransferObject.request.InitPaymentRequest;
 import com.flight.server.application.payment.dataTransferObject.response.InitPaymentResponse;
 import com.flight.server.application.payment.service.IPaymentGatewayService;
@@ -11,15 +10,14 @@ import com.flight.server.application.ticket.dataTransferObject.response.TicketBo
 import com.flight.server.application.ticket.dataTransferObject.response.TicketResponse;
 import com.flight.server.application.ticket.mapper.TicketMapper;
 import com.flight.server.application.ticket.service.ITicketUseCase;
-import com.flight.server.application.ticket.utils.TicketUtils;
 import com.flight.server.application.utils.exception.ApplicationException;
 import com.flight.server.domain.flight.model.Flight;
-import com.flight.server.domain.airplane.service.IFlightScheduleService;
+import com.flight.server.domain.flight.service.IFlightPriceService;
+import com.flight.server.domain.flight.service.IFlightService;
 import com.flight.server.domain.ticket.model.Ticket;
 import com.flight.server.domain.ticket.service.ITicketService;
-import com.flight.server.domain.utils.valueObject.Money;
+import com.flight.server.application.utils.component.KafkaProducer;
 import com.flight.server.infrastructure.dataTransferObject.request.EmailRequest;
-import com.flight.server.application.component.KafkaProducer;
 import com.flight.server.infrastructure.service.cache.CacheService;
 import com.flight.server.infrastructure.util.Template;
 import jakarta.persistence.OptimisticLockException;
@@ -28,17 +26,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+
 
 @Service
 public class TicketUseCaseImpl implements ITicketUseCase {
     private static final Logger logger = LoggerFactory.getLogger(TicketUseCaseImpl.class);
 
     private final ITicketService ticketService;
+    private final IFlightService flightService;
+    private final IFlightPriceService flightPriceService;
     private final TicketMapper ticketMapper;
-    private final IAirportUseCase airportUseCase;
-    private final IFlightScheduleService flightScheduleService;
     private final IPaymentGatewayService paymentGatewayService;
     private final KafkaProducer kafkaProducer;
     private final CacheService cacheService;
@@ -60,16 +59,16 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
 
     public TicketUseCaseImpl(ITicketService ticketService,
+                             IFlightService flightService,
+                             IFlightPriceService flightPriceService,
                              TicketMapper ticketMapper,
-                             IAirportUseCase airportUseCase,
-                             IFlightScheduleService flightScheduleService,
                              IPaymentGatewayService paymentGatewayService,
                              KafkaProducer kafkaProducer,
                              CacheService cacheService) {
         this.ticketService = ticketService;
+        this.flightService = flightService;
+        this.flightPriceService = flightPriceService;
         this.ticketMapper = ticketMapper;
-        this.airportUseCase = airportUseCase;
-        this.flightScheduleService = flightScheduleService;
         this.paymentGatewayService = paymentGatewayService;
         this.kafkaProducer = kafkaProducer;
         this.cacheService = cacheService;
@@ -77,33 +76,19 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
     @Override
     public TicketResponse create(TicketBookingRequest request) {
-        String FlightScheduleId = request.getFlightScheduleId();
+        String flightId = request.getFlightId();
+        Flight existFlight = flightService.getById(request.getFlightId());
 
-        String startairlineId = request.getStartairlineId();
-        String endairlineId = request.getEndairlineId();
-
-        Flight Flight = flightScheduleService
-                .g(
-                        FlightScheduleId,
-                        startairlineId,
-                        endairlineId);
-        Money standardTicketPrice = ticketPricingService.calculateStandardTicketPrice(Flight);
-
-        Money totalPrice = ticketPricingService.calculateTicketPriceForPassengers(
-                standardTicketPrice,
-                request.getChildSeats(),
-                request.getAdultSeats(),
-                request.getSeniorSeats()
+        var totalPare = flightPriceService.calculateTotalFare(
+                existFlight,
+                request.getChildSeats(), request.getAdultSeats()
         );
         Ticket ticket = new Ticket(
                 null,
-                FlightScheduleId,
-                startairlineId,
-                endairlineId,
-                totalPrice,
+                flightId,
+                totalPare,
                 request.getChildSeats(),
                 request.getAdultSeats(),
-                request.getSeniorSeats(),
                 null,
                 null,
                 null,
@@ -114,13 +99,15 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         cacheService.put(key, newTicket, confirmTimeout);
 
         logger.info("Ticket creating successful. Ticket ID: {}", newTicket.getId());
-        return TicketUtils.buildTicketResponse(newTicket, Flight, airlineUseCase, ticketMapper);
 
+        return ticketMapper.toResponse(newTicket);
     }
 
     @Override
-    public TicketBookResponse book(String ticketId,
-                                   TicketBookRequest request) {
+    public TicketBookResponse book(
+            String ticketId,
+            TicketBookRequest request
+    ) {
         String cacheKey = String.format(confirmKey, ticketId);
 
         if (!cacheService.exists(cacheKey)) {
@@ -131,7 +118,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         existTicket.setContactEmail(request.getContactEmail());
         logger.info("Ticket booked. Ticket: {}", existTicket);
 
-        Flight Flight = confirmTicketWithRetry(existTicket, cacheKey);
+        Flight flight = confirmTicketWithRetry(existTicket, cacheKey);
 
         InitPaymentRequest initPaymentRequest = new InitPaymentRequest(
                 request.getIpAddress(),
@@ -142,15 +129,14 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         InitPaymentResponse initPaymentResponse = paymentGatewayService.init(initPaymentRequest);
 
         existTicket.setPaymentId(initPaymentResponse.getPaymentId());
-        Ticket ticket = ticketService.confirm(existTicket);
+        Ticket confirmedTicket = ticketService.confirm(existTicket);
 
-        cacheService.put(String.format(paymentKey, existTicket.getId()), ticket);
+        cacheService.put(String.format(paymentKey, existTicket.getId()), confirmedTicket);
 
-        TicketResponse ticketResponse = TicketUtils.buildTicketResponse(ticket, Flight, airlineUseCase, ticketMapper);
+        TicketResponse ticketResponse = ticketMapper.toResponse(confirmedTicket);
+
         TicketBookResponse response = new TicketBookResponse(ticketResponse, initPaymentResponse);
-
         sendConfirmEmail(response);
-
         return response;
     }
 
@@ -159,16 +145,11 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         boolean isConfirmed = false;
         while (retries < confirmMaxRetries && !isConfirmed) {
             try {
-                Flight Flight = getFlightSchedule(
-                        existTicket.getFlightScheduleId(),
-                        existTicket.getStartairlineId(),
-                        existTicket.getEndairlineId()
-                );
-                List<FlightScheduleStop> FlightScheduleStops = Flight.getStops();
-                FlightScheduleStopService.updateAvailableSeats(FlightScheduleStops, existTicket.calculateTotalSeats());
+                Flight existFlight = flightService.getById(existTicket.getFlightId());
+                flightService.updateAvailableSeats(existFlight, existTicket.calculateTotalSeats());
                 logger.info("Ticket with ticketId={} update available seats successfully for FlightScheduleId={}.",
-                        existTicket.getId(), Flight.getId());
-                return Flight;
+                        existTicket.getId(), existFlight.getId());
+                return existFlight;
             } catch (OptimisticLockException e) {
                 logger.warn("OptimisticLockException encountered on attempt {}/{} for ticketId={}. Retrying...",
                         retries, confirmMaxRetries, existTicket.getId(), e);
@@ -183,18 +164,10 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         throw new ApplicationException("");
     }
 
-    private Flight getFlightSchedule(String FlightScheduleId, String startairlineId, String endairlineId) {
-        return FlightScheduleService.getScheduleByIdAndairlines(
-                FlightScheduleId,
-                startairlineId,
-                endairlineId);
-    }
-
     private void sendConfirmEmail(TicketBookResponse response) {
         TicketResponse ticketResponse = response.getTicket();
 
-        Map<String, Object> variables = TicketUtils.buildEmailVariables(ticketResponse, response.getPayment());
-
+        Map<String, Object> variables = new HashMap<>();
         var emailRequest = new EmailRequest(
                 ticketResponse.getContactEmail(),
                 "Your airline e-Ticket Confirmation",
@@ -219,31 +192,22 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         String cacheKey = String.format(paymentKey, ticketId);
         Ticket existTicket;
         if (!cacheService.exists(cacheKey)) {
-            existTicket = ticketService.getTicket(ticketId);
+            existTicket = ticketService.getById(ticketId);
         } else {
             existTicket = cacheService.get(cacheKey, Ticket.class);
             cacheService.delete(cacheKey);
         }
         Ticket ticket = ticketService.confirmPayment(existTicket);
 
-        Flight flight = getFlightSchedule(
-                ticket.getId(),
-                ticket.getStartairlineId(),
-                ticket.getEndairlineId()
-        );
-        TicketResponse ticketResponse = TicketUtils.buildTicketResponse(
-                ticket,
-                flight,
-                airlineUseCase,
-                ticketMapper
-        );
+        Flight bookedFlight = flightService.getById(existTicket.getFlightId());
+        TicketResponse response = ticketMapper.toResponse(ticket);
+        sendETicket(response);
 
-        sendETicket(ticketResponse);
         return ticket;
     }
 
     private void sendETicket(TicketResponse ticketResponse) {
-        Map<String, Object> variables = TicketUtils.buildEmailVariables(ticketResponse, null);
+        Map<String, Object> variables = new HashMap<>();
         var emailRequest = new EmailRequest(
                 ticketResponse.getContactEmail(),
                 "Your airline e-Ticket - Payment Successful",
@@ -255,24 +219,22 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
     @Override
     public void cancelTicket(String ticketId) {
-        Ticket ticket = ticketService.getTicket(ticketId);
+        Ticket ticket = ticketService.getById(ticketId);
         try {
-            Flight flight = FlightScheduleService
-                    .getScheduleByIdAndairlines(
-                            ticket.getFlightScheduleId(),
-                            ticket.getStartairlineId(),
-                            ticket.getEndairlineId());
-            List<FlightScheduleStop> FlightScheduleStops = Flight.getStops();
-            FlightScheduleStopService.rollbackSeats(FlightScheduleStops, ticket.calculateTotalSeats());
-            logger.info("Ticket with ticketId={} rollback seats successfully for FlightScheduleId={}.",
-                    ticket.getId(), flight.getId());
+            Flight existFlight = flightService.getById(ticket.getFlightId());
+            flightService.rollbackBookedSeats(existFlight, ticket.calculateTotalSeats());
+            logger.info("Ticket with ticketId={} rollback seats successfully for flightId={}.",
+                    ticket.getId(), existFlight.getId());
         } catch (OptimisticLockException e) {
             throw new ApplicationException(e.getMessage());
         }
     }
 
     @Override
-    public TicketResponse applyDiscount(String ticketId, ApplyDiscountRequest request) {
+    public TicketResponse applyDiscount(
+            String ticketId,
+            ApplyDiscountRequest request
+    ) {
         return null;
     }
 }

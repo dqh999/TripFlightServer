@@ -73,7 +73,10 @@ public class UserUseCaseImpl implements UserUseCase {
         }
     }
 
-    private void storeAccessTokenInCache(String accessToken, AccountDTO accountDTO) {
+    private void storeAccessTokenInCache(
+            String accessToken,
+            AccountDTO accountDTO
+    ) {
         cacheService.put(accessToken, accountDTO, accessTokenTTL);
     }
 
@@ -97,8 +100,10 @@ public class UserUseCaseImpl implements UserUseCase {
     }
 
     @Override
-    public AccountDTO changePassword(UserDetail userRequest,
-                                     ChangePasswordRequest request) {
+    public AccountDTO changePassword(
+            UserDetail userRequest,
+            ChangePasswordRequest request
+    ) {
         String phoneNumber = userRequest.getUsername();
 
         User userResult = userService.changePassword(phoneNumber, request.getOldPassword(), request.getNewPassword());
@@ -129,7 +134,7 @@ public class UserUseCaseImpl implements UserUseCase {
         }
 
         if (cacheService.exists(accessToken)) {
-            AccountDTO accountDTO = cacheService.get(accessToken,AccountDTO.class);
+            AccountDTO accountDTO = cacheService.get(accessToken, AccountDTO.class);
             return accountMapper.toEntity(accountDTO);
         }
         User existUser = userService.getUserByPhoneNumber(userName);

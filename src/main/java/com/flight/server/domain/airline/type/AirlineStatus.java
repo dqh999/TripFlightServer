@@ -1,26 +1,19 @@
 package com.flight.server.domain.airline.type;
 
 public enum AirlineStatus {
-    ACTIVE(0),
-    INACTIVE(1),
-    SUSPENDED(2),
-    TERMINATED(3);
+    ACTIVE("ACTIVE"),
+    INACTIVE("INACTIVE"),
+    SUSPENDED("SUSPENDED"),
+    TERMINATED("TERMINATED");
 
-    private final int value;
+    private final String value;
 
-    AirlineStatus(int value) {
+    AirlineStatus(String value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
     }
-    public static AirlineStatus fromValue(int value) {
-        for (AirlineStatus status : AirlineStatus.values()) {
-            if (status.getValue() == value) {
-                return status;
-            }
-        }
-        throw new IllegalArgumentException("Unknown value: " + value);
-    }
+
 }

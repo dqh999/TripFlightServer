@@ -1,13 +1,20 @@
 package com.flight.server.domain.flight.service;
 
 import com.flight.server.domain.flight.model.Flight;
-import com.flight.server.domain.utils.service.CURDService;
+import com.flight.server.domain.utils.service.GenericService;
 import org.springframework.data.domain.Page;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public interface IFlightService extends CURDService<Flight, String> {
-    Page<Flight> getFlights(String departureAirportId, String arrivalAirportId,
-                               LocalDateTime departureTime,
-                               int pageNumber, int pageSize);
+public interface IFlightService extends GenericService<Flight, String> {
+    Flight updateAvailableSeats(Flight flight, int newSeatBooking);
+
+    Flight rollbackBookedSeats(Flight flight, int canceledSeats);
+
+    Page<Flight> getFlights(
+            String departureAirportId, String arrivalAirportId,
+            LocalDate departureTime,
+            Integer totalSeats,
+            int pageNumber, int pageSize
+    );
 }

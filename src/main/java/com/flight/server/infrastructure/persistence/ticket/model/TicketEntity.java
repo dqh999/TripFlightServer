@@ -1,7 +1,6 @@
 package com.flight.server.infrastructure.persistence.ticket.model;
 
 import com.flight.server.domain.utils.valueObject.Money;
-import com.airline.infrastructure.persistence.Flight.model.schedule.FlightScheduleEntity;
 import com.flight.server.infrastructure.persistence.utils.BaseEntity;
 import jakarta.persistence.*;
 
@@ -13,18 +12,12 @@ import java.time.LocalDateTime;
 public class TicketEntity extends BaseEntity {
     @Id
     private String id;
-    @Column(name = "Flight_schedule_id")
-    private String FlightScheduleId;
-    @Column(name = "start_airline_id")
-    private String startairlineId;
-    @Column(name = "end_airline_id")
-    private String endairlineId;
+    @Column(name = "flight_id")
+    private String flightId;
     @Column(name = "child_seats", columnDefinition = "0")
     private Integer childSeats;
     @Column(name = "adult_seats", columnDefinition = "0")
     private Integer adultSeats;
-    @Column(name = "senior_seats", columnDefinition = "0")
-    private Integer seniorSeats;
     @Column(name = "total_price")
     private BigDecimal totalPrice;
     private String currency;
@@ -39,14 +32,11 @@ public class TicketEntity extends BaseEntity {
     public TicketEntity() {
     }
 
-    public TicketEntity(String id, String FlightScheduleId, String startairlineId, String endairlineId,Integer childSeats,Integer adultSeats,Integer seniorSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
+    public TicketEntity(String id, String flightId,Integer childSeats,Integer adultSeats, Money totalPrice, String contactEmail,LocalDateTime expirationTime, String paymentId, String status) {
         this.id = id;
-        this.FlightScheduleId = FlightScheduleId;
-        this.startairlineId = startairlineId;
-        this.endairlineId = endairlineId;
+        this.flightId = flightId;
         this.childSeats = childSeats;
         this.adultSeats = adultSeats;
-        this.seniorSeats = seniorSeats;
         this.totalPrice = totalPrice.getValue();
         this.currency = totalPrice.getCurrency();
         this.contactEmail = contactEmail;
@@ -63,29 +53,14 @@ public class TicketEntity extends BaseEntity {
         this.id = id;
     }
 
-    public String getFlightScheduleId() {
-        return FlightScheduleId;
+    public String getFlightId() {
+        return flightId;
     }
 
-    public void setFlightScheduleId(String FlightScheduleId) {
-        this.FlightScheduleId = FlightScheduleId;
+    public void setFlightId(String flightId) {
+        this.flightId = flightId;
     }
 
-    public String getStartairlineId() {
-        return startairlineId;
-    }
-
-    public void setStartairlineId(String startairlineId) {
-        this.startairlineId = startairlineId;
-    }
-
-    public String getEndairlineId() {
-        return endairlineId;
-    }
-
-    public void setEndairlineId(String endairlineId) {
-        this.endairlineId = endairlineId;
-    }
 
     public Integer getChildSeats() {
         return childSeats;
@@ -103,13 +78,6 @@ public class TicketEntity extends BaseEntity {
         this.adultSeats = adultSeats;
     }
 
-    public Integer getSeniorSeats() {
-        return seniorSeats;
-    }
-
-    public void setSeniorSeats(Integer seniorSeats) {
-        this.seniorSeats = seniorSeats;
-    }
 
     public Money getTotalPrice() {
         return new Money(this.totalPrice, this.currency);

@@ -8,11 +8,14 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface FlightRepository {
-    void save(Flight s);
-
+    Flight save(Flight s);
+    boolean existByCode(String code);
     Optional<Flight> findById(String id);
 
-    Page<Flight> findFlights(String departureAirportId, String arrivalAirportId,
-                                  LocalDateTime startDate, LocalDateTime endDate,
-                                  Pageable pageable);
+    Page<Flight> findFlights(
+            String departureAirportId, String arrivalAirportId,
+            Integer totalSeats,
+            LocalDateTime startDate, LocalDateTime endDate,
+            Pageable pageable
+    );
 }

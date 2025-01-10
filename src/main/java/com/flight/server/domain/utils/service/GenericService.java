@@ -1,6 +1,6 @@
 package com.flight.server.domain.utils.service;
 
-public interface CURDService<T,K> {
+public interface GenericService<T,K> {
     T create(T t);
     T update(T t);
     T getById(K id);

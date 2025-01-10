@@ -1,14 +1,7 @@
-package com.flight.server.infrastructure.persistence.airline.model;
+package com.flight.server.application.airline.dataTransferObject.response;
 
-import com.flight.server.infrastructure.persistence.utils.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "tbl_airlines")
-public class AirlineEntity extends BaseEntity {
-    @Id
+public class AirlineResponse {
     private String id;
     private String name;
     private String country;
@@ -17,9 +10,9 @@ public class AirlineEntity extends BaseEntity {
     private String website;
     private String logoUrl;
     private String status;
-    public AirlineEntity() {}
-
-    public AirlineEntity(String id, String name, String country, String phoneNumber, String email, String website, String logoUrl, String status) {
+    public AirlineResponse() {
+    }
+    public AirlineResponse(String id, String name, String country, String phoneNumber, String email, String website, String logoUrl, String status) {
         this.id = id;
         this.name = name;
         this.country = country;

@@ -9,23 +9,27 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL:jdbc:mysql://dqhdev.io.vn:3308/airline_db}
+    url: ${MYSQL_URL:jdbc:mysql://147.93.29.117:3308/airline_db}
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:Hop2005@}
+
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   #    hibernate:
   #      ddl-auto: update
+
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:dqhdev.io.vn}
+      host: ${SPRING_REDIS_HOST:147.93.29.117}
       port: ${SPRING_REDIS_PORT:6379}
       password: Hop2005@
       timeout: 2000
 
       key:
+        flight:
+          detail: flightId_%s_sessionId:%s
         ticket:
           ticket-confirm:
             value:  ticket_confirm:%s
@@ -34,12 +38,11 @@ spring:
             value: ticket_payment:%s
 
   kafka:
-    bootstrap-servers: dqhdev.io.vn:9092
+    bootstrap-servers: 147.93.29.117:9092,147.93.29.117:9093
     topic:
       email: email-topic
       ticket:
         ticket-cancel: ticket-cancel
-
 
   mail:
     host: smtp.gmail.com

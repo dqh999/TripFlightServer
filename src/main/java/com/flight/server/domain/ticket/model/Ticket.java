@@ -14,7 +14,6 @@ public class Ticket extends BaseModel {
     private Money totalPrice;
     private Integer childSeats = 0;
     private Integer adultSeats = 1;
-    private Integer seniorSeats = 0;
     private Email contactEmail;
     private LocalDateTime expirationTime;
     private Id paymentId;
@@ -24,13 +23,12 @@ public class Ticket extends BaseModel {
         this.id = new Id();
     }
 
-    public Ticket(String id, String flightId, Money totalPrice, Integer childSeats, Integer adultSeats, Integer seniorSeats, String contactEmail, LocalDateTime expirationTime, String paymentId, String status) {
+    public Ticket(String id, String flightId, Money totalPrice, Integer childSeats, Integer adultSeats, String contactEmail, LocalDateTime expirationTime, String paymentId, String status) {
         this.id =  new Id(id);
         this.flightId = new Id(flightId);
         this.totalPrice = totalPrice;
         this.childSeats = childSeats;
         this.adultSeats = adultSeats;
-        this.seniorSeats = seniorSeats;
         this.contactEmail = contactEmail != null && !contactEmail.isEmpty() ? new Email(contactEmail) : null;
         this.expirationTime = expirationTime;
         this.paymentId = paymentId != null ? new Id(paymentId) : null;
@@ -78,16 +76,8 @@ public class Ticket extends BaseModel {
         this.adultSeats = adultSeats;
     }
 
-    public Integer getSeniorSeats() {
-        return seniorSeats;
-    }
-
-    public void setSeniorSeats(Integer seniorSeats) {
-        this.seniorSeats = seniorSeats;
-    }
-
     public Integer calculateTotalSeats() {
-        return this.childSeats  + this.adultSeats + this.seniorSeats;
+        return this.childSeats  + this.adultSeats;
     }
     public String getContactEmail() {
         return contactEmail != null ? contactEmail.getValue() : "";

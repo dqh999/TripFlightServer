@@ -1,41 +1,20 @@
-package com.flight.server.infrastructure.persistence.airline.model;
+package com.flight.server.application.airline.dataTransferObject.request;
 
-import com.flight.server.infrastructure.persistence.utils.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "tbl_airlines")
-public class AirlineEntity extends BaseEntity {
-    @Id
-    private String id;
+public class AddAirlineRequest {
     private String name;
     private String country;
     private String phoneNumber;
     private String email;
     private String website;
     private String logoUrl;
-    private String status;
-    public AirlineEntity() {}
-
-    public AirlineEntity(String id, String name, String country, String phoneNumber, String email, String website, String logoUrl, String status) {
-        this.id = id;
+    public AddAirlineRequest() {}
+    public AddAirlineRequest(String name, String country, String phoneNumber, String email, String website, String logoUrl) {
         this.name = name;
         this.country = country;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.website = website;
         this.logoUrl = logoUrl;
-        this.status = status;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -84,13 +63,5 @@ public class AirlineEntity extends BaseEntity {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

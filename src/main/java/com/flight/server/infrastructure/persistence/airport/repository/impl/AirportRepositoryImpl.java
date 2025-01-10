@@ -26,9 +26,10 @@ public class AirportRepositoryImpl implements AirportRepository {
     }
 
     @Override
-    public void save(Airport s) {
+    public Airport save(Airport s) {
         AirportEntity entity = mapper.toEntity(s);
-        repository.save(entity);
+        AirportEntity saved = repository.save(entity);
+        return mapper.toDTO(saved);
     }
 
     @Override

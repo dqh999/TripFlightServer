@@ -40,7 +40,7 @@ CREATE TABLE tbl_airlines
     email        varchar(100),
     website      varchar(100),
     logo_url     varchar(255),
-    status       tinyint      not null,
+    status       varchar(45)  not null,
     created_at   timestamp,
     updated_at   timestamp
 );
@@ -57,57 +57,46 @@ create table tbl_airports
     email           varchar(100),
     website         varchar(100),
     operating_hours varchar(100),
-    status          tinyint      not null,
+    status          varchar(45)  not null,
     created_at      timestamp,
     updated_at      timestamp
-);
-create table tbL_airplane_seat_classes
-(
-    id          varchar(45) primary key,
-    type        varchar(25) not null,
-    name        varchar(50) NOT NULL,
-    description varchar(255),
-    created_at  timestamp,
-    updated_at  timestamp
 );
 create table tbl_flights
 (
     id                   varchar(45) primary key,
-    airline_id           varchar(45) not null,
-    code                 varchar(45) not null,
-    departure_airport_id varchar(45) not null,
-    arrival_airport_id   varchar(45) not null,
-    departure_time       DATETIME    NOT NULL,
-    arrival_time         DATETIME    NOT NULL,
+    airline_id           varchar(45)    not null,
+    code                 varchar(30)    not null,
+    departure_airport_id varchar(45)    not null,
+    arrival_airport_id   varchar(45)    not null,
+    departure_time       DATETIME       not null,
+    arrival_time         DATETIME       not null,
     description          varchar(255),
-    status               tinyint     not null,
+    standard_price       decimal(10, 2) not null,
+    currency             varchar(10)    not null,
+    total_seats          int            not null,
+    available_seats      int            not null,
+    status               varchar(45)    not null,
+    version              int auto_increment,
     created_at           timestamp,
     updated_at           timestamp
 );
-CREATE TABLE tbl_flight_seats
-(
-    id              varchar(45) PRIMARY KEY,
-    flight_id       varchar(45) NOT NULL,
-    class_id        varchar(45) NOT NULL,
-    total_seats     INT         NOT NULL,
-    available_seats INT         NOT NULL,
-    created_at      timestamp,
-    updated_at      timestamp
-);
+SELECT f.*
+FROM tbl_flights
+WHERE f.d
 create table tbl_tickets
 (
-    id                 varchar(45) primary key,
-    flight_schedule_id varchar(45)    not null,
-    child_seats        int default 0,
-    adult_seats        int default 0,
-    total_price        decimal(10, 2) not null,
-    currency           varchar(10)    not null,
-    contact_email      varchar(100),
-    expiration_time    datetime       not null,
-    payment_id         varchar(45),
-    status             tinyint        not null,
-    created_at         timestamp,
-    updated_at         timestamp
+    id              varchar(45) primary key,
+    flight_id       varchar(45)    not null,
+    child_seats     int default 0,
+    adult_seats     int default 0,
+    total_price     decimal(10, 2) not null,
+    currency        varchar(10)    not null,
+    contact_email   varchar(100),
+    expiration_time datetime       not null,
+    payment_id      varchar(45),
+    status          varchar(45)    not null,
+    created_at      timestamp,
+    updated_at      timestamp
 );
 create table tbl_ticket_passengers
 (
@@ -130,7 +119,7 @@ create table tbl_discounts
     usage_limit         int,
     usage_count         int default 0,
     conditions          text,
-    status              tinyint        not null,
+    status              varchar(45)    not null,
     created_at          timestamp,
     updated_at          timestamp
 );
@@ -156,7 +145,7 @@ create table tbl_payments
     currency        varchar(10)    not null,
     ip_address      varchar(45),
     user_agent      varchar(255),
-    status          tinyint        not null,
+    status          varchar(45)    not null,
     created_at      timestamp,
     updated_at      timestamp
 );

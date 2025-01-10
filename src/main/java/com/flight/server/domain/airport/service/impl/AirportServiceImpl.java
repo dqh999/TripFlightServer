@@ -3,6 +3,7 @@ package com.flight.server.domain.airport.service.impl;
 import com.flight.server.domain.airport.model.Airport;
 import com.flight.server.domain.airport.repository.AirportRepository;
 import com.flight.server.domain.airport.service.IAirportService;
+import com.flight.server.domain.airport.type.AirportStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +21,8 @@ public class AirportServiceImpl implements IAirportService {
 
     @Override
     public Airport create(Airport airport) {
-        airportRepository.save(airport);
-        return null;
+        airport.setStatus(AirportStatus.OPERATIONAL.getValue());
+        return airportRepository.save(airport);
     }
 
     @Override

@@ -8,7 +8,7 @@ import com.flight.server.application.ticket.service.ITicketUseCase;
 import com.flight.server.domain.payment.model.Payment;
 import com.flight.server.domain.payment.service.IPaymentService;
 import com.flight.server.domain.utils.exception.BusinessException;
-import com.flight.server.application.component.KafkaProducer;
+import com.flight.server.application.utils.component.KafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

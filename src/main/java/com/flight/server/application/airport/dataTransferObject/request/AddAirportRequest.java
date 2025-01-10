@@ -10,12 +10,11 @@ public class AddAirportRequest {
     private String email;
     private String website;
     private String operatingHours;
-    private String status;
 
     public AddAirportRequest() {
     }
 
-    public AddAirportRequest(String name, String country, String city, Double latitude, Double longitude, String phoneNumber, String email, String website, String operatingHours, String status) {
+    public AddAirportRequest(String name, String country, String city, Double latitude, Double longitude, String phoneNumber, String email, String website, String operatingHours) {
         this.name = name;
         this.country = country;
         this.city = city;
@@ -25,7 +24,6 @@ public class AddAirportRequest {
         this.email = email;
         this.website = website;
         this.operatingHours = operatingHours;
-        this.status = status;
     }
 
     public String getName() {
@@ -98,13 +96,5 @@ public class AddAirportRequest {
 
     public void setOperatingHours(String operatingHours) {
         this.operatingHours = operatingHours;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

@@ -32,14 +32,14 @@ public class AirportUseCase implements IAirportUseCase {
                                       AddAirportRequest request) {
 
         Airport airlineObject = airlineMapper.toAirport(request);
-        Airport newAirport = airlineService.addAirport(airlineObject);
+        Airport newAirport = airlineService.create(airlineObject);
 
         return airlineMapper.toDTO(newAirport);
     }
 
     @Override
     public AirportResponse getById(String id) {
-        Airport exist = airlineService.getAirport(id);
+        Airport exist = airlineService.getById(id);
         return airlineMapper.toDTO(exist);
     }
 

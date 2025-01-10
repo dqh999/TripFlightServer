@@ -5,7 +5,6 @@ import com.flight.server.domain.ticket.model.Ticket;
 import com.flight.server.domain.ticket.repository.TicketRepository;
 import com.flight.server.domain.ticket.service.ITicketService;
 import com.flight.server.domain.ticket.type.TicketStatus;
-import com.airline.domain.Flight.service.IFlightScheduleStopService;
 import com.flight.server.domain.utils.DateTimeUtils;
 import com.flight.server.domain.utils.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +36,13 @@ public class ITicketServiceImpl implements ITicketService {
     }
 
     private void validateTicketForBooking(Ticket ticket) {
-        int totalSeats = getTotalSeats(ticket);
+        int totalSeats = ticket.calculateTotalSeats();
 
         if (totalSeats <= 0 || totalSeats >= 10) {
             throw new BusinessException(TicketExceptionCode.INVALID_TICKET);
         }
     }
 
-    private int getTotalSeats(Ticket ticket) {
-        return ticket.getChildSeats() + ticket.getAdultSeats() + ticket.getSeniorSeats();
-    }
 
     @Override
     public Ticket confirm(Ticket ticket) {
@@ -72,19 +68,23 @@ public class ITicketServiceImpl implements ITicketService {
 
     @Override
     public Ticket confirmPayment(Ticket ticket) {
-        int totalSeats = getTotalSeats(ticket);
-
-//        FlightScheduleStopService.updateAvailableSeats(
-//                ticket.getFlightSchedule().getStops(),
-//                totalSeats);
-
         ticket.setStatus(TicketStatus.PAID.getValue());
         ticketRepository.save(ticket);
         return ticket;
     }
 
     @Override
-    public Ticket getTicket(String id) {
+    public Ticket update(Ticket ticket) {
+        return null;
+    }
+
+    @Override
+    public void delete(Ticket ticket) {
+
+    }
+
+    @Override
+    public Ticket getById(String id) {
         return ticketRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(TicketExceptionCode.TICKET_NOT_FOUND));
     }
