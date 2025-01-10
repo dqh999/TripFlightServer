@@ -18,20 +18,20 @@
         <h4 style="font-weight: bold;">Ticket Details</h4>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
-                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Train</th>
-                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${trainName}"></td>
+                <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">Flight</th>
+                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${FlightName}"></td>
             </tr>
             <tr>
                 <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">
                     Departure
                 </th>
-                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${departureStation} + ' - ' + ${departureTime}"></td>
+                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${departureairline} + ' - ' + ${departureTime}"></td>
             </tr>
             <tr>
                 <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold;">
                     Arrival
                 </th>
-                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${arrivalStation} + ' - ' + ${arrivalTime}"></td>
+                <td style="padding: 8px; border-bottom: 1px solid #e0e0e0;" th:text="${arrivalairline} + ' - ' + ${arrivalTime}"></td>
             </tr>
             <tr>
                 <th style="text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; font-weight: bold; white-space: nowrap">

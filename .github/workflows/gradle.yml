@@ -42,11 +42,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/railgo-server:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/airline-server:latest .
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/railgo-server:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/airline-server:latest
 
   dependency-submission:
 
@@ -81,10 +81,10 @@ jobs:
       - name: Connect to VPS and pull the latest code & restart container
         run: |
           ssh -o StrictHostKeyChecking=no root@147.93.29.117 << 'EOF'
-            cd railgo-server
+            cd TravelokaServer
             git pull origin main
-            docker stop railgo-app
-            docker rm railgo-app
+            docker stop airline-app
+            docker rm airline-app
             docker compose build app
             docker compose up -d app
           EOF
