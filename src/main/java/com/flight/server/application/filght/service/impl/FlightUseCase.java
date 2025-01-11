@@ -2,7 +2,6 @@ package com.flight.server.application.filght.service.impl;
 
 
 import com.flight.server.application.airline.service.IAirlineUseCase;
-import com.flight.server.application.airport.service.IAirportUseCase;
 import com.flight.server.application.filght.dataTransferObject.request.AddFlightRequest;
 import com.flight.server.application.filght.dataTransferObject.response.FlightReservation;
 import com.flight.server.application.filght.dataTransferObject.response.FlightResponse;
@@ -32,7 +31,6 @@ public class FlightUseCase implements IFlightUseCase {
     private final IFlightService flightService;
     private final IFlightPriceService flightPriceService;
     private final IAirlineUseCase airlineUseCase;
-    private final IAirportUseCase airportUseCase;
 
     private final FlightMapper flightMapper;
     private final CacheService cacheService;
@@ -44,14 +42,12 @@ public class FlightUseCase implements IFlightUseCase {
             IFlightService flightService,
             IFlightPriceService flightPriceService,
             IAirlineUseCase airlineUseCase,
-            IAirportUseCase airportUseCase,
             FlightMapper flightMapper,
             CacheService cacheService
     ) {
         this.flightService = flightService;
         this.flightPriceService = flightPriceService;
         this.airlineUseCase = airlineUseCase;
-        this.airportUseCase = airportUseCase;
         this.flightMapper = flightMapper;
         this.cacheService = cacheService;
     }
@@ -69,12 +65,7 @@ public class FlightUseCase implements IFlightUseCase {
         FlightResponse response = flightMapper.toResponse(flight);
 
         var airline = airlineUseCase.get(flight.getAirlineId());
-        var departureAirport = airportUseCase.getById(flight.getDepartureAirportId());
-        var arrivalAirport = airportUseCase.getById(flight.getArrivalAirportId());
-
         response.setAirline(airline);
-        response.setDepartureAirport(departureAirport);
-        response.setArrivalAirport(arrivalAirport);
 
         return response;
     }
@@ -135,7 +126,7 @@ public class FlightUseCase implements IFlightUseCase {
 
     @Override
     public PageResponse<FlightReservation> searchFlight(
-            String departureAirportId, String arrivalAirportId,
+            String departureAirportCode, String arrivalAirportCode,
             LocalDate departureTime,
             int childSeats, int adultSeats,
             int page, int pageSize,
@@ -143,7 +134,7 @@ public class FlightUseCase implements IFlightUseCase {
     ) {
         String cacheKey = "flight_search:"
                 + "from:%s_to:%s_depart:%s".formatted(
-                departureAirportId, arrivalAirportId,
+                departureAirportCode, arrivalAirportCode,
                 departureTime.toString()
         );
         int totalSeats = childSeats + adultSeats;
@@ -155,7 +146,7 @@ public class FlightUseCase implements IFlightUseCase {
             );
         }
         Page<Flight> flightPage = flightService.getFlights(
-                departureAirportId, arrivalAirportId,
+                departureAirportCode, arrivalAirportCode,
                 departureTime,
                 totalSeats,
                 page, pageSize

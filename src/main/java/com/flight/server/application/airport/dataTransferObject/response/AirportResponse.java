@@ -3,31 +3,21 @@ package com.flight.server.application.airport.dataTransferObject.response;
 
 public class AirportResponse {
     private String id;
+    private String code;
     private String name;
     private String country;
     private String city;
-    private Double latitude;
-    private Double longitude;
-    private String phoneNumber;
-    private String email;
-    private String website;
-    private String operatingHours;
     private String status;
 
     public AirportResponse() {
     }
 
-    public AirportResponse(String id, String name, String country, String city, Double latitude, Double longitude, String phoneNumber, String email, String website, String operatingHours, String status) {
+    public AirportResponse(String id, String code, String name, String country, String city, String status) {
         this.id = id;
+        this.code = code;
         this.name = name;
         this.country = country;
         this.city = city;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.website = website;
-        this.operatingHours = operatingHours;
         this.status = status;
     }
 
@@ -37,6 +27,14 @@ public class AirportResponse {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -61,54 +59,6 @@ public class AirportResponse {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public String getOperatingHours() {
-        return operatingHours;
-    }
-
-    public void setOperatingHours(String operatingHours) {
-        this.operatingHours = operatingHours;
     }
 
     public String getStatus() {

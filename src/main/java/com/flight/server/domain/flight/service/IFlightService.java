@@ -12,7 +12,7 @@ public interface IFlightService extends GenericService<Flight, String> {
     Flight rollbackBookedSeats(Flight flight, int canceledSeats);
 
     Page<Flight> getFlights(
-            String departureAirportId, String arrivalAirportId,
+            String departureAirportCode, String arrivalAirportCode,
             LocalDate departureTime,
             Integer totalSeats,
             int pageNumber, int pageSize

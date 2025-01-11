@@ -20,8 +20,8 @@ public interface IFlightUseCase {
     /**
      * Searches for flights based on the provided criteria.
      *
-     * @param departureAirportId the ID of the departure airport
-     * @param arrivalAirportId   the ID of the arrival airport
+     * @param departureAirportCode the Code of the departure airport
+     * @param arrivalAirportCode   the Code of the arrival airport
      * @param departureTime      the desired departure time for the flight
      * @param childSeats         the number of child seats required
      * @param adultSeats         the number of adult seats required
@@ -32,10 +32,10 @@ public interface IFlightUseCase {
      * encapsulated in a {@link PageResponse} containing {@link FlightReservation} objects
      */
     PageResponse<FlightReservation> searchFlight(
-            String departureAirportId, String arrivalAirportId,
+            String departureAirportCode, String arrivalAirportCode,
             LocalDate departureTime,
             int childSeats, int adultSeats,
             int page, int pageSize,
-            String sortBy
+             String sortBy
     );
 }

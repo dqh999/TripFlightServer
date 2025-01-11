@@ -1,27 +1,31 @@
 package com.flight.server.application.filght.dataTransferObject.response;
 
 import com.flight.server.application.airline.dataTransferObject.response.AirlineResponse;
-import com.flight.server.application.airport.dataTransferObject.response.AirportResponse;
 import com.flight.server.domain.utils.valueObject.Money;
 
 import java.time.LocalDateTime;
 
 public class FlightResponse {
     private AirlineResponse airline;
-    private AirportResponse departureAirport;
+    private String departureAirportCode;
     private LocalDateTime departureTime;
-    private AirportResponse arrivalAirport;
+    private String arrivalAirportCode;
     private LocalDateTime arrivalTime;
     private Money standardPrice;
 
     public FlightResponse() {
     }
 
-    public FlightResponse(AirlineResponse airline, AirportResponse departureAirport, LocalDateTime departureTime, AirportResponse arrivalAirport, LocalDateTime arrivalTime, Money standardPrice) {
+    public FlightResponse(
+            AirlineResponse airline,
+            String departureAirportCode, LocalDateTime departureTime,
+            String arrivalAirportCode, LocalDateTime arrivalTime,
+            Money standardPrice
+    ) {
         this.airline = airline;
-        this.departureAirport = departureAirport;
+        this.departureAirportCode = departureAirportCode;
         this.departureTime = departureTime;
-        this.arrivalAirport = arrivalAirport;
+        this.arrivalAirportCode = arrivalAirportCode;
         this.arrivalTime = arrivalTime;
         this.standardPrice = standardPrice;
     }
@@ -34,12 +38,12 @@ public class FlightResponse {
         this.airline = airline;
     }
 
-    public AirportResponse getDepartureAirport() {
-        return departureAirport;
+    public String getDepartureAirportCode() {
+        return departureAirportCode;
     }
 
-    public void setDepartureAirport(AirportResponse departureAirport) {
-        this.departureAirport = departureAirport;
+    public void setDepartureAirportCode(String departureAirportCode) {
+        this.departureAirportCode = departureAirportCode;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -50,12 +54,12 @@ public class FlightResponse {
         this.departureTime = departureTime;
     }
 
-    public AirportResponse getArrivalAirport() {
-        return arrivalAirport;
+    public String getArrivalAirportCode() {
+        return arrivalAirportCode;
     }
 
-    public void setArrivalAirport(AirportResponse arrivalAirport) {
-        this.arrivalAirport = arrivalAirport;
+    public void setArrivalAirportCode(String arrivalAirportCode) {
+        this.arrivalAirportCode = arrivalAirportCode;
     }
 
     public LocalDateTime getArrivalTime() {

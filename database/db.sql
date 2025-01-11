@@ -36,9 +36,6 @@ CREATE TABLE tbl_airlines
     id           varchar(45) PRIMARY KEY,
     name         varchar(100) NOT NULL,
     country      varchar(100) NOT NULL,
-    phone_number varchar(15),
-    email        varchar(100),
-    website      varchar(100),
     logo_url     varchar(255),
     status       varchar(45)  not null,
     created_at   timestamp,
@@ -47,38 +44,33 @@ CREATE TABLE tbl_airlines
 
 create table tbl_airports
 (
-    id              varchar(45) primary key,
-    name            varchar(100) not null,
-    country         varchar(100) not null,
-    city            varchar(100) not null,
-    latitude        DECIMAL(10, 8),
-    longitude       DECIMAL(11, 8),
-    phone_number    varchar(100),
-    email           varchar(100),
-    website         varchar(100),
-    operating_hours varchar(100),
-    status          varchar(45)  not null,
-    created_at      timestamp,
-    updated_at      timestamp
+    id         varchar(45) primary key,
+    code       varchar(5)   not null,
+    name       varchar(100) not null,
+    country    varchar(100) not null,
+    city       varchar(100) not null,
+    status     varchar(45)  not null,
+    created_at timestamp,
+    updated_at timestamp
 );
 create table tbl_flights
 (
-    id                   varchar(45) primary key,
-    airline_id           varchar(45)    not null,
-    code                 varchar(30)    not null,
-    departure_airport_id varchar(45)    not null,
-    arrival_airport_id   varchar(45)    not null,
-    departure_time       DATETIME       not null,
-    arrival_time         DATETIME       not null,
-    description          varchar(255),
-    standard_price       decimal(10, 2) not null,
-    currency             varchar(10)    not null,
-    total_seats          int            not null,
-    available_seats      int            not null,
-    status               varchar(45)    not null,
-    version              int auto_increment,
-    created_at           timestamp,
-    updated_at           timestamp
+    id                     varchar(45) primary key,
+    airline_id             varchar(45)    not null,
+    code                   varchar(30)    not null,
+    departure_airport_code varchar(5)     not null,
+    arrival_airport_code   varchar(5)     not null,
+    departure_time         DATETIME       not null,
+    arrival_time           DATETIME       not null,
+    description            varchar(255),
+    standard_price         decimal(10, 2) not null,
+    currency               varchar(10)    not null,
+    total_seats            int            not null,
+    available_seats        int            not null,
+    status                 varchar(45)    not null,
+    version                int auto_increment,
+    created_at             timestamp,
+    updated_at             timestamp
 );
 SELECT f.*
 FROM tbl_flights

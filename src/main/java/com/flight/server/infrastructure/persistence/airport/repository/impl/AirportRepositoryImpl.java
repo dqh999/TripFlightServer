@@ -33,8 +33,18 @@ public class AirportRepositoryImpl implements AirportRepository {
     }
 
     @Override
+    public Optional<Airport> findByCode(String code) {
+        return repository.findByCode(code).map(mapper::toDTO);
+    }
+
+    @Override
     public Optional<Airport> findById(String id) {
         return repository.findById(id).map(mapper::toDTO);
+    }
+
+    @Override
+    public boolean existsByCode(String code) {
+        return repository.existsByCode(code);
     }
 
     @Override

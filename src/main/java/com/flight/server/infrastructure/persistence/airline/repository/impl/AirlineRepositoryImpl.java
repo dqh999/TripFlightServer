@@ -30,4 +30,9 @@ public class AirlineRepositoryImpl implements AirlineRepository {
     public Optional<Airline> findById(String id) {
         return repository.findById(id).map(mapper::toDTO);
     }
+
+    @Override
+    public boolean existsById(String id) {
+        return repository.existsById(id);
+    }
 }

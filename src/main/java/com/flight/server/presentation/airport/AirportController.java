@@ -40,7 +40,6 @@ public class AirportController {
                 .withData(result)
                 .toEntity();
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<AirportResponse>> getAirport(
             @PathVariable("id") String id

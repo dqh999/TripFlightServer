@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface AirportRepository {
     Airport save(Airport s);
+    Optional<Airport> findByCode(String code);
     Optional<Airport> findById(String id);
+    boolean existsByCode(String code);
     Page<Airport> search(String keyword, Pageable pageable);
 }

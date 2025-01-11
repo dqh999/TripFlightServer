@@ -15,12 +15,12 @@ public class FlightEntity extends BaseEntity {
     @Column(name = "airline_id")
     private String airlineId;
     private String code;
-    @Column(name = "departure_airport_id")
-    private String departureAirportId;
+    @Column(name = "departure_airport_code")
+    private String departureAirportCode;
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
-    @Column(name = "arrival_airport_id")
-    private String arrivalAirportId;
+    @Column(name = "arrival_airport_code")
+    private String arrivalAirportCode;
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
     private String description;
@@ -38,13 +38,13 @@ public class FlightEntity extends BaseEntity {
     public FlightEntity() {
     }
 
-    public FlightEntity(String id, String airlineId, String code, String departureAirportId, LocalDateTime departureTime, String arrivalAirportId, LocalDateTime arrivalTime, Money standardPrice, Integer totalSeats, Integer availableSeats, String description, String status, int version) {
+    public FlightEntity(String id, String airlineId, String code, String departureAirportCode, LocalDateTime departureTime, String arrivalAirportCode, LocalDateTime arrivalTime, Money standardPrice, Integer totalSeats, Integer availableSeats, String description, String status, int version) {
         this.id = id;
         this.airlineId = airlineId;
         this.code = code;
-        this.departureAirportId = departureAirportId;
+        this.departureAirportCode = departureAirportCode;
         this.departureTime = departureTime;
-        this.arrivalAirportId = arrivalAirportId;
+        this.arrivalAirportCode = arrivalAirportCode;
         this.arrivalTime = arrivalTime;
         this.standardPrice = standardPrice.getValue();
         this.currency = standardPrice.getCurrency();
@@ -79,12 +79,12 @@ public class FlightEntity extends BaseEntity {
         this.airlineId = airlineId;
     }
 
-    public String getDepartureAirportId() {
-        return departureAirportId;
+    public String getDepartureAirportCode() {
+        return departureAirportCode;
     }
 
-    public void setDepartureAirportId(String departureAirportId) {
-        this.departureAirportId = departureAirportId;
+    public void setDepartureAirportCode(String departureAirportCode) {
+        this.departureAirportCode = departureAirportCode;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -95,12 +95,12 @@ public class FlightEntity extends BaseEntity {
         this.departureTime = departureTime;
     }
 
-    public String getArrivalAirportId() {
-        return arrivalAirportId;
+    public String getArrivalAirportCode() {
+        return arrivalAirportCode;
     }
 
-    public void setArrivalAirportId(String arrivalAirportId) {
-        this.arrivalAirportId = arrivalAirportId;
+    public void setArrivalAirportCode(String arrivalAirportCode) {
+        this.arrivalAirportCode = arrivalAirportCode;
     }
 
     public LocalDateTime getArrivalTime() {

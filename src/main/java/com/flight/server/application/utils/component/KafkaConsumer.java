@@ -54,18 +54,6 @@ public class KafkaConsumer {
         ticketUseCase.cancelTicket(ticketId);
     }
 
-    @KafkaListener(
-            topicPartitions = @TopicPartition(
-                    topic = "test",
-                    partitions = {"0", "1"}
-            ),
-            concurrency = "1"
-    )
-    public void test(String message) {
-        logger.info("Received test message: {}", message);
-        throw new BusinessException();
-    }
-
     @DltHandler
     void handleTicketCancelDlt(@Payload String message) {
         logger.error("Alert Booking Command: {}", message);

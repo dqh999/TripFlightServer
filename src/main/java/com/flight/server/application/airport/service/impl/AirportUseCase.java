@@ -45,7 +45,7 @@ public class AirportUseCase implements IAirportUseCase {
 
     @Override
     public PageResponse<AirportResponse>  search(String keyword, int pageNo, int pageSize) {
-        Page<Airport> pageResult = airlineService.search(keyword,pageNo-1,pageSize);
+        Page<Airport> pageResult = airlineService.search(keyword,pageNo,pageSize);
         List<AirportResponse> airlineResponses = pageResult.getContent().stream().map(airlineMapper::toDTO).collect(Collectors.toList());
 
         return new PageResponse<>(
