@@ -1,11 +1,10 @@
 package com.flight.server.application.filght.service.impl;
 
 
-import com.flight.server.application.airline.dataTransferObject.response.AirlineResponse;
 import com.flight.server.application.airline.service.IAirlineUseCase;
-import com.flight.server.application.airport.dataTransferObject.response.AirportResponse;
 import com.flight.server.application.airport.service.IAirportUseCase;
 import com.flight.server.application.filght.dataTransferObject.request.AddFlightRequest;
+import com.flight.server.application.filght.dataTransferObject.response.FlightReservation;
 import com.flight.server.application.filght.dataTransferObject.response.FlightResponse;
 import com.flight.server.application.filght.mapper.FlightMapper;
 import com.flight.server.application.filght.service.IFlightUseCase;
@@ -22,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,8 +37,8 @@ public class FlightUseCase implements IFlightUseCase {
     private final FlightMapper flightMapper;
     private final CacheService cacheService;
 
-    @Value("${spring.data.redis.key.flight.detail-session}")
-    private String flightDetailSessionKey;
+    @Value("${spring.data.redis.key.flight.detail}")
+    private String flightDetailKey;
 
     public FlightUseCase(
             IFlightService flightService,
@@ -65,14 +65,12 @@ public class FlightUseCase implements IFlightUseCase {
         return buildResponse(newFlight);
     }
 
-    private FlightResponse buildResponse(
-            Flight flight
-    ) {
+    private FlightResponse buildResponse(Flight flight) {
         FlightResponse response = flightMapper.toResponse(flight);
 
-        AirlineResponse airline = airlineUseCase.get(flight.getAirlineId());
-        AirportResponse departureAirport = airportUseCase.getById(flight.getDepartureAirportId());
-        AirportResponse arrivalAirport = airportUseCase.getById(flight.getArrivalAirportId());
+        var airline = airlineUseCase.get(flight.getAirlineId());
+        var departureAirport = airportUseCase.getById(flight.getDepartureAirportId());
+        var arrivalAirport = airportUseCase.getById(flight.getArrivalAirportId());
 
         response.setAirline(airline);
         response.setDepartureAirport(departureAirport);
@@ -82,78 +80,103 @@ public class FlightUseCase implements IFlightUseCase {
     }
 
     @Override
-    public FlightResponse getFlight(
-            String fightId,
+    public FlightReservation getFlight(
+            String flightId,
             int childSeats, int adultSeats,
             String sessionId
     ) {
-        String cacheKey = flightDetailSessionKey.formatted(
-                fightId,
-                sessionId
-        );
+        String cacheKey = flightDetailKey.formatted(flightId);
+        if (cacheService.exists(cacheKey)) {
+            logger.info("Flight details found in cache for flightId: {}", flightId);
 
-        FlightResponse existFlightRes;
-        if (!cacheService.exists(cacheKey)) {
-            Flight existFlight = flightService.getById(fightId);
-
-            Money pricePare = flightPriceService.calculateTotalFare(
-                    null,
+            Flight flightCache = cacheService.get(
+                    cacheKey,
+                    Flight.class
+            );
+            return buildFlightReservation(
+                    flightCache,
                     childSeats, adultSeats
             );
-            existFlightRes = buildResponse(existFlight);
-            existFlightRes.setPricePare(pricePare);
-            cacheService.put(
-                    cacheKey,
-                    existFlightRes,
-                    60000
-            );
-        } else {
-            existFlightRes = cacheService.get(cacheKey, FlightResponse.class);
         }
+        logger.info("Flight details querying database for flightId: {}", flightId);
+        Flight existFlight = flightService.getById(flightId);
 
-        FlightResponse response = new FlightResponse();
-        cacheService.put(cacheKey, response);
-        return existFlightRes;
+        return buildFlightReservation(
+                existFlight,
+                childSeats, adultSeats
+        );
+    }
+
+    private FlightReservation buildFlightReservation(
+            Flight flight,
+            int childSeats, int adultSeats
+    ) {
+        FlightResponse flightResponse = buildResponse(flight);
+        Money pricePare = calculateTotalFare(
+                flight,
+                childSeats, adultSeats
+        );
+        return new FlightReservation(
+                flightResponse,
+                childSeats, adultSeats,
+                pricePare
+        );
+    }
+
+    private Money calculateTotalFare(
+            Flight flight,
+            int childSeats, int adultSeats
+    ) {
+        return flightPriceService.calculateTotalFare(
+                flight,
+                childSeats, adultSeats
+        );
     }
 
     @Override
-    public PageResponse<FlightResponse> searchFlight(
+    public PageResponse<FlightReservation> searchFlight(
             String departureAirportId, String arrivalAirportId,
             LocalDate departureTime,
             int childSeats, int adultSeats,
             int page, int pageSize,
             String sortBy
     ) {
-//        String cacheKey = "flight_search_" + departureAirportId + "_" + arrivalAirportId + "_"
-//                + departureTime.toString() + "_"
-//                + page + "_" + pageSize + "_" + sortBy + "_"
-//                + "version:" + "_";
-
+        String cacheKey = "flight_search:"
+                + "from:%s_to:%s_depart:%s".formatted(
+                departureAirportId, arrivalAirportId,
+                departureTime.toString()
+        );
         int totalSeats = childSeats + adultSeats;
+        if (cacheService.exists(cacheKey)) {
+            logger.info("Flight details found in cache for flightId: {}", cacheKey);
+            List<Flight> flights = cacheService.get(
+                    cacheKey,
+                    List.class
+            );
+        }
         Page<Flight> flightPage = flightService.getFlights(
                 departureAirportId, arrivalAirportId,
                 departureTime,
                 totalSeats,
                 page, pageSize
         );
+
         List<Flight> flights = flightPage.getContent();
 
-        flights.forEach(flight -> {
-            Money pricePare = flightPriceService.calculateTotalFare(
-                    flight,
-                    childSeats, adultSeats
-            );
-            flight.setStandardPrice(pricePare);
-        });
-
-        List<FlightResponse> flightResponses = flightMapper.toResponses(flights);
+        List<FlightReservation> flightReservations = new ArrayList<>();
+        flights.forEach(flight -> flightReservations.add(
+                buildFlightReservation(
+                        flight,
+                        childSeats, adultSeats
+                )
+        ));
 
         return new PageResponse<>(
                 (int) flightPage.getTotalElements(),
                 flightPage.getTotalPages(),
                 page,
                 flightPage.getSize(),
-                flightResponses,
+                flightReservations,
                 flightPage.hasNext(),
                 flightPage.hasPrevious()
         );

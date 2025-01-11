@@ -2,6 +2,7 @@ package com.flight.server.application.filght.service;
 
 
 import com.flight.server.application.filght.dataTransferObject.request.AddFlightRequest;
+import com.flight.server.application.filght.dataTransferObject.response.FlightReservation;
 import com.flight.server.application.filght.dataTransferObject.response.FlightResponse;
 import com.flight.server.application.utils.PageResponse;
 
@@ -10,8 +11,8 @@ import java.time.LocalDate;
 public interface IFlightUseCase {
     FlightResponse addFlight(AddFlightRequest request);
 
-    FlightResponse getFlight(
-            String fightId,
+    FlightReservation getFlight(
+            String flightId,
             int childSeats, int adultSeats,
             String sessionId
     );
@@ -28,9 +29,9 @@ public interface IFlightUseCase {
      * @param pageSize           the number of items per page
      * @param sortBy             the field to sort the results by (e.g., "price", "duration")
      * @return a paginated list of flights matching the specified criteria,
-     * encapsulated in a {@link PageResponse} containing {@link FlightResponse} objects
+     * encapsulated in a {@link PageResponse} containing {@link FlightReservation} objects
      */
-    PageResponse<FlightResponse> searchFlight(
+    PageResponse<FlightReservation> searchFlight(
             String departureAirportId, String arrivalAirportId,
             LocalDate departureTime,
             int childSeats, int adultSeats,

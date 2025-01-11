@@ -1,6 +1,7 @@
 package com.flight.server.presentation.flight;
 
 import com.flight.server.application.filght.dataTransferObject.request.AddFlightRequest;
+import com.flight.server.application.filght.dataTransferObject.response.FlightReservation;
 import com.flight.server.application.filght.dataTransferObject.response.FlightResponse;
 import com.flight.server.application.filght.service.IFlightUseCase;
 import com.flight.server.application.utils.PageResponse;
@@ -32,36 +33,35 @@ public class FlightController {
     public ResponseEntity<ApiResponse<FlightResponse>> handelAddFlight(
             @RequestBody AddFlightRequest request
     ) {
+        logger.info("Adding flight: {}", request);
         var result = flightUseCase.addFlight(request);
         return ApiResponse.<FlightResponse>build()
                 .withData(result)
                 .toEntity();
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<FlightResponse>> handleGetFlight(
-            @RequestParam(required = false) String flightId,
+    @GetMapping("/detail")
+    public ResponseEntity<ApiResponse<FlightReservation>> handleGetFlight(
+            @RequestParam String flightId,
             @RequestParam(defaultValue = "0") int childSeats,
             @RequestParam(defaultValue = "1") int adultSeats,
-            HttpSession httpSession
+            HttpSession session
     ) {
-        String sessionId = httpSession.getId();
+        String sessionId = session.getId();
+        logger.info("Getting flight with id: {}, childSeats: {}, adultSeats: {}, sessionId: {}",
+                flightId, childSeats, adultSeats, sessionId);
         var result = flightUseCase.getFlight(
                 flightId,
                 childSeats, adultSeats,
                 sessionId
         );
-        return ApiResponse.<FlightResponse>build()
+        return ApiResponse.<FlightReservation>build()
                 .withData(result)
                 .toEntity();
     }
 
-    @Tag(
-            name = "Search Flight",
-            description = ""
-    )
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<PageResponse<FlightResponse>>> handelSearchFlight(
+    public ResponseEntity<ApiResponse<PageResponse<FlightReservation>>> handelSearchFlight(
 //            @RequestParam(defaultValue = "one-way") String tripType,
 //            @RequestParam(required = false) LocalDateTime returnTime,
             @RequestParam(required = false) String departureAirportId,
@@ -90,7 +90,7 @@ public class FlightController {
                 childSeats, adultSeats,
                 page, pageSize, sortBy
         );
-        return ApiResponse.<PageResponse<FlightResponse>>build()
+        return ApiResponse.<PageResponse<FlightReservation>>build()
                 .withData(result)
                 .toEntity();
     }

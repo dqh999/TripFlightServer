@@ -137,6 +137,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
         TicketBookResponse response = new TicketBookResponse(ticketResponse, initPaymentResponse);
         sendConfirmEmail(response);
+
         return response;
     }
 
@@ -146,7 +147,10 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         while (retries < confirmMaxRetries && !isConfirmed) {
             try {
                 Flight existFlight = flightService.getById(existTicket.getFlightId());
-                flightService.updateAvailableSeats(existFlight, existTicket.calculateTotalSeats());
+                Flight updatedFlight = flightService.updateAvailableSeats(existFlight, existTicket.calculateTotalSeats());
+
+                cacheService.put(cacheKey, updatedFlight);
+
                 logger.info("Ticket with ticketId={} update available seats successfully for FlightScheduleId={}.",
                         existTicket.getId(), existFlight.getId());
                 return existFlight;

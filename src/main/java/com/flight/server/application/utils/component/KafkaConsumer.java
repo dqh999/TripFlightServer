@@ -1,12 +1,14 @@
 package com.flight.server.application.utils.component;
 
 import com.flight.server.application.ticket.service.ITicketUseCase;
+import com.flight.server.domain.utils.exception.BusinessException;
 import com.flight.server.infrastructure.dataTransferObject.request.EmailRequest;
 import com.flight.server.infrastructure.service.messaging.EmailService;
 import org.apache.kafka.common.errors.RetriableException;
 import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.retry.annotation.Backoff;
@@ -44,13 +46,26 @@ public class KafkaConsumer {
             include = {RetriableException.class, RuntimeException.class}    // RuntimeException: for test; mark retriable business exceptions
     )
     @KafkaListener(
-            topics = "${spring.kafka.topic.ticket.ticket-cancel}",
-            groupId = "ticket"
+            topics = "${spring.kafka.topic.ticket.ticket-cancel}"
+//            concurrency =
     )
     public void listenTicketCancel(String ticketId) {
         logger.info("Received ticket cancel request for ticketId: {}", ticketId);
         ticketUseCase.cancelTicket(ticketId);
     }
+
+    @KafkaListener(
+            topicPartitions = @TopicPartition(
+                    topic = "test",
+                    partitions = {"0", "1"}
+            ),
+            concurrency = "1"
+    )
+    public void test(String message) {
+        logger.info("Received test message: {}", message);
+        throw new BusinessException();
+    }
+
     @DltHandler
     void handleTicketCancelDlt(@Payload String message) {
         logger.error("Alert Booking Command: {}", message);
