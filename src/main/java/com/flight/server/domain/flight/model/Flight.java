@@ -21,7 +21,7 @@ public class Flight extends BaseModel {
     private Integer totalSeats;
     private Integer availableSeats;
     private FlightStatus status;
-    private int version;
+    private Integer version;
 
     public Flight() {
         this.id = new Id();
@@ -37,7 +37,7 @@ public class Flight extends BaseModel {
             Money standardPrice,
             Integer totalSeats, Integer availableSeats,
             String status,
-            int version
+            Integer version
     ) {
         this.id = new Id(id);
         this.airlineId = new Id(airlineId);
@@ -150,11 +150,11 @@ public class Flight extends BaseModel {
         this.status = FlightStatus.valueOf(status);
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 }

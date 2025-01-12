@@ -1,18 +1,33 @@
 package com.flight.server.application.filght.dataTransferObject.request;
 
 import com.flight.server.domain.utils.valueObject.Money;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
 public class AddFlightRequest {
+    @NotBlank(message = "Airline ID cannot be blank")
     private String airlineId;
+    @NotBlank(message = "Flight code cannot be blank")
+    @Size(min = 3, max = 10, message = "Flight code must be between 3 and 10 characters")
     private String code;
+    @NotBlank(message = "Departure airport code cannot be blank")
     private String departureAirportCode;
+    @NotBlank(message = "Arrival airport code cannot be blank")
     private String arrivalAirportCode;
+    @NotNull(message = "Departure time cannot be null")
     private LocalDateTime departureTime;
+    @NotNull(message = "Arrival time cannot be null")
     private LocalDateTime arrivalTime;
+    @Size(max = 255, message = "Description must not exceed 255 characters")
     private String description;
+    @NotNull(message = "Standard price cannot be null")
     private Money standardPrice;
+    @NotNull(message = "Total seats cannot be null")
+    @Min(value = 1, message = "Total seats must be greater than 0")
     private Integer totalSeats;
     public AddFlightRequest() {
     }
