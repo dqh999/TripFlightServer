@@ -125,4 +125,5 @@ public class TokenEntity extends BaseEntity {
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
     }
+
 }

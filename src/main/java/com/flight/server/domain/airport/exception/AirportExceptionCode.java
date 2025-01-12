@@ -3,7 +3,7 @@ package com.flight.server.domain.airport.exception;
 import com.flight.server.domain.utils.exception.ExceptionCode;
 
 public enum AirportExceptionCode implements ExceptionCode {
-    AIR_PORT_NOT_FOUND("airline", 404);
+    AIR_PORT_NOT_FOUND("AIR_PORT_NOT_FOUND", 404);
 
 
     private final String type;

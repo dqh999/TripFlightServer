@@ -45,13 +45,13 @@ public class FlightRepositoryImpl implements FlightRepository {
 
     @Override
     public Page<Flight> findFlights(
-            String departureAirportId, String arrivalAirportId,
+            String departureAirportCode, String arrivalAirportCode,
             Integer totalSeats,
             LocalDateTime startDate, LocalDateTime endDate,
             Pageable pageable
     ) {
         return repository.findFlights(
-                        departureAirportId, arrivalAirportId,
+                        departureAirportCode, arrivalAirportCode,
                         totalSeats,
                         startDate, endDate,
                         pageable

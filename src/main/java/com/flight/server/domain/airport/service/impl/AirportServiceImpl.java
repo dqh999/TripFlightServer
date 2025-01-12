@@ -1,14 +1,18 @@
 package com.flight.server.domain.airport.service.impl;
 
+import com.flight.server.domain.airport.exception.AirportExceptionCode;
 import com.flight.server.domain.airport.model.Airport;
 import com.flight.server.domain.airport.repository.AirportRepository;
 import com.flight.server.domain.airport.service.IAirportService;
 import com.flight.server.domain.airport.type.AirportStatus;
+import com.flight.server.domain.utils.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class AirportServiceImpl implements IAirportService {
@@ -32,9 +36,16 @@ public class AirportServiceImpl implements IAirportService {
     }
 
     @Override
+    public boolean isAirportAvailableAtTime(String airportCode, LocalDateTime time) {
+        return airportRepository.existsByCode(airportCode);
+    }
+
+    @Override
     public Airport getById(String id) {
         return airportRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(
+                        () -> new BusinessException(AirportExceptionCode.AIR_PORT_NOT_FOUND)
+                );
     }
 
     @Override
@@ -44,7 +55,7 @@ public class AirportServiceImpl implements IAirportService {
 
     @Override
     public Page<Airport> search(String keyword, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
         return airportRepository.search(keyword, pageable);
     }
 }

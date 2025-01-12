@@ -13,7 +13,7 @@ public interface FlightRepository {
     Optional<Flight> findById(String id);
 
     Page<Flight> findFlights(
-            String departureAirportId, String arrivalAirportId,
+            String departureAirportCode, String arrivalAirportCode,
             Integer totalSeats,
             LocalDateTime startDate, LocalDateTime endDate,
             Pageable pageable

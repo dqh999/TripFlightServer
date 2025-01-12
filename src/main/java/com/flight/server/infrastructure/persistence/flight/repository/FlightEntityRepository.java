@@ -13,13 +13,13 @@ public interface FlightEntityRepository extends JpaRepository<FlightEntity,Strin
     boolean existsByCode(String code);
     @Query("SELECT s " +
             "FROM FlightEntity s " +
-            "WHERE s.departureAirportId = :departureAirportId " +
-            "AND s.arrivalAirportId = :arrivalAirportId " +
+            "WHERE s.departureAirportCode = :departureAirportCode " +
+            "AND s.arrivalAirportCode = :arrivalAirportCode " +
             "AND s.availableSeats >= :totalSeats " +
             "AND s.departureTime BETWEEN :startDate AND :endDate")
     Page<FlightEntity> findFlights(
-            @Param("departureAirportId") String departureAirportId,
-            @Param("arrivalAirportId") String arrivalAirportId,
+            @Param("departureAirportCode") String departureAirportCode,
+            @Param("arrivalAirportCode") String arrivalAirportCode,
             @Param("totalSeats") Integer totalSeats,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,

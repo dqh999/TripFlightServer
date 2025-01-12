@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 
 public class Flight extends BaseModel {
     private Id id;
-    private Id flightId;
+    private Id airlineId;
     private String code;
-    private Id departureAirportId;
+    private String departureAirportCode;
     private LocalDateTime departureTime;
-    private Id arrivalAirportId;
+    private String arrivalAirportCode;
     private LocalDateTime arrivalTime;
     private String description;
     private Money standardPrice;
     private Integer totalSeats;
     private Integer availableSeats;
     private FlightStatus status;
-    private String version;
+    private Integer version;
 
     public Flight() {
         this.id = new Id();
@@ -29,28 +29,28 @@ public class Flight extends BaseModel {
 
     public Flight(
             String id,
-            String flightId,
+            String airlineId,
             String code,
-            String departureAirportId, LocalDateTime departureTime,
-            String arrivalAirportId, LocalDateTime arrivalTime,
+            String departureAirportCode, LocalDateTime departureTime,
+            String arrivalAirportCode, LocalDateTime arrivalTime,
             String description,
             Money standardPrice,
             Integer totalSeats, Integer availableSeats,
             String status,
-            String version
+            Integer version
     ) {
         this.id = new Id(id);
-        this.flightId = new Id(flightId);
+        this.airlineId = new Id(airlineId);
         this.code = code;
-        this.departureAirportId = new Id(departureAirportId);
+        this.departureAirportCode = departureAirportCode;
         this.departureTime = departureTime;
-        this.arrivalAirportId = new Id(arrivalAirportId);
+        this.arrivalAirportCode = arrivalAirportCode;
         this.arrivalTime = arrivalTime;
         this.description = description;
         this.standardPrice = standardPrice;
         this.totalSeats = totalSeats;
         this.availableSeats = availableSeats;
-        this.status = FlightStatus.valueOf(status);
+        this.status = status != null ? FlightStatus.valueOf(status) : null;
         this.version =version;
     }
 
@@ -62,12 +62,12 @@ public class Flight extends BaseModel {
         this.id = new Id(id);
     }
 
-    public String getFlightId() {
-        return flightId.getValue();
+    public String getAirlineId() {
+        return airlineId.getValue();
     }
 
-    public void setFlightId(String flightId) {
-        this.flightId = new Id(flightId);
+    public void setAirlineId(String airlineId) {
+        this.airlineId = new Id(airlineId);
     }
 
     public String getCode() {
@@ -78,12 +78,12 @@ public class Flight extends BaseModel {
         this.code = code;
     }
 
-    public String getDepartureAirportId() {
-        return departureAirportId.getValue();
+    public String getDepartureAirportCode() {
+        return departureAirportCode;
     }
 
-    public void setDepartureAirportId(String departureAirportId) {
-        this.departureAirportId = new Id(departureAirportId);
+    public void setDepartureAirportCode(String departureAirportCode) {
+        this.departureAirportCode = departureAirportCode;
     }
 
     public LocalDateTime getDepartureTime() {
@@ -94,12 +94,12 @@ public class Flight extends BaseModel {
         this.departureTime = departureTime;
     }
 
-    public String getArrivalAirportId() {
-        return arrivalAirportId.getValue();
+    public String getArrivalAirportCode() {
+        return arrivalAirportCode;
     }
 
-    public void setArrivalAirportId(String arrivalAirportId) {
-        this.arrivalAirportId = new Id(arrivalAirportId);
+    public void setArrivalAirportCode(String arrivalAirportCode) {
+        this.arrivalAirportCode = arrivalAirportCode;
     }
 
     public LocalDateTime getArrivalTime() {
@@ -143,18 +143,18 @@ public class Flight extends BaseModel {
     }
 
     public String getStatus() {
-        return status.toString();
+        return status.getValue();
     }
 
     public void setStatus(String status) {
         this.status = FlightStatus.valueOf(status);
     }
 
-    public String getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 }

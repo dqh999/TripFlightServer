@@ -3,6 +3,7 @@ package com.flight.server.domain.airline.service.impl;
 import com.flight.server.domain.airline.model.Airline;
 import com.flight.server.domain.airline.repository.AirlineRepository;
 import com.flight.server.domain.airline.service.IAirlineService;
+import com.flight.server.domain.utils.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,5 +33,12 @@ public class AirlineService implements IAirlineService {
     @Override
     public void delete(Airline airline) {
 
+    }
+
+    @Override
+    public void checkAirlineActive(String airlineId) {
+        if (!repository.existsById(airlineId)) {
+            throw new BusinessException();
+        }
     }
 }

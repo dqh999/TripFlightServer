@@ -1,5 +1,7 @@
 package com.flight.server.domain.flight.service.impl;
 
+import com.flight.server.domain.airline.service.IAirlineService;
+import com.flight.server.domain.airport.service.IAirportService;
 import com.flight.server.domain.flight.excpetion.FlightExceptionCode;
 import com.flight.server.domain.flight.model.Flight;
 import com.flight.server.domain.flight.repository.FlightRepository;
@@ -17,11 +19,17 @@ import java.time.LocalDateTime;
 @Service
 public class FlightServiceImpl implements IFlightService {
     private final FlightRepository flightRepository;
+    private final IAirlineService airlineService;
+    private final IAirportService airportService;
 
     public FlightServiceImpl(
-            FlightRepository flightRepository
+            FlightRepository flightRepository,
+            IAirlineService airlineService,
+            IAirportService airportService
     ) {
         this.flightRepository = flightRepository;
+        this.airlineService = airlineService;
+        this.airportService = airportService;
     }
 
     @Override
@@ -35,8 +43,14 @@ public class FlightServiceImpl implements IFlightService {
     }
 
     private void validateFlight(Flight flight) {
-        if (!flightRepository.existByCode(flight.getCode())) {
-            throw new BusinessException(FlightExceptionCode.FLIGHT_NOT_FOUND);
+        airlineService.checkAirlineActive(flight.getAirlineId());
+
+        if (flightRepository.existByCode(flight.getCode())) {
+            throw new BusinessException(FlightExceptionCode.FLIGHT_DUPLICATE_CODE);
+        }
+        if (!airportService.isAirportAvailableAtTime(flight.getDepartureAirportCode(), flight.getDepartureTime())
+                || !airportService.isAirportAvailableAtTime(flight.getArrivalAirportCode(), flight.getArrivalTime())) {
+            throw new BusinessException(FlightExceptionCode.FLIGHT_INVALID_AIRPORT_CODE);
         }
     }
 
@@ -73,13 +87,13 @@ public class FlightServiceImpl implements IFlightService {
 
     @Override
     public Page<Flight> getFlights(
-            String departureAirportId, String arrivalAirportId,
+            String departureAirportCode, String arrivalAirportCode,
             LocalDate departureTime,
             Integer totalSeats,
             int pageNumber, int pageSize
     ) {
         validateGetFlights(
-                departureAirportId, arrivalAirportId,
+                departureAirportCode, arrivalAirportCode,
                 departureTime,
                 totalSeats,
                 pageNumber, pageSize
@@ -88,7 +102,7 @@ public class FlightServiceImpl implements IFlightService {
         LocalDateTime startDate = calculateStartDate(departureTime);
         LocalDateTime endDate = calculateEndDate(departureTime);
         return flightRepository.findFlights(
-                departureAirportId, arrivalAirportId,
+                departureAirportCode, arrivalAirportCode,
                 totalSeats,
                 startDate, endDate,
                 pageable

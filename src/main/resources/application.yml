@@ -29,7 +29,7 @@ spring:
 
       key:
         flight:
-          detail: flightId_%s_sessionId:%s
+          detail: flightId:%s
         ticket:
           ticket-confirm:
             value:  ticket_confirm:%s
