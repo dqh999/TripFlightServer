@@ -8,6 +8,7 @@ import com.flight.server.application.filght.dataTransferObject.response.FlightRe
 import com.flight.server.application.filght.mapper.FlightMapper;
 import com.flight.server.application.filght.service.IFlightUseCase;
 import com.flight.server.application.utils.PageResponse;
+import com.flight.server.application.utils.component.KafkaProducer;
 import com.flight.server.domain.flight.model.Flight;
 import com.flight.server.domain.flight.service.IFlightPriceService;
 import com.flight.server.domain.flight.service.IFlightService;
@@ -33,7 +34,9 @@ public class FlightUseCase implements IFlightUseCase {
     private final IAirlineUseCase airlineUseCase;
 
     private final FlightMapper flightMapper;
+
     private final CacheService cacheService;
+    private final KafkaProducer kafkaProducer;
 
     @Value("${spring.data.redis.key.flight.detail}")
     private String flightDetailKey;
@@ -43,13 +46,15 @@ public class FlightUseCase implements IFlightUseCase {
             IFlightPriceService flightPriceService,
             IAirlineUseCase airlineUseCase,
             FlightMapper flightMapper,
-            CacheService cacheService
+            CacheService cacheService,
+            KafkaProducer kafkaProducer
     ) {
         this.flightService = flightService;
         this.flightPriceService = flightPriceService;
         this.airlineUseCase = airlineUseCase;
         this.flightMapper = flightMapper;
         this.cacheService = cacheService;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @Override
@@ -77,20 +82,19 @@ public class FlightUseCase implements IFlightUseCase {
             String sessionId
     ) {
         String cacheKey = flightDetailKey.formatted(flightId);
+        Flight existFlight;
         if (cacheService.exists(cacheKey)) {
-            logger.info("Flight details found in cache for flightId: {}", flightId);
-
-            Flight flightCache = cacheService.get(
+            logger.info("Flight found in cache for flightId: {}", flightId);
+            existFlight = cacheService.get(
                     cacheKey,
                     Flight.class
             );
-            return buildFlightReservation(
-                    flightCache,
-                    childSeats, adultSeats
-            );
+        } else {
+            logger.info("Flight querying database for flightId: {}", flightId);
+            existFlight = flightService.getById(flightId);
         }
-        logger.info("Flight details querying database for flightId: {}", flightId);
-        Flight existFlight = flightService.getById(flightId);
+
+        kafkaProducer.send("flight_get_", existFlight);
 
         return buildFlightReservation(
                 existFlight,
@@ -140,9 +144,25 @@ public class FlightUseCase implements IFlightUseCase {
         int totalSeats = childSeats + adultSeats;
         if (cacheService.exists(cacheKey)) {
             logger.info("Flight details found in cache for flightId: {}", cacheKey);
-            List<Flight> flights = cacheService.get(
+            Page<Flight> flightPage = cacheService.get(
                     cacheKey,
-                    List.class
+                    Page.class
+            );
+            List<FlightReservation> flightReservations = new ArrayList<>();
+            flightPage.getContent().forEach(flight -> flightReservations.add(
+                    buildFlightReservation(
+                            flight,
+                            childSeats, adultSeats
+                    )
+            ));
+             return new PageResponse<>(
+                    (int) flightPage.getTotalElements(),
+                    flightPage.getTotalPages(),
+                    page,
+                    flightPage.getSize(),
+                    flightReservations,
+                    flightPage.hasNext(),
+                    flightPage.hasPrevious()
             );
         }
         Page<Flight> flightPage = flightService.getFlights(

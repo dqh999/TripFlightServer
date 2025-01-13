@@ -72,9 +72,6 @@ create table tbl_flights
     created_at             timestamp,
     updated_at             timestamp
 );
-SELECT f.*
-FROM tbl_flights
-WHERE f.d
 create table tbl_tickets
 (
     id              varchar(45) primary key,

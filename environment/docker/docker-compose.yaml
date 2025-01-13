@@ -37,8 +37,8 @@ services:
   app:
     image: airline-server:latest
     build:
-      context: ..
-      dockerfile: ../Dockerfile
+      context: ../..
+      dockerfile: ../../Dockerfile
     container_name: airline-app
     restart: always
     ports:

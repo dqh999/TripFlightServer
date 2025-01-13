@@ -133,10 +133,10 @@ volumes:
 
 #docker rm -f zookeeper-01 zookeeper-02 zookeeper-03 kafka-broker-01
 
-#docker compose -f kafka-deployment.yaml up -d zookeeper-01
-#docker compose -f kafka-deployment.yaml up -d zookeeper-02
-#docker compose -f kafka-deployment.yaml up -d zookeeper-03
+#docker compose -f docker-compose-kafka.yaml up -d zookeeper-01
+#docker compose -f docker-compose-kafka.yaml up -d zookeeper-02
+#docker compose -f docker-compose-kafka.yaml up -d zookeeper-03
 
-#docker compose -f kafka-deployment.yaml up -d kafka-broker-01
-#docker compose -f kafka-deployment.yaml up -d kafka-broker-02
+#docker compose -f docker-compose-kafka.yaml up -d kafka-broker-01
+#docker compose -f docker-compose-kafka.yaml up -d kafka-broker-02
 

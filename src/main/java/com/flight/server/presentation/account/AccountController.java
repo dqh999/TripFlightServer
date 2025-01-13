@@ -6,9 +6,11 @@ import com.flight.server.application.account.dataTransferObject.request.LoginReq
 import com.flight.server.application.account.dataTransferObject.request.RefreshTokenRequest;
 import com.flight.server.application.account.dataTransferObject.request.RegisterRequest;
 import com.flight.server.application.account.service.UserUseCase;
+import com.flight.server.application.utils.RequestUtil;
 import com.flight.server.infrastructure.exception.ApiResponse;
 import com.flight.server.infrastructure.security.UserDetail;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,12 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AccountDTO>> handleRegister(
-            @RequestBody RegisterRequest request
+            @RequestBody RegisterRequest request,
+            HttpServletRequest httpServletRequest
     ) {
+        String ipAddress = RequestUtil.getIpAddress(httpServletRequest);
+        request.setIpAddress(ipAddress);
+
         var result = userUseCase.register(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
@@ -42,8 +48,10 @@ public class AccountController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AccountDTO>> handleLogin(
-            @RequestBody LoginRequest request
+            @RequestBody LoginRequest request,
+            HttpServletRequest httpServletRequest
     ) {
+        String ipAddress = RequestUtil.getIpAddress(httpServletRequest);
         var result = userUseCase.login(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)

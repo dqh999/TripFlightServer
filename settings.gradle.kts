@@ -1,1 +1,1 @@
-rootProject.name = "TravelokaServer"
+rootProject.name = "TripFlightServer"

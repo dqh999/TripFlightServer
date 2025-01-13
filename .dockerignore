@@ -10,4 +10,4 @@ build/
 .dockerignore
 Dockerfile
 docker/docker-compose.yaml
-./database/
+environment/database/

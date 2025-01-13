@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 
 public class RegisterRequest {
+    private String ipAddress;
     private String phoneNumber;
     private String email;
     private String password;
@@ -17,7 +18,8 @@ public class RegisterRequest {
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String phoneNumber, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String gender) {
+    public RegisterRequest(String ipAddress,String phoneNumber, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, String gender) {
+        this.ipAddress = ipAddress;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
@@ -25,6 +27,14 @@ public class RegisterRequest {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getPhoneNumber() {
