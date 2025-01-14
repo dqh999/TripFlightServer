@@ -72,6 +72,8 @@ create table tbl_flights
     created_at             timestamp,
     updated_at             timestamp
 );
+CREATE INDEX idx_flight_route ON tbl_flights (departure_airport_code, arrival_airport_code, departure_time);
+
 create table tbl_tickets
 (
     id              varchar(45) primary key,
