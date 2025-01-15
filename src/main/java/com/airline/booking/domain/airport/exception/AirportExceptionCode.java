@@ -1,6 +1,6 @@
 package com.airline.booking.domain.airport.exception;
 
-import com.airline.booking.domain.utils.exception.ExceptionCode;
+import com.airline.booking.domain.exception.ExceptionCode;
 
 public enum AirportExceptionCode implements ExceptionCode {
     AIR_PORT_NOT_FOUND("AIR_PORT_NOT_FOUND", 404);

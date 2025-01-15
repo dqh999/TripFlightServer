@@ -1,8 +1,7 @@
 package com.airline.booking.infrastructure.exception;
 
-import com.airline.booking.application.utils.exception.ApplicationException;
-import com.airline.booking.domain.utils.exception.BusinessException;
-import com.airline.booking.domain.utils.exception.ExceptionCode;
+import com.airline.booking.domain.exception.BusinessException;
+import com.airline.booking.domain.exception.ExceptionCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

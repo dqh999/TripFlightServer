@@ -1,6 +1,6 @@
 package com.airline.booking.domain.ticket.exception;
 
-import com.airline.booking.domain.utils.exception.ExceptionCode;
+import com.airline.booking.domain.exception.ExceptionCode;
 
 public enum TicketExceptionCode implements ExceptionCode {
     TICKET_NOT_FOUND("TICKET_NOT_FOUND", 404),

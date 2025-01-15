@@ -1,6 +1,7 @@
 package com.airline.booking.application.utils;
 
 
+import com.airline.booking.infrastructure.security.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

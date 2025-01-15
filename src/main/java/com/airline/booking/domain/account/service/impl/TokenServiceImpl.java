@@ -5,7 +5,7 @@ import com.airline.booking.domain.account.model.Token;
 import com.airline.booking.domain.account.model.User;
 import com.airline.booking.domain.account.repository.TokenRepository;
 import com.airline.booking.domain.account.service.ITokenService;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -54,17 +54,21 @@ public class TokenServiceImpl implements ITokenService {
         return newToken;
     }
 
-    private Map<String, Object> buildClaims(String accountId,
-                                            String subject) {
+    private Map<String, Object> buildClaims(
+            String accountId,
+            String subject
+    ) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("accountId", accountId);
         claims.put("subject", subject);
         return claims;
     }
 
-    private String generateToken(Map<String, Object> claims,
-                                 String subject,
-                                 Date expiresAt) {
+    private String generateToken(
+            Map<String, Object> claims,
+            String subject,
+            Date expiresAt
+    ) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(subject)
@@ -83,8 +87,10 @@ public class TokenServiceImpl implements ITokenService {
     }
 
     @Override
-    public Token refreshToken(User user,
-                              String refreshToken) {
+    public Token refreshToken(
+            User user,
+            String refreshToken
+    ) {
         Token existingToken = tokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new BusinessException(AccountExceptionCode.TOKEN_NOT_FOUND, "Refresh token not found."));
         if (existingToken.getRevoked()) {

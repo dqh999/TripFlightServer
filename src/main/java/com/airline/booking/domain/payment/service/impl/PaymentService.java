@@ -4,7 +4,7 @@ import com.airline.booking.domain.payment.model.Payment;
 import com.airline.booking.domain.payment.repository.PaymentRepository;
 import com.airline.booking.domain.payment.service.IPaymentService;
 import com.airline.booking.domain.payment.type.PaymentStatus;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

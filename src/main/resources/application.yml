@@ -58,6 +58,23 @@ spring:
             required: true
       default-encoding: UTF-8
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 806634918775-849bm677ttvf5k8u2v2gc3gvcjmf73p4.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/api/account/login/oauth2/code/google
+            scope: email,profile,openid
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
+
   jwt:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60

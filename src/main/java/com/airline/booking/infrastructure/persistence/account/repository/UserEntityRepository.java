@@ -8,11 +8,15 @@ import java.util.Optional;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity,String> {
     boolean existsByPhoneNumber(String phoneNumber);
-    boolean existsByEmail(String email);
 
-    @Query(value = "SELECT new UserEntity(id,firstName,lastName,gender,dateOfBirth) " +
-            "FROM UserEntity " +
-            "WHERE id = :id")
+    @Query(value = "select new UserEntity(id,firstName,lastName,gender,dateOfBirth) " +
+            "from UserEntity " +
+            "where email = :userName or phoneNumber = :userName")
+    Optional<UserEntity> findByUserName(String userName);
+
+    @Query(value = "select new UserEntity(id,firstName,lastName,gender,dateOfBirth) " +
+            "from UserEntity " +
+            "where id = :id")
     Optional<UserEntity> findById(String id);
 
     Optional<UserEntity> findByPhoneNumber(String phoneNumber);

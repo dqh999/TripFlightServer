@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface UserRepository {
     boolean existsByPhoneNumber(String phoneNumber);
-    Optional<User> findByPhoneNumber(String phoneNumber);
+    Optional<User> findByUserName(String userName);
     Optional<User> findById(String id);
     User save(User user);
 }

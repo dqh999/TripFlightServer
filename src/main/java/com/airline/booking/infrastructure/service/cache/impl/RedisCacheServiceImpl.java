@@ -1,5 +1,6 @@
 package com.airline.booking.infrastructure.service.cache.impl;
 
+import com.airline.booking.domain.exception.BusinessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.airline.booking.infrastructure.service.cache.CacheService;
@@ -39,7 +40,7 @@ public class RedisCacheServiceImpl implements CacheService {
             String jsonValue = objectMapper.writeValueAsString(value);
             redisTemplate.opsForValue().set(key, jsonValue, ttl, TimeUnit.SECONDS);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Failed to serialize object for Redis", e);
+            throw new BusinessException("Failed to serialize object for Redis: " + e);
         }
     }
 
@@ -63,7 +64,7 @@ public class RedisCacheServiceImpl implements CacheService {
         try {
             return objectMapper.readValue(jsonValue, clazz);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to deserialize object from Redis", e);
+            throw new BusinessException("Failed to deserialize object from Redis: " + e);
         }
     }
 

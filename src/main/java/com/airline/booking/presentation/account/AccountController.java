@@ -5,85 +5,99 @@ import com.airline.booking.application.account.dataTransferObject.request.Change
 import com.airline.booking.application.account.dataTransferObject.request.LoginRequest;
 import com.airline.booking.application.account.dataTransferObject.request.RefreshTokenRequest;
 import com.airline.booking.application.account.dataTransferObject.request.RegisterRequest;
-import com.airline.booking.application.account.service.AccountUseCase;
+import com.airline.booking.application.account.service.IAccountUseCase;
+import com.airline.booking.application.account.service.IOAuth2Service;
+import com.airline.booking.application.account.type.OAuth2Type;
 import com.airline.booking.application.utils.RequestUtil;
 import com.airline.booking.infrastructure.exception.ApiResponse;
 import com.airline.booking.infrastructure.security.UserDetail;
+import com.airline.booking.presentation.account.operation.AccountOperations;
+import com.airline.booking.presentation.account.operation.OAuth2Operations;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/${api.prefix}/account")
 @Tag(name = "Account Controller")
-public class AccountController {
+public class AccountController implements AccountOperations, OAuth2Operations {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    private final AccountUseCase accountUseCase;
+    private final IAccountUseCase IAccountUseCase;
+    private final IOAuth2Service oauth2Service;
 
-    @Autowired
-    public AccountController(AccountUseCase accountUseCase) {
-        this.accountUseCase = accountUseCase;
+    public AccountController(IAccountUseCase IAccountUseCase, IOAuth2Service oauth2Service) {
+        this.IAccountUseCase = IAccountUseCase;
+        this.oauth2Service = oauth2Service;
     }
 
-    @PostMapping("/register")
+    @Override
     public ResponseEntity<ApiResponse<AccountDTO>> handleRegister(
-            @RequestBody RegisterRequest request,
+            RegisterRequest request,
             HttpServletRequest httpServletRequest
     ) {
         String ipAddress = RequestUtil.getIpAddress(httpServletRequest);
         request.setIpAddress(ipAddress);
 
-        var result = accountUseCase.register(request);
+        var result = IAccountUseCase.register(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
     }
 
-    @PostMapping("/login")
+    @Override
     public ResponseEntity<ApiResponse<AccountDTO>> handleLogin(
-            @RequestBody LoginRequest request,
+            LoginRequest request,
             HttpServletRequest httpServletRequest
     ) {
         String ipAddress = RequestUtil.getIpAddress(httpServletRequest);
-        var result = accountUseCase.login(request);
+        request.setIpAddress(ipAddress);
+        var result = IAccountUseCase.login(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
     }
-    @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse<String>> handleGetUser(
-            @PathVariable String userId
-    ){
 
+    @Override
+    public ResponseEntity<ApiResponse<String>> generateOAuth2LoginUrl(OAuth2Type type) {
+        var result = oauth2Service.generateAuthUrl(type);
+        return ApiResponse.<String>build()
+                .withData(result)
+                .toEntity();
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse<AccountDTO>> processOAuth2Callback(OAuth2Type type, String code) {
+        var result = oauth2Service.authenticate(type, code);
+        return ApiResponse.<AccountDTO>build()
+                .withData(result)
+                .toEntity();
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse<String>> handleGetUser(String userId) {
         return ApiResponse.<String>build()
                 .withData(userId)
                 .toEntity();
     }
 
-    @PatchMapping("/changePassword")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @Override
     public ResponseEntity<ApiResponse<AccountDTO>> handleChangePassword(
-            @AuthenticationPrincipal UserDetail userRequest,
-            @RequestBody ChangePasswordRequest request
+            UserDetail userRequest,
+            ChangePasswordRequest request
     ) {
-        var result = accountUseCase.changePassword(userRequest, request);
+        var result = IAccountUseCase.changePassword(userRequest, request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
     }
-    @PostMapping("/refreshToken")
-    public ResponseEntity<ApiResponse<AccountDTO>> handleRefreshToken(
-            @RequestBody RefreshTokenRequest request
-    ) {
-        var result = accountUseCase.refreshToken(request);
+
+    @Override
+    public ResponseEntity<ApiResponse<AccountDTO>> handleRefreshToken(RefreshTokenRequest request) {
+        var result = IAccountUseCase.refreshToken(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();

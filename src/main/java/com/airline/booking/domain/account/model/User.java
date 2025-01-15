@@ -21,7 +21,10 @@ public class User extends BaseModel {
     private HashPassword password;
     private boolean isAccountLocked;
     private boolean isAccountActive;
-    public User() {}
+
+    public User() {
+    }
+
     public User(String id, String firstName, String lastName, LocalDate dateOfBirth, String gender, String role, String email, String phoneNumber, String password, boolean isAccountLocked, boolean isAccountActive) {
         this.id = new Id(id);
         this.firstName = firstName;

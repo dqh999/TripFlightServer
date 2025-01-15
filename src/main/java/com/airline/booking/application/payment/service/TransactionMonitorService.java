@@ -1,6 +1,6 @@
 package com.airline.booking.application.payment.service;
 
-import com.airline.booking.application.utils.component.KafkaProducer;
+import com.airline.booking.application.component.KafkaProducer;
 import com.airline.booking.domain.ticket.model.Ticket;
 import com.airline.booking.infrastructure.service.cache.CacheService;
 import org.slf4j.Logger;

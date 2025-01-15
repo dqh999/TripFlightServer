@@ -1,6 +1,6 @@
 package com.airline.booking.infrastructure.service.messaging;
 
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import com.airline.booking.infrastructure.dataTransferObject.request.EmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

@@ -7,7 +7,7 @@ import com.airline.booking.domain.account.model.User;
 import com.airline.booking.domain.account.repository.UserRepository;
 import com.airline.booking.domain.account.service.IUserService;
 import com.airline.booking.domain.account.valueObject.Role;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,51 +49,54 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User login(String phoneNumber, String password) {
-        validateUserForLogin(phoneNumber, password);
+    public User login(
+            String userName,
+            String password
+    ) {
+        validateUserForLogin(userName, password);
 
-        User existUser = getUserByPhoneNumber(phoneNumber);
+        User existUser = getByUserName(userName);
 
         checkCredentials(existUser, password);
 
         return existUser;
     }
 
-    private void validateUserForLogin(String phoneNumber, String password) {
+    private void validateUserForLogin(
+            String phoneNumber,
+            String password
+    ) {
         userValidator.validatePhoneNumber(phoneNumber);
         userValidator.validatePassword(password);
     }
 
-    @Override
-    public User getUserByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new BusinessException(AccountExceptionCode.ACCOUNT_NOT_FOUND));
-    }
-
-    private void checkCredentials(User existUser, String password) {
+    private void checkCredentials(
+            User existUser,
+            String password
+    ) {
         if (!existUser.getHashedPassword().matches(password)) {
             throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
         }
 
-//        if (existUser.isAccountLocked()) {
-//            throw new BusinessException(AccountExceptionCode.ACCOUNT_LOCKED);
-//        }
-//        if (!existUser.isAccountActive()) {
-//            throw new BusinessException(AccountExceptionCode.ACCOUNT_INACTIVE);
-//        }
+        if (existUser.isAccountLocked()) {
+            throw new BusinessException(AccountExceptionCode.ACCOUNT_LOCKED);
+        }
+        if (!existUser.isAccountActive()) {
+            throw new BusinessException(AccountExceptionCode.ACCOUNT_INACTIVE);
+        }
     }
 
     @Override
     @Transactional
-    public User changePassword(String phoneNumber,
-                               String oldPassword, String newPassword) {
-        validateChangePasswordRequest(phoneNumber,oldPassword, newPassword);
+    public User changePassword(
+            User existUser,
+            String oldPassword, String newPassword
+    ) {
+        validateChangePasswordRequest(oldPassword, newPassword);
 
         if (oldPassword.equals(newPassword)) {
             throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
         }
-
-        User existUser = this.getUserByPhoneNumber(phoneNumber);
 
         checkCredentials(existUser, oldPassword);
 
@@ -108,9 +111,16 @@ public class UserServiceImpl implements IUserService {
         return existUser;
     }
 
-    private void validateChangePasswordRequest(String phoneNumber,String oldPassword, String newPassword) {
-        userValidator.validatePhoneNumber(phoneNumber);
+    private void validateChangePasswordRequest(
+            String oldPassword, String newPassword
+    ) {
         userValidator.validatePassword(oldPassword);
         userValidator.validatePassword(newPassword);
+    }
+
+    @Override
+    public User getByUserName(String userName) {
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new BusinessException(AccountExceptionCode.ACCOUNT_NOT_FOUND));
     }
 }

@@ -1,7 +1,7 @@
 package com.airline.booking.infrastructure.security;
 
 import com.airline.booking.domain.account.exception.AccountExceptionCode;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import com.airline.booking.infrastructure.persistence.account.model.UserEntity;
 import com.airline.booking.infrastructure.persistence.account.repository.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +35,8 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return phoneNumber -> {
-            UserEntity entity = userRepository.findByPhoneNumber(phoneNumber)
+        return userName -> {
+            UserEntity entity = userRepository.findByUserName(userName)
                     .orElseThrow(() -> new BusinessException(AccountExceptionCode.ACCOUNT_NOT_FOUND));
             return new UserDetail(entity.getId(),entity.getRole(),entity.getPhoneNumber(),"");
         };

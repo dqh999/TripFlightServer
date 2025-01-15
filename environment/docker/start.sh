@@ -9,7 +9,6 @@ docker compose build app
 echo "Starting MySQL and Redis services..."
 docker compose up -d airline-mysql airline-redis
 
-# Chờ vài giây để đảm bảo các dịch vụ phụ (MySQL, Redis) đã sẵn sàng
 echo "Waiting for dependencies to be ready..."
 sleep 10
 

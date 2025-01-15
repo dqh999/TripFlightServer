@@ -30,14 +30,10 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return repository.existsByPhoneNumber(phoneNumber);
     }
-
     @Override
-    public Optional<User> findByPhoneNumber(String phoneNumber) {
-        if (phoneNumber == null) {
-            return Optional.empty();
-        }
-        Optional<UserEntity> userEntity = repository.findByPhoneNumber(phoneNumber);
-        return userEntity.map(mapper::toDTO);
+    public Optional<User> findByUserName(String userName) {
+        return repository.findByUserName(userName)
+                .map(mapper::toDTO);
     }
 
     @Override

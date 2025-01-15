@@ -1,6 +1,6 @@
 package com.airline.booking.domain.account.exception;
 
-import com.airline.booking.domain.utils.exception.ExceptionCode;
+import com.airline.booking.domain.exception.ExceptionCode;
 
 public enum AccountExceptionCode implements ExceptionCode {
     ACCOUNT_NOT_FOUND("ACCOUNT_NOT_FOUND", 404),

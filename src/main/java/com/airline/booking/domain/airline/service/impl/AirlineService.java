@@ -3,7 +3,7 @@ package com.airline.booking.domain.airline.service.impl;
 import com.airline.booking.domain.airline.model.Airline;
 import com.airline.booking.domain.airline.repository.AirlineRepository;
 import com.airline.booking.domain.airline.service.IAirlineService;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 @Service

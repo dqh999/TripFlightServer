@@ -6,7 +6,7 @@ import com.airline.booking.domain.ticket.repository.TicketRepository;
 import com.airline.booking.domain.ticket.service.ITicketService;
 import com.airline.booking.domain.ticket.type.TicketStatus;
 import com.airline.booking.domain.utils.DateTimeUtils;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

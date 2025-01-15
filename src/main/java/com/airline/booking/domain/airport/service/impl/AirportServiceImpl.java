@@ -5,7 +5,7 @@ import com.airline.booking.domain.airport.model.Airport;
 import com.airline.booking.domain.airport.repository.AirportRepository;
 import com.airline.booking.domain.airport.service.IAirportService;
 import com.airline.booking.domain.airport.type.AirportStatus;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

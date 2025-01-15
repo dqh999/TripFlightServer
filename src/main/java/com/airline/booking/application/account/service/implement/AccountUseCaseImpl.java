@@ -1,32 +1,30 @@
 package com.airline.booking.application.account.service.implement;
 
 import com.airline.booking.application.account.dataTransferObject.AccountDTO;
-import com.airline.booking.application.account.dataTransferObject.request.ChangePasswordRequest;
-import com.airline.booking.application.account.dataTransferObject.request.LoginRequest;
-import com.airline.booking.application.account.dataTransferObject.request.RefreshTokenRequest;
-import com.airline.booking.application.account.dataTransferObject.request.RegisterRequest;
-import com.airline.booking.application.account.dataTransferObject.response.UserResponse;
+import com.airline.booking.application.account.dataTransferObject.request.*;
 import com.airline.booking.application.account.exception.AccountApplicationExceptionCode;
 import com.airline.booking.application.account.mapper.AccountMapper;
-import com.airline.booking.application.account.service.AccountUseCase;
-import com.airline.booking.application.utils.exception.ApplicationException;
+import com.airline.booking.application.account.service.IAccountUseCase;
+import com.airline.booking.infrastructure.exception.ApplicationException;
 import com.airline.booking.domain.account.component.UserValidator;
 import com.airline.booking.domain.account.exception.AccountExceptionCode;
 import com.airline.booking.domain.account.model.Token;
 import com.airline.booking.domain.account.model.User;
 import com.airline.booking.domain.account.service.ITokenService;
 import com.airline.booking.domain.account.service.IUserService;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import com.airline.booking.infrastructure.service.cache.CacheService;
 import com.airline.booking.infrastructure.security.UserDetail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountUseCaseImpl implements AccountUseCase {
+public class AccountUseCaseImpl implements IAccountUseCase {
+    private static final Logger logger = LoggerFactory.getLogger(AccountUseCaseImpl.class);
+
     private final IUserService userService;
     private final ITokenService tokenService;
     private final AccountMapper accountMapper;
@@ -49,32 +47,28 @@ public class AccountUseCaseImpl implements AccountUseCase {
 
     @Override
     public AccountDTO register(RegisterRequest request) {
-
         String phoneNumber = request.getPhoneNumber();
         validatePhoneNumber(phoneNumber);
-        cacheService.delete(phoneNumber);
 
-        boolean isLocked = cacheService.acquireLock(phoneNumber, 300);
+        boolean isLocked = cacheService.acquireLock(phoneNumber, 300L);
         if (!isLocked) {
             throw new ApplicationException(AccountApplicationExceptionCode.LOCK_ALREADY_ACQUIRED);
         }
         try {
             User userRegister = accountMapper.toDTO(request);
             User newUser = userService.register(userRegister);
-
-            Token token = tokenService.createToken(newUser);
-            String accessToken = token.getValue();
-
-            AccountDTO accountDTO = buildAccountDTO(newUser, token);
-
-            storeAccessTokenInCache(accessToken, newUser);
-
-            return accountDTO;
+            return createAndStoreToken(newUser);
         } catch (BusinessException e) {
             throw new BusinessException(e.getExceptionCode());
         } finally {
             cacheService.releaseLock(phoneNumber);
         }
+    }
+
+    private AccountDTO createAndStoreToken(User user) {
+        Token newToken = tokenService.createToken(user);
+        storeAccessTokenInCache(newToken.getValue(), user);
+        return buildAccountDTO(user, newToken);
     }
 
     private void storeAccessTokenInCache(
@@ -84,34 +78,26 @@ public class AccountUseCaseImpl implements AccountUseCase {
         UserDetail existUser = new UserDetail(
                 user.getId(),
                 user.getRole(),
-                user.getPhoneNumber(),
-                user.getPassword()
+                user.getPhoneNumber(), user.getPassword()
         );
         cacheService.put(accessToken, existUser, accessTokenTTL);
     }
+
     private AccountDTO buildAccountDTO(
             User user,
             Token token
-    ){
-        UserResponse userResponse = accountMapper.toResponse(user);
+    ) {
         return new AccountDTO(
-                userResponse,
-                token.getValue(),
-                token.getRefreshToken()
+                user.getId(), user.getRole(),
+                token.getValue(), token.getExpiresAt(),
+                token.getRefreshToken(), token.getRefreshTokenExpiresAt()
         );
     }
+
     @Override
     public AccountDTO login(LoginRequest request) {
-        User existUser = userService.login(request.getPhoneNumber(), request.getPassword());
-
-        Token token = tokenService.createToken(existUser);
-        String accessToken = token.getValue();
-
-        AccountDTO accountDTO = buildAccountDTO(existUser, token);
-
-        storeAccessTokenInCache(accessToken, existUser);
-
-        return accountDTO;
+        User existUser = userService.login(request.getUserName(), request.getPassword());
+        return createAndStoreToken(existUser);
     }
 
     private void validatePhoneNumber(String phoneNumber) {
@@ -124,33 +110,20 @@ public class AccountUseCaseImpl implements AccountUseCase {
             UserDetail userRequest,
             ChangePasswordRequest request
     ) {
-        AuthenticationPrincipal principal = (AuthenticationPrincipal) SecurityContextHolder.getContext().getAuthentication();
         String phoneNumber = userRequest.getUsername();
-
-        User userResult = userService.changePassword(phoneNumber, request.getOldPassword(), request.getNewPassword());
+        User existUser = userService.getByUserName(phoneNumber);
+        User userResult = userService.changePassword(existUser, request.getOldPassword(), request.getNewPassword());
 
         tokenService.revokeAllTokens(userResult.getId());
 
-        Token token = tokenService.createToken(userResult);
-        String accessToken = token.getValue();
-
-        AccountDTO accountDTO = buildAccountDTO(userResult, token);
-
-        storeAccessTokenInCache(accessToken, userResult);
-
-        return accountDTO;
+        return createAndStoreToken(existUser);
     }
 
     @Override
     public AccountDTO refreshToken(RefreshTokenRequest request) {
         String userName = tokenService.validateToken(request.getAccessToken());
-        User existUser = userService.getUserByPhoneNumber(userName);
-        Token newToken = tokenService.createToken(existUser);
-
-        AccountDTO accountDTO = buildAccountDTO(existUser, newToken);
-
-        storeAccessTokenInCache(newToken.getValue(), existUser);
-        return accountDTO;
+        User existUser = userService.getByUserName(userName);
+        return createAndStoreToken(existUser);
     }
 
     @Override
@@ -160,5 +133,13 @@ public class AccountUseCaseImpl implements AccountUseCase {
             return cacheService.get(accessToken, UserDetail.class);
         }
         throw new BusinessException(AccountExceptionCode.UNAUTHORIZED_ACCESS);
+    }
+
+    @Override
+    public AccountDTO loginWithOAuth2(OAuth2LoginRequest request) {
+        logger.info("loginWithOAuth2");
+        String userName = request.getEmail() != null ? request.getEmail() : request.getPhoneNumber();
+        User existUser = userService.getByUserName(userName);
+        return createAndStoreToken(existUser);
     }
 }

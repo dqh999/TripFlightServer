@@ -1,17 +1,18 @@
 CREATE
-DATABASE airline_db;
+    DATABASE airline_db;
 use
-airline_db;
+    airline_db;
 create table tbl_users
 (
     id              varchar(45) primary key,
+    oauth2_type     varchar(45),
     first_name      varchar(50)  not null,
     last_name       varchar(50)  not null,
     date_of_birth   datetime     not null,
     gender          varchar(45)  not null,
     role            varchar(45)  not null,
     phone_number    varchar(15)  not null unique,
-    email           varchar(100) not null,
+    email           varchar(100) not null unique,
     hashed_password varchar(255) not null,
     created_at      timestamp,
     updated_at      timestamp
@@ -33,13 +34,13 @@ create table tbl_user_tokens
 );
 CREATE TABLE tbl_airlines
 (
-    id           varchar(45) PRIMARY KEY,
-    name         varchar(100) NOT NULL,
-    country      varchar(100) NOT NULL,
-    logo_url     varchar(255),
-    status       varchar(45)  not null,
-    created_at   timestamp,
-    updated_at   timestamp
+    id         varchar(45) PRIMARY KEY,
+    name       varchar(100) NOT NULL,
+    country    varchar(100) NOT NULL,
+    logo_url   varchar(255),
+    status     varchar(45)  not null,
+    created_at timestamp,
+    updated_at timestamp
 );
 
 create table tbl_airports

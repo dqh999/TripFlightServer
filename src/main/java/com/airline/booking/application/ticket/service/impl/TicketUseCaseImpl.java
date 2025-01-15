@@ -10,13 +10,13 @@ import com.airline.booking.application.ticket.dataTransferObject.response.Ticket
 import com.airline.booking.application.ticket.dataTransferObject.response.TicketResponse;
 import com.airline.booking.application.ticket.mapper.TicketMapper;
 import com.airline.booking.application.ticket.service.ITicketUseCase;
-import com.airline.booking.application.utils.exception.ApplicationException;
+import com.airline.booking.infrastructure.exception.ApplicationException;
 import com.airline.booking.domain.flight.model.Flight;
 import com.airline.booking.domain.flight.service.IFlightPriceService;
 import com.airline.booking.domain.flight.service.IFlightService;
 import com.airline.booking.domain.ticket.model.Ticket;
 import com.airline.booking.domain.ticket.service.ITicketService;
-import com.airline.booking.application.utils.component.KafkaProducer;
+import com.airline.booking.application.component.KafkaProducer;
 import com.airline.booking.infrastructure.dataTransferObject.request.EmailRequest;
 import com.airline.booking.infrastructure.service.cache.CacheService;
 import com.airline.booking.infrastructure.util.Template;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 @Service
 public class TicketUseCaseImpl implements ITicketUseCase {

@@ -4,7 +4,7 @@ import com.airline.booking.application.payment.constant.VNPayParams;
 import com.airline.booking.application.payment.dataTransferObject.request.InitPaymentRequest;
 import com.airline.booking.application.payment.dataTransferObject.response.InitPaymentResponse;
 import com.airline.booking.application.payment.service.IPaymentGatewayService;
-import com.airline.booking.application.utils.constant.Locale;
+import com.airline.booking.application.constant.Locale;
 import com.airline.booking.domain.payment.model.Payment;
 import com.airline.booking.domain.payment.service.IPaymentService;
 import com.airline.booking.domain.payment.type.PaymentStatus;

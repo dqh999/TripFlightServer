@@ -1,6 +1,6 @@
 package com.airline.booking.domain.utils.valueObject;
 
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import com.airline.booking.domain.utils.service.CurrencyConverter;
 import com.airline.booking.domain.utils.type.Currency;
 

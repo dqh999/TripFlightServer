@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 
 public interface FlightEntityRepository extends JpaRepository<FlightEntity,String> {
     boolean existsByCode(String code);
+
+
     @Query("SELECT s " +
             "FROM FlightEntity s " +
             "WHERE s.departureAirportCode = :departureAirportCode " +

@@ -7,7 +7,7 @@ import com.airline.booking.domain.flight.model.Flight;
 import com.airline.booking.domain.flight.repository.FlightRepository;
 import com.airline.booking.domain.flight.service.IFlightService;
 import com.airline.booking.domain.flight.type.FlightStatus;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

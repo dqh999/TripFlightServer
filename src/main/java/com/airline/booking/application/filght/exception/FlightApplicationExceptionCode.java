@@ -1,6 +1,6 @@
 package com.airline.booking.application.filght.exception;
 
-import com.airline.booking.domain.utils.exception.ExceptionCode;
+import com.airline.booking.domain.exception.ExceptionCode;
 
 public enum FlightApplicationExceptionCode implements ExceptionCode {
     Flight_NOT_FOUND("Flight_NOT_FOUND", 404);

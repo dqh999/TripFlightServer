@@ -1,6 +1,5 @@
 package com.airline.booking.domain.account.model;
 
-
 import com.airline.booking.domain.utils.model.BaseModel;
 import com.airline.booking.domain.utils.valueObject.Id;
 

@@ -47,7 +47,8 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.4.1")
-
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+	implementation("com.google.api-client:google-api-client:2.7.1")
 
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

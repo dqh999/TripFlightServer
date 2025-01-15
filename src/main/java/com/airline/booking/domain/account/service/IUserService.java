@@ -5,9 +5,9 @@ import com.airline.booking.domain.account.model.User;
 
 public interface IUserService {
     User register(User user);
-    User login(String phoneNumber,String password);
+    User login(String userName,String password);
 
-    User changePassword(String phoneNumber,String oldPassword,String newPassword);
+    User changePassword(User existUser,String oldPassword,String newPassword);
 
-    User getUserByPhoneNumber(String phoneNumber);
+    User getByUserName(String userName);
 }

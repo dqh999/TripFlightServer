@@ -15,6 +15,8 @@ public class UserDetail implements UserDetails {
     private String password;
 
     public static String roleAdmin = "ADMIN";
+    public static String roleUser = "USER";
+
     public UserDetail() {
     }
 

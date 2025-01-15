@@ -2,8 +2,7 @@ package com.airline.booking.domain.account.component;
 
 import com.airline.booking.domain.account.exception.AccountExceptionCode;
 import com.airline.booking.domain.account.model.User;
-import com.airline.booking.domain.account.valueObject.Role;
-import com.airline.booking.domain.utils.exception.BusinessException;
+import com.airline.booking.domain.exception.BusinessException;
 import com.airline.booking.domain.utils.validation.SecurityValidator;
 import org.springframework.stereotype.Component;
 
