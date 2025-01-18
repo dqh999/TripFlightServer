@@ -9,15 +9,10 @@ import java.util.Optional;
 public interface UserEntityRepository extends JpaRepository<UserEntity,String> {
     boolean existsByPhoneNumber(String phoneNumber);
 
-    @Query(value = "select new UserEntity(id,firstName,lastName,gender,dateOfBirth) " +
-            "from UserEntity " +
-            "where email = :userName or phoneNumber = :userName")
+    @Query(value = "select u " +
+            "from UserEntity u " +
+            "where u.email = :userName or u.phoneNumber = :userName")
     Optional<UserEntity> findByUserName(String userName);
-
-    @Query(value = "select new UserEntity(id,firstName,lastName,gender,dateOfBirth) " +
-            "from UserEntity " +
-            "where id = :id")
-    Optional<UserEntity> findById(String id);
 
     Optional<UserEntity> findByPhoneNumber(String phoneNumber);
 }

@@ -1,4 +1,4 @@
-package com.airline.booking.application.constant;
+package com.airline.booking.application.utils.constant;
 
 public enum Locale {
     VIETNAM("vn");

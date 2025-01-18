@@ -26,6 +26,10 @@ public class UserEntity extends BaseEntity  {
     private String phoneNumber;
     @Column(name = "hashed_password")
     private String password;
+    @Column(name = "is_locked")
+    private boolean isLocked;
+    @Column(name = "is_active")
+    private boolean isActive;
 
     public UserEntity() {
     }
@@ -38,7 +42,7 @@ public class UserEntity extends BaseEntity  {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public UserEntity(String id, String firstName, String lastName, String gender, LocalDate dateOfBirth, String role, String email, String phoneNumber, String password) {
+    public UserEntity(String id, String firstName, String lastName, String gender, LocalDate dateOfBirth, String role, String email, String phoneNumber, String password, boolean isLocked, boolean isActive) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,6 +52,8 @@ public class UserEntity extends BaseEntity  {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.isLocked = isLocked;
+        this.isActive = isActive;
     }
 
 
@@ -121,5 +127,21 @@ public class UserEntity extends BaseEntity  {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

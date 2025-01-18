@@ -1,6 +1,7 @@
 package com.airline.booking.presentation.flight;
 
 import com.airline.booking.application.filght.dataTransferObject.request.AddFlightRequest;
+import com.airline.booking.application.filght.dataTransferObject.request.SearchFlightRequest;
 import com.airline.booking.application.filght.dataTransferObject.response.FlightReservation;
 import com.airline.booking.application.filght.dataTransferObject.response.FlightResponse;
 import com.airline.booking.application.filght.service.IFlightUseCase;
@@ -15,8 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/${api.prefix}/flight")
@@ -30,17 +29,6 @@ public class FlightController {
         this.flightUseCase = flightUseCase;
     }
 
-    @PostMapping("/list")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse<List<FlightResponse>>> handelAddFlights(
-            @RequestBody List<AddFlightRequest> requests
-    ) {
-        logger.info("Adding flights: {}", requests);
-        List<FlightResponse> results = requests.stream().map(flightUseCase::addFlight).collect(Collectors.toList());
-        return ApiResponse.<List<FlightResponse>>build()
-                .withData(results)
-                .toEntity();
-    }
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<FlightResponse>> handelAddFlight(
@@ -96,13 +84,14 @@ public class FlightController {
                 childSeats, adultSeats,
                 page, pageSize, sortBy
         );
-
-        var result = flightUseCase.searchFlight(
-                departureAirportCode, arrivalAirportCode,
+        var request = new SearchFlightRequest(
+                departureAirportCode,arrivalAirportCode,
                 departureTime,
                 childSeats, adultSeats,
-                page, pageSize, sortBy
+                page, pageSize,
+                sortBy
         );
+        var result = flightUseCase.searchFlight(request);
         return ApiResponse.<PageResponse<FlightReservation>>build()
                 .withData(result)
                 .toEntity();

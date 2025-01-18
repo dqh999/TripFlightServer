@@ -28,6 +28,13 @@ public class UserDetail implements UserDetails {
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE" + "_" + this.role.toUpperCase()));
+        return authorities;
+    }
+
+    @Override
     public String getUsername() {
         return this.username;
     }
@@ -35,13 +42,6 @@ public class UserDetail implements UserDetails {
     @Override
     public String getPassword() {
         return this.password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE" + "_" + this.role.toUpperCase()));
-        return authorities;
     }
 
     @Override

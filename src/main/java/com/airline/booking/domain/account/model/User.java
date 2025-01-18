@@ -19,13 +19,13 @@ public class User extends BaseModel {
     private Email email;
     private PhoneNumber phoneNumber;
     private HashPassword password;
-    private boolean isAccountLocked;
-    private boolean isAccountActive;
+    private boolean isLocked;
+    private boolean isActive;
 
     public User() {
     }
 
-    public User(String id, String firstName, String lastName, LocalDate dateOfBirth, String gender, String role, String email, String phoneNumber, String password, boolean isAccountLocked, boolean isAccountActive) {
+    public User(String id, String firstName, String lastName, LocalDate dateOfBirth, String gender, String role, String email, String phoneNumber, String password, boolean isLocked, boolean isActive) {
         this.id = new Id(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,8 +35,8 @@ public class User extends BaseModel {
         this.email = new Email(email);
         this.phoneNumber = new PhoneNumber(phoneNumber);
         this.password = new HashPassword(password);
-        this.isAccountLocked = isAccountLocked;
-        this.isAccountActive = isAccountActive;
+        this.isLocked = isLocked;
+        this.isActive = isActive;
     }
 
     public void initializeNewId() {
@@ -110,28 +110,31 @@ public class User extends BaseModel {
     public String getPassword() {
         return this.password.getValue();
     }
+    public boolean checkPasswordMatches(String password) {
+        return this.password.matches(password);
+    }
 
     public void setPassword(String password) {
         this.password = new HashPassword(password);
     }
 
-    public HashPassword getHashedPassword() {
-        return this.password;
+    public String getHashedPassword() {
+        return this.password.getValue();
     }
 
-    public boolean isAccountLocked() {
-        return isAccountLocked;
+    public boolean isLocked() {
+        return isLocked;
     }
 
-    public void setAccountLocked(boolean accountLocked) {
-        isAccountLocked = accountLocked;
+    public void setLocked(boolean accountLocked) {
+        isLocked = accountLocked;
     }
 
-    public boolean isAccountActive() {
-        return isAccountActive;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setAccountActive(boolean accountActive) {
-        isAccountActive = accountActive;
+    public void setActive(boolean accountActive) {
+        isActive = accountActive;
     }
 }

@@ -25,8 +25,6 @@ public class EmailService {
 
     @Value("${spring.mail.username}")
     private String from;
-    @Value("${spring.kafka.topic.email}")
-    private String topicEmail;
 
     @Autowired
     public EmailService(JavaMailSender mailSender,
@@ -36,7 +34,6 @@ public class EmailService {
     }
 
     public void send(EmailRequest request) {
-        logger.info("Preparing to send email to: {}", request.getTo());
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -51,8 +48,8 @@ public class EmailService {
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-            logger.info("Email sent successfully to: {}", request.getTo());
         } catch (MessagingException e) {
+
             throw new BusinessException();
         }
     }

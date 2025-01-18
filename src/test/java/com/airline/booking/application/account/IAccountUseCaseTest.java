@@ -110,7 +110,6 @@ class IAccountUseCaseTest {
         verify(userService).register(any(User.class));
         verify(tokenService).createToken(any(User.class));
         verify(cacheService).releaseLock(registerRequest.getPhoneNumber());
-
     }
     @Test
     void testRegister_withLockAcquired_shouldThrowApplicationException() {

@@ -32,6 +32,7 @@ public class AccountUseCaseImpl implements IAccountUseCase {
 
     @Value("${spring.jwt.expiration}")
     private long accessTokenTTL;
+    private final String userDetailKey = "user_detail_id:%s";
 
     @Autowired
     public AccountUseCaseImpl(IUserService userService,
@@ -43,7 +44,6 @@ public class AccountUseCaseImpl implements IAccountUseCase {
         this.accountMapper = accountMapper;
         this.cacheService = cacheService;
     }
-
 
     @Override
     public AccountDTO register(RegisterRequest request) {
@@ -59,6 +59,7 @@ public class AccountUseCaseImpl implements IAccountUseCase {
             User newUser = userService.register(userRegister);
             return createAndStoreToken(newUser);
         } catch (BusinessException e) {
+            logger.error("Error occurred during registration: {}", e.getMessage(), e);
             throw new BusinessException(e.getExceptionCode());
         } finally {
             cacheService.releaseLock(phoneNumber);
@@ -67,20 +68,21 @@ public class AccountUseCaseImpl implements IAccountUseCase {
 
     private AccountDTO createAndStoreToken(User user) {
         Token newToken = tokenService.createToken(user);
-        storeAccessTokenInCache(newToken.getValue(), user);
+        storeUserInCache(user);
         return buildAccountDTO(user, newToken);
     }
 
-    private void storeAccessTokenInCache(
-            String accessToken,
-            User user
-    ) {
+    private void storeUserInCache(User user) {
         UserDetail existUser = new UserDetail(
                 user.getId(),
                 user.getRole(),
                 user.getPhoneNumber(), user.getPassword()
         );
-        cacheService.put(accessToken, existUser, accessTokenTTL);
+        cacheService.put(
+                userDetailKey.formatted(user.getId()),
+                existUser,
+                accessTokenTTL
+        );
     }
 
     private AccountDTO buildAccountDTO(
@@ -96,8 +98,13 @@ public class AccountUseCaseImpl implements IAccountUseCase {
 
     @Override
     public AccountDTO login(LoginRequest request) {
-        User existUser = userService.login(request.getUserName(), request.getPassword());
-        return createAndStoreToken(existUser);
+        try {
+            User existUser = userService.login(request.getUserName(), request.getPassword());
+            return createAndStoreToken(existUser);
+        } catch (BusinessException e) {
+            logger.error("Login failed for user: {}. Reason: {}", request.getUserName(), e.getMessage());
+            throw e;
+        }
     }
 
     private void validatePhoneNumber(String phoneNumber) {
@@ -128,16 +135,15 @@ public class AccountUseCaseImpl implements IAccountUseCase {
 
     @Override
     public UserDetail authenticate(String accessToken) {
-        tokenService.validateToken(accessToken);
-        if (cacheService.exists(accessToken)) {
-            return cacheService.get(accessToken, UserDetail.class);
+        String userName = tokenService.validateToken(accessToken);
+        if (cacheService.exists(userDetailKey.formatted(userName))) {
+            return cacheService.get(accessToken.formatted(userName), UserDetail.class);
         }
         throw new BusinessException(AccountExceptionCode.UNAUTHORIZED_ACCESS);
     }
 
     @Override
     public AccountDTO loginWithOAuth2(OAuth2LoginRequest request) {
-        logger.info("loginWithOAuth2");
         String userName = request.getEmail() != null ? request.getEmail() : request.getPhoneNumber();
         User existUser = userService.getByUserName(userName);
         return createAndStoreToken(existUser);

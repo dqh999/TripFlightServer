@@ -36,7 +36,7 @@ public class AirlineService implements IAirlineService {
     }
 
     @Override
-    public void checkAirlineActive(String airlineId) {
+    public void checkActive(String airlineId) {
         if (!repository.existsById(airlineId)) {
             throw new BusinessException();
         }

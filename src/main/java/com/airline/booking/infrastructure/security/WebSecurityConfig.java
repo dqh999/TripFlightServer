@@ -1,11 +1,11 @@
-package com.airline.booking.application.utils;
+package com.airline.booking.infrastructure.security;
 
 
-import com.airline.booking.infrastructure.security.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,7 +32,9 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("**").permitAll()
-                );
+                )
+                .oauth2Login(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
         return http.build();
     }
 

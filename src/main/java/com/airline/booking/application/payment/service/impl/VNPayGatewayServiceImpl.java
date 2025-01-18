@@ -4,7 +4,7 @@ import com.airline.booking.application.payment.constant.VNPayParams;
 import com.airline.booking.application.payment.dataTransferObject.request.InitPaymentRequest;
 import com.airline.booking.application.payment.dataTransferObject.response.InitPaymentResponse;
 import com.airline.booking.application.payment.service.IPaymentGatewayService;
-import com.airline.booking.application.constant.Locale;
+import com.airline.booking.application.utils.constant.Locale;
 import com.airline.booking.domain.payment.model.Payment;
 import com.airline.booking.domain.payment.service.IPaymentService;
 import com.airline.booking.domain.payment.type.PaymentStatus;
@@ -47,6 +47,7 @@ public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
     private final IPaymentService paymentService;
     private final CryptoService cryptoService;
     private final CacheService cacheService;
+
     public VNPayGatewayServiceImpl(IPaymentService paymentService,
                                    CryptoService cryptoService,
                                    CacheService cacheService) {
@@ -61,6 +62,7 @@ public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
                 .multiply(BigDecimal.valueOf(DEFAULT_MULTIPLIER))
                 .convertToCurrency(Currency.VND.getValue())
                 .getValue().longValue();
+
         var txnRef = request.getTxnRef();
         var returnUrl = buildReturnUrl(txnRef);
 
@@ -108,16 +110,19 @@ public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
         );
         paymentService.pay(initPayment);
         cacheService.put("payment_pending_%s".formatted(initPayment.getId()), expiryTime);
+        logger.info("");
         return new InitPaymentResponse(
                 initPayment.getId(),
                 PAYMENT_GATEWAY,
                 initPaymentUrl,
                 expiryTime);
     }
+
     private String formatVnTime(Calendar calendar) {
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
         return DATE_FORMAT.format(calendar.getTime());
     }
+
     private String buildReturnUrl(String txnRef) {
         return String.format(returnUrlFormat, txnRef);
     }
@@ -155,7 +160,6 @@ public class VNPayGatewayServiceImpl implements IPaymentGatewayService {
 
         var secureHash = cryptoService.sign(hashPayload.toString());
 
-        // 4. Finalize query
         query.append("&vnp_SecureHash=");
         query.append(secureHash);
 

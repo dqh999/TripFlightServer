@@ -43,7 +43,7 @@ public class FlightServiceImpl implements IFlightService {
     }
 
     private void validateFlight(Flight flight) {
-        airlineService.checkAirlineActive(flight.getAirlineId());
+        airlineService.checkActive(flight.getAirlineId());
 
         if (flightRepository.existByCode(flight.getCode())) {
             throw new BusinessException(FlightExceptionCode.FLIGHT_DUPLICATE_CODE);
@@ -115,14 +115,8 @@ public class FlightServiceImpl implements IFlightService {
             Integer totalSeats,
             int pageNumber, int pageSize
     ) {
-        if (departureAirportId == null || departureAirportId.isBlank()
-                || arrivalAirportId == null || arrivalAirportId.isBlank()
-                || departureAirportId.equals(arrivalAirportId)
-        ) {
+        if ( departureAirportId.equals(arrivalAirportId)) {
             throw new BusinessException(FlightExceptionCode.FLIGHT_NOT_FOUND);
-        }
-        if (departureTime.isBefore(LocalDate.now())) {
-            throw new BusinessException();
         }
         if (totalSeats < 0 || totalSeats > 100) {
             throw new BusinessException();

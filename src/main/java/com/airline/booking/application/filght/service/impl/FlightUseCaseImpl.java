@@ -3,6 +3,7 @@ package com.airline.booking.application.filght.service.impl;
 
 import com.airline.booking.application.airline.service.IAirlineUseCase;
 import com.airline.booking.application.filght.dataTransferObject.request.AddFlightRequest;
+import com.airline.booking.application.filght.dataTransferObject.request.SearchFlightRequest;
 import com.airline.booking.application.filght.dataTransferObject.response.FlightReservation;
 import com.airline.booking.application.filght.dataTransferObject.response.FlightResponse;
 import com.airline.booking.application.filght.mapper.FlightMapper;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,19 +129,13 @@ public class FlightUseCaseImpl implements IFlightUseCase {
     }
 
     @Override
-    public PageResponse<FlightReservation> searchFlight(
-            String departureAirportCode, String arrivalAirportCode,
-            LocalDate departureTime,
-            int childSeats, int adultSeats,
-            int page, int pageSize,
-            String sortBy
-    ) {
+    public PageResponse<FlightReservation> searchFlight(SearchFlightRequest request) {
         String cacheKey = "flight_search:"
                 + "from:%s_to:%s_depart:%s".formatted(
-                departureAirportCode, arrivalAirportCode,
-                departureTime.toString()
+                request.getDepartureAirportCode(), request.getArrivalAirportCode(),
+                request.getDepartureTime().toString()
         );
-        int totalSeats = childSeats + adultSeats;
+        int totalSeats = request.getAdultSeats() + request.getChildSeats();
         if (cacheService.exists(cacheKey)) {
             logger.info("Flight details found in cache for flightId: {}", cacheKey);
             Page<Flight> flightPage = cacheService.get(
@@ -152,24 +146,25 @@ public class FlightUseCaseImpl implements IFlightUseCase {
             flightPage.getContent().forEach(flight -> flightReservations.add(
                     buildFlightReservation(
                             flight,
-                            childSeats, adultSeats
+                            request.getChildSeats(), request.getAdultSeats()
                     )
             ));
-             return new PageResponse<>(
+            return new PageResponse<>(
                     (int) flightPage.getTotalElements(),
                     flightPage.getTotalPages(),
-                    page,
+                    request.getPage(),
                     flightPage.getSize(),
                     flightReservations,
                     flightPage.hasNext(),
                     flightPage.hasPrevious()
             );
         }
+
         Page<Flight> flightPage = flightService.getFlights(
-                departureAirportCode, arrivalAirportCode,
-                departureTime,
+                request.getDepartureAirportCode(), request.getArrivalAirportCode(),
+                request.getDepartureTime(),
                 totalSeats,
-                page, pageSize
+                request.getPage(), request.getPageSize()
         );
 
         List<Flight> flights = flightPage.getContent();
@@ -178,14 +173,14 @@ public class FlightUseCaseImpl implements IFlightUseCase {
         flights.forEach(flight -> flightReservations.add(
                 buildFlightReservation(
                         flight,
-                        childSeats, adultSeats
+                        request.getChildSeats(), request.getAdultSeats()
                 )
         ));
 
         return new PageResponse<>(
                 (int) flightPage.getTotalElements(),
                 flightPage.getTotalPages(),
-                page,
+                request.getPage(),
                 flightPage.getSize(),
                 flightReservations,
                 flightPage.hasNext(),

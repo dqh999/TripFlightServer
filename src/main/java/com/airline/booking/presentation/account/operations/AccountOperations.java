@@ -1,4 +1,4 @@
-package com.airline.booking.presentation.account.operation;
+package com.airline.booking.presentation.account.operations;
 
 import com.airline.booking.application.account.dataTransferObject.AccountDTO;
 import com.airline.booking.application.account.dataTransferObject.request.ChangePasswordRequest;
@@ -37,6 +37,6 @@ public interface AccountOperations {
             @RequestBody ChangePasswordRequest request
     );
 
-    @PostMapping("/refreshToken")
+    @PostMapping("/refresh-token")
     ResponseEntity<ApiResponse<AccountDTO>> handleRefreshToken(@RequestBody RefreshTokenRequest request);
 }

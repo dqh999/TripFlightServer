@@ -12,6 +12,6 @@ import java.util.List;
         config = GlobalMapperConfig.class)
 public interface FlightMapper {
     Flight toFlight(AddFlightRequest request);
+
     FlightResponse toResponse(Flight flights);
-    List<FlightResponse> toResponses(List<Flight> flights);
 }

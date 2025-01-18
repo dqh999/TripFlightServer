@@ -8,7 +8,6 @@ import com.airline.booking.domain.account.repository.UserRepository;
 import com.airline.booking.domain.account.service.IUserService;
 import com.airline.booking.domain.account.valueObject.Role;
 import com.airline.booking.domain.exception.BusinessException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,25 +26,23 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User register(User user) {
         validateUserForRegistration(user);
-
-        if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
-            throw new BusinessException(AccountExceptionCode.ACCOUNT_ALREADY_EXISTS);
-        }
-
         setUserDefaults(user);
-
         return userRepository.save(user);
     }
 
     private void validateUserForRegistration(User user) {
         userValidator.validateUser(user);
+
+        if (userRepository.existsByPhoneNumber(user.getPhoneNumber())) {
+            throw new BusinessException(AccountExceptionCode.ACCOUNT_ALREADY_EXISTS);
+        }
     }
 
     private void setUserDefaults(User user) {
         user.initializeNewId();
         user.setRole(Role.USER().getValue());
-        user.setAccountActive(true);
-        user.setAccountLocked(false);
+        user.setActive(true);
+        user.setLocked(false);
     }
 
     @Override
@@ -56,17 +53,15 @@ public class UserServiceImpl implements IUserService {
         validateUserForLogin(userName, password);
 
         User existUser = getByUserName(userName);
-
         checkCredentials(existUser, password);
-
         return existUser;
     }
 
     private void validateUserForLogin(
-            String phoneNumber,
+            String userName,
             String password
     ) {
-        userValidator.validatePhoneNumber(phoneNumber);
+//        userValidator.validatePhoneNumber();
         userValidator.validatePassword(password);
     }
 
@@ -74,20 +69,18 @@ public class UserServiceImpl implements IUserService {
             User existUser,
             String password
     ) {
-        if (!existUser.getHashedPassword().matches(password)) {
+        if (!existUser.checkPasswordMatches(password)) {
             throw new BusinessException(AccountExceptionCode.INVALID_CREDENTIALS);
         }
-
-        if (existUser.isAccountLocked()) {
+        if (existUser.isLocked()) {
             throw new BusinessException(AccountExceptionCode.ACCOUNT_LOCKED);
         }
-        if (!existUser.isAccountActive()) {
+        if (!existUser.isActive()) {
             throw new BusinessException(AccountExceptionCode.ACCOUNT_INACTIVE);
         }
     }
 
     @Override
-    @Transactional
     public User changePassword(
             User existUser,
             String oldPassword, String newPassword
@@ -112,7 +105,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     private void validateChangePasswordRequest(
-            String oldPassword, String newPassword
+            String oldPassword,
+            String newPassword
     ) {
         userValidator.validatePassword(oldPassword);
         userValidator.validatePassword(newPassword);

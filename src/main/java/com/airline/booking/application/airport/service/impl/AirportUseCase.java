@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AirportUseCase implements IAirportUseCase {
@@ -46,8 +45,7 @@ public class AirportUseCase implements IAirportUseCase {
     @Override
     public PageResponse<AirportResponse>  search(String keyword, int pageNo, int pageSize) {
         Page<Airport> pageResult = airlineService.search(keyword,pageNo,pageSize);
-        List<AirportResponse> airlineResponses = pageResult.getContent().stream().map(airlineMapper::toDTO).collect(Collectors.toList());
-
+        List<AirportResponse> airlineResponses = airlineMapper.toDTOs(pageResult.getContent());
         return new PageResponse<>(
                 (int) pageResult.getTotalElements(),
                 pageResult.getTotalPages(),

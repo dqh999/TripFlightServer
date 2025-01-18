@@ -8,7 +8,8 @@ public class FlightReservation {
     private int adultSeats = 1;
     private Money pricePare;
 
-    public FlightReservation() {}
+    public FlightReservation() {
+    }
 
     public FlightReservation(FlightResponse flight, int childSeats, int adultSeats, Money pricePare) {
         this.flight = flight;

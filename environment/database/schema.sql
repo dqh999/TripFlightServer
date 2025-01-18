@@ -14,6 +14,8 @@ create table tbl_users
     phone_number    varchar(15)  not null unique,
     email           varchar(100) not null unique,
     hashed_password varchar(255) not null,
+    is_locked       boolean default false,
+    is_active       boolean default false,
     created_at      timestamp,
     updated_at      timestamp
 );
@@ -73,8 +75,6 @@ create table tbl_flights
     created_at             timestamp,
     updated_at             timestamp
 );
-CREATE INDEX idx_flight_route ON tbl_flights (departure_airport_code, arrival_airport_code, departure_time);
-
 create table tbl_tickets
 (
     id              varchar(45) primary key,

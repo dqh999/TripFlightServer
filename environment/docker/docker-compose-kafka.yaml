@@ -131,6 +131,9 @@ volumes:
   kafka-broker-01-data:
   kafka-broker-02-data:
 
+
+#docker exec -it ... bash
+
 #docker rm -f zookeeper-01 zookeeper-02 zookeeper-03 kafka-broker-01
 
 #docker compose -f docker-compose-kafka.yaml up -d zookeeper-01

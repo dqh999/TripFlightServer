@@ -29,6 +29,7 @@ public class AddFlightRequest {
     @NotNull(message = "Total seats cannot be null")
     @Min(value = 1, message = "Total seats must be greater than 0")
     private Integer totalSeats;
+
     public AddFlightRequest() {
     }
 
@@ -99,12 +100,15 @@ public class AddFlightRequest {
     public void setDescription(String description) {
         this.description = description;
     }
+
     public Money getStandardPrice() {
         return this.standardPrice;
     }
+
     public void setStandardPrice(Money standardPrice) {
         this.standardPrice = standardPrice;
     }
+
     public Integer getTotalSeats() {
         return totalSeats;
     }

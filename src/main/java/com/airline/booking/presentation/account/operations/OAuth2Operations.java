@@ -1,4 +1,4 @@
-package com.airline.booking.presentation.account.operation;
+package com.airline.booking.presentation.account.operations;
 
 import com.airline.booking.application.account.dataTransferObject.AccountDTO;
 import com.airline.booking.application.account.type.OAuth2Type;

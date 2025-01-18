@@ -1,12 +1,12 @@
 package com.airline.booking.domain.flight.service;
 
 import com.airline.booking.domain.flight.model.Flight;
-import com.airline.booking.domain.utils.service.GenericService;
+import com.airline.booking.domain.utils.service.CURDService;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 
-public interface IFlightService extends GenericService<Flight, String> {
+public interface IFlightService extends CURDService<Flight, String> {
     Flight updateAvailableSeats(Flight flight, int newSeatBooking);
 
     Flight rollbackBookedSeats(Flight flight, int canceledSeats);
