@@ -1,10 +1,7 @@
 package com.airline.booking.presentation.account;
 
 import com.airline.booking.application.account.dataTransferObject.AccountDTO;
-import com.airline.booking.application.account.dataTransferObject.request.ChangePasswordRequest;
-import com.airline.booking.application.account.dataTransferObject.request.LoginRequest;
-import com.airline.booking.application.account.dataTransferObject.request.RefreshTokenRequest;
-import com.airline.booking.application.account.dataTransferObject.request.RegisterRequest;
+import com.airline.booking.application.account.dataTransferObject.request.*;
 import com.airline.booking.application.account.service.IAccountUseCase;
 import com.airline.booking.application.account.service.IOAuth2Service;
 import com.airline.booking.application.account.type.OAuth2Type;
@@ -15,6 +12,7 @@ import com.airline.booking.presentation.account.operations.AccountOperations;
 import com.airline.booking.presentation.account.operations.OAuth2Operations;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.kafka.shaded.com.google.protobuf.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +24,11 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController implements AccountOperations, OAuth2Operations {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    private final IAccountUseCase IAccountUseCase;
+    private final IAccountUseCase accountUseCase;
     private final IOAuth2Service oauth2Service;
 
-    public AccountController(IAccountUseCase IAccountUseCase, IOAuth2Service oauth2Service) {
-        this.IAccountUseCase = IAccountUseCase;
+    public AccountController(IAccountUseCase accountUseCase, IOAuth2Service oauth2Service) {
+        this.accountUseCase = accountUseCase;
         this.oauth2Service = oauth2Service;
     }
 
@@ -42,7 +40,7 @@ public class AccountController implements AccountOperations, OAuth2Operations {
         String ipAddress = RequestUtil.getIpAddress(httpServletRequest);
         request.setIpAddress(ipAddress);
 
-        var result = IAccountUseCase.register(request);
+        var result = accountUseCase.register(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
@@ -55,10 +53,16 @@ public class AccountController implements AccountOperations, OAuth2Operations {
     ) {
         String ipAddress = RequestUtil.getIpAddress(httpServletRequest);
         request.setIpAddress(ipAddress);
-        var result = IAccountUseCase.login(request);
+        var result = accountUseCase.login(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse<Void>> handleLogout(LogoutRequest request) {
+        accountUseCase.logout(request);
+        return ApiResponse.<Void>build().toEntity();
     }
 
     @Override
@@ -77,19 +81,13 @@ public class AccountController implements AccountOperations, OAuth2Operations {
                 .toEntity();
     }
 
-    @Override
-    public ResponseEntity<ApiResponse<String>> handleGetUser(String userId) {
-        return ApiResponse.<String>build()
-                .withData(userId)
-                .toEntity();
-    }
 
     @Override
     public ResponseEntity<ApiResponse<AccountDTO>> handleChangePassword(
             UserDetail userRequest,
             ChangePasswordRequest request
     ) {
-        var result = IAccountUseCase.changePassword(userRequest, request);
+        var result = accountUseCase.changePassword(userRequest, request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
@@ -97,7 +95,7 @@ public class AccountController implements AccountOperations, OAuth2Operations {
 
     @Override
     public ResponseEntity<ApiResponse<AccountDTO>> handleRefreshToken(RefreshTokenRequest request) {
-        var result = IAccountUseCase.refreshToken(request);
+        var result = accountUseCase.refreshToken(request);
         return ApiResponse.<AccountDTO>build()
                 .withData(result)
                 .toEntity();
