@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
                 errors
         );
     }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<?>> handleBusinessException(BusinessException e) {
         return handleException(e, e.getExceptionCode());
@@ -43,6 +44,7 @@ public class GlobalExceptionHandler {
                 errors
         );
     }
+
     private Map<String, Object> createErrorDetails(ExceptionCode code) {
         Map<String, Object> errors = new HashMap<>();
         errors.put("type", code != null ? code.getType() : HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());

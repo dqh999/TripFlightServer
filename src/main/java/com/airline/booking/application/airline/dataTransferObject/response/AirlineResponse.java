@@ -7,8 +7,10 @@ public class AirlineResponse {
     private String country;
     private String logoUrl;
     private String status;
+
     public AirlineResponse() {
     }
+
     public AirlineResponse(String id, String name, String country, String logoUrl, String status) {
         this.id = id;
         this.name = name;
@@ -40,6 +42,7 @@ public class AirlineResponse {
     public void setCountry(String country) {
         this.country = country;
     }
+
     public String getLogoUrl() {
         return logoUrl;
     }

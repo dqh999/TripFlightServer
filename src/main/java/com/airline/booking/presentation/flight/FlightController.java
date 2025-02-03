@@ -31,9 +31,7 @@ public class FlightController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse<FlightResponse>> handelAddFlight(
-            @RequestBody AddFlightRequest request
-    ) {
+    public ResponseEntity<ApiResponse<FlightResponse>> handelAddFlight(@RequestBody AddFlightRequest request) {
         logger.info("Adding flight: {}", request);
         var result = flightUseCase.addFlight(request);
         return ApiResponse.<FlightResponse>build()

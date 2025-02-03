@@ -1,5 +1,6 @@
 package com.airline.booking.infrastructure.persistence.flight.repository;
 
+import com.airline.booking.domain.flight.model.FlightSearch;
 import com.airline.booking.infrastructure.persistence.flight.model.FlightEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +28,6 @@ public interface FlightEntityRepository extends JpaRepository<FlightEntity,Strin
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
+
+    Page<FlightSearch> searchFlights(FlightSearch flightSearch, Pageable pageable);
 }

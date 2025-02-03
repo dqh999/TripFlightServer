@@ -7,7 +7,10 @@ public class AddAirlineRequest {
     private String email;
     private String website;
     private String logoUrl;
-    public AddAirlineRequest() {}
+
+    public AddAirlineRequest() {
+    }
+
     public AddAirlineRequest(String name, String country, String phoneNumber, String email, String website, String logoUrl) {
         this.name = name;
         this.country = country;

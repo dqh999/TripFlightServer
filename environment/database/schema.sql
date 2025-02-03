@@ -19,6 +19,7 @@ create table tbl_users
     created_at      timestamp,
     updated_at      timestamp
 );
+
 create table tbl_user_tokens
 (
     id                       varchar(45) primary key,
@@ -75,6 +76,27 @@ create table tbl_flights
     created_at             timestamp,
     updated_at             timestamp
 );
+
+create index idx_flight_route on tbl_flights (departure_airport_code, arrival_airport_code, departure_time);
+
+with RecursiveFlights as (select 'connecting' as flight_type
+                          from tbl_flights f1
+                                   join tbl_flights f2
+                                        on f1.arrival_airport_code = f2.departure_airport_code
+                                            and f1.arrival_time < f2.departure_time
+                          where f1.status = 'active'),
+     DirectFlights as (select 'direct' as flight_type
+                       from tbl_flights
+                       where departure_airport_code = :departure_airport_code
+                         and arrival_airport_code = :arrival_airport_code
+                         and departure_time between :startDate and :endDate
+                         and status = 'active')
+select *
+from DirectFlights
+union all
+select *
+from RecursiveFlights;
+
 create table tbl_tickets
 (
     id              varchar(45) primary key,
@@ -103,28 +125,16 @@ create table tbl_discounts
     id                  varchar(45) primary key,
     code                varchar(50) unique,
     description         text,
-    discount_type       varchar(20)    not null,
-    discount_value      decimal(10, 2) not null,
+    type                varchar(20)    not null,
+    value               decimal(10, 2) not null,
     max_discount_amount decimal(10, 2),
     start_date          datetime       not null,
     end_date            datetime       not null,
     usage_limit         int,
     usage_count         int default 0,
-    conditions          text,
     status              varchar(45)    not null,
     created_at          timestamp,
     updated_at          timestamp
-);
-create table tbl_user_discounts
-(
-    id          varchar(45) primary key,
-    user_id     varchar(45) not null,
-    discount_id varchar(45) not null,
-    assigned_at timestamp,
-    used_at     timestamp,
-    status      varchar(20) not null default 'ACTIVE',
-    created_at  timestamp,
-    updated_at  timestamp
 );
 create table tbl_payments
 (

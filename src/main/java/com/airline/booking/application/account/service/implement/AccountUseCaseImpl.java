@@ -134,6 +134,13 @@ public class AccountUseCaseImpl implements IAccountUseCase {
     }
 
     @Override
+    public AccountDTO loginWithOAuth2(OAuth2LoginRequest request) {
+        String userName = request.getEmail() != null ? request.getEmail() : request.getPhoneNumber();
+        User existUser = userService.getByUserName(userName);
+        return createAndStoreToken(existUser);
+    }
+
+    @Override
     public UserDetail authenticate(String accessToken) {
         String userName = tokenService.validateToken(accessToken);
         if (cacheService.exists(userDetailKey.formatted(userName))) {
@@ -142,10 +149,4 @@ public class AccountUseCaseImpl implements IAccountUseCase {
         throw new BusinessException(AccountExceptionCode.UNAUTHORIZED_ACCESS);
     }
 
-    @Override
-    public AccountDTO loginWithOAuth2(OAuth2LoginRequest request) {
-        String userName = request.getEmail() != null ? request.getEmail() : request.getPhoneNumber();
-        User existUser = userService.getByUserName(userName);
-        return createAndStoreToken(existUser);
-    }
 }

@@ -43,9 +43,7 @@ public class AirportServiceImpl implements IAirportService {
     @Override
     public Airport getById(String id) {
         return airportRepository.findById(id)
-                .orElseThrow(
-                        () -> new BusinessException(AirportExceptionCode.AIR_PORT_NOT_FOUND)
-                );
+                .orElseThrow( () -> new BusinessException(AirportExceptionCode.AIR_PORT_NOT_FOUND));
     }
 
     @Override

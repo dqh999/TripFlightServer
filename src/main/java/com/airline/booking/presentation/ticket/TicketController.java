@@ -30,9 +30,7 @@ public class TicketController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<TicketResponse>> handleCreateTicket(
-            @RequestBody TicketBookingRequest request
-    ) {
+    public ResponseEntity<ApiResponse<TicketResponse>> handleCreateTicket(@RequestBody TicketBookingRequest request) {
         logger.info("Received request to create ticket: {}", request);
 
         var result = ticketUseCase.create(request);

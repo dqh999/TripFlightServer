@@ -28,9 +28,7 @@ public class AirlineController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ApiResponse<AirlineResponse>> handleAddAirline(
-            @RequestBody AddAirlineRequest request
-    ) {
+    public ResponseEntity<ApiResponse<AirlineResponse>> handleAddAirline(@RequestBody AddAirlineRequest request) {
         var result = airlineUseCase.add(request);
         return ApiResponse.<AirlineResponse>build()
                 .withData(result)

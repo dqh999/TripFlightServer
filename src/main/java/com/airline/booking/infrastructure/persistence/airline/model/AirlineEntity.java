@@ -14,7 +14,9 @@ public class AirlineEntity extends BaseEntity {
     private String country;
     private String logoUrl;
     private String status;
-    public AirlineEntity() {}
+
+    public AirlineEntity() {
+    }
 
     public AirlineEntity(String id, String name, String country, String logoUrl, String status) {
         this.id = id;

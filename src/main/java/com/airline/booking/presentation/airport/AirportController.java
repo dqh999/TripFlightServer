@@ -33,29 +33,29 @@ public class AirportController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ApiResponse<AirportResponse>> handleAddAirport(
             @AuthenticationPrincipal UserDetail userRequest,
-                                                                         @RequestBody AddAirportRequest request
+            @RequestBody AddAirportRequest request
     ) {
         var result = airportUseCase.add(userRequest, request);
         return ApiResponse.<AirportResponse>build()
                 .withData(result)
                 .toEntity();
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<AirportResponse>> getAirport(
-            @PathVariable("id") String id
-    ) {
+    public ResponseEntity<ApiResponse<AirportResponse>> getAirport(@PathVariable("id") String id) {
         var result = airportUseCase.getById(id);
         return ApiResponse.<AirportResponse>build()
                 .withData(result)
                 .toEntity();
     }
+
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<PageResponse<AirportResponse>>> handleSearchAirport(
             @RequestParam String keyword,
             @RequestParam(defaultValue = "1") int pageNo,
             @RequestParam(defaultValue = "5") int pageSize
-    ){
-        var result = airportUseCase.search(keyword,pageNo,pageSize);
+    ) {
+        var result = airportUseCase.search(keyword, pageNo, pageSize);
         return ApiResponse.<PageResponse<AirportResponse>>build()
                 .withData(result)
                 .toEntity();

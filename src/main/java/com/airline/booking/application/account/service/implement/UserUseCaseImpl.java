@@ -30,7 +30,6 @@ public class UserUseCaseImpl implements UserUseCase {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new ApplicationException(AccountApplicationExceptionCode.USER_NOT_AUTHENTICATED);
         }
-
         String username = authentication.getName();
         User existUser = userService.getByUserName(username);
         return accountMapper.toResponse(existUser);

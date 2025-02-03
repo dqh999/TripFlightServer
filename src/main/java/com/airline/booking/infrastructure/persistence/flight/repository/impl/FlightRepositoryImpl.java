@@ -1,6 +1,7 @@
 package com.airline.booking.infrastructure.persistence.flight.repository.impl;
 
 import com.airline.booking.domain.flight.model.Flight;
+import com.airline.booking.domain.flight.model.FlightSearch;
 import com.airline.booking.domain.flight.repository.FlightRepository;
 import com.airline.booking.infrastructure.persistence.flight.mapper.FlightEntityMapper;
 import com.airline.booking.infrastructure.persistence.flight.model.FlightEntity;
@@ -57,5 +58,10 @@ public class FlightRepositoryImpl implements FlightRepository {
                         pageable
                 )
                 .map(mapper::toDTO);
+    }
+
+    @Override
+    public Page<FlightSearch> searchFlights() {
+        return null;
     }
 }

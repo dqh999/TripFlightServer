@@ -9,7 +9,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL:jdbc:mysql://147.93.29.117:3308/airline_db}
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3308/airline_db}
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:Hop2005@}
 
@@ -22,7 +22,7 @@ spring:
 
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:147.93.29.117}
+      host: ${SPRING_REDIS_HOST:localhost}
       port: ${SPRING_REDIS_PORT:6379}
       password: Hop2005@
       timeout: 2000
@@ -48,7 +48,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: dqhit999@gmail.com
-    password: gqua nyez oljm ygov
+    password:
     properties:
       mail:
         smtp:
@@ -63,8 +63,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 413942208357-biv4nit78b6nvfh9cggtt8e8e3c8pcne.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             redirect-uri: http://localhost:8080/api/account/login/oauth2/code/google
             scope: email,profile,openid
         provider:
@@ -78,12 +78,12 @@ spring:
   jwt:
     expiration: 3600 #hours = 1 * 60 * 60
     expiration-refresh-token: 86400 #days =  24 * 60 * 60
-    secretKeyAccess: ${SECRET_KEY_ACCESS:c29tZUNvbXBsZXhLZXlzZWN1cml0eTEyMzQ1Njc4OTA=}
+    secretKeyAccess: ${JWT_SECRET_KEY_ACCESS}
 
 payment:
   VNPay:
-    tmn-code: ${VNPAY_TMN_CODE:FPBMPL8F}
-    secret-key: ${VNPAY_SECRET_KEY:8YDK2KXJ6Q56KEJBOF3UBO96D8X3H134}
+    tmn-code: ${VNPAY_TMN_CODE}
+    secret-key: ${VNPAY_SECRET_KEY}
     init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
     return-url: https://airline.dqhdev.io.vn/order/%s/status
     time-out: 1

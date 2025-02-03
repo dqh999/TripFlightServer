@@ -9,7 +9,8 @@ public class ApplicationException extends RuntimeException {
         super(message);
         this.responseCode = responseCode;
     }
-    public ApplicationException(ExceptionCode responseCode){
+
+    public ApplicationException(ExceptionCode responseCode) {
         this.responseCode = responseCode;
     }
 

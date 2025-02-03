@@ -1,6 +1,7 @@
 package com.airline.booking.domain.flight.repository;
 
 import com.airline.booking.domain.flight.model.Flight;
+import com.airline.booking.domain.flight.model.FlightSearch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +19,6 @@ public interface FlightRepository {
             LocalDateTime startDate, LocalDateTime endDate,
             Pageable pageable
     );
+
+    Page<FlightSearch> searchFlights();
 }
