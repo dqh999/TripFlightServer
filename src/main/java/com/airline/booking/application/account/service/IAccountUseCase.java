@@ -12,6 +12,8 @@ public interface IAccountUseCase {
 
     AccountDTO loginWithOAuth2(OAuth2LoginRequest request);
 
+    void logout(LogoutRequest request);
+
     AccountDTO changePassword(UserDetail userRequest, ChangePasswordRequest request);
 
     AccountDTO refreshToken(RefreshTokenRequest request);

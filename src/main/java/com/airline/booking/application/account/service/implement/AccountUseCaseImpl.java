@@ -113,6 +113,11 @@ public class AccountUseCaseImpl implements IAccountUseCase {
     }
 
     @Override
+    public void logout(LogoutRequest request) {
+        tokenService.validateToken(request.accessToken());
+    }
+
+    @Override
     public AccountDTO changePassword(
             UserDetail userRequest,
             ChangePasswordRequest request

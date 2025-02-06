@@ -8,6 +8,6 @@ build/
 ./logs/
 
 .dockerignore
-Dockerfile
+docker/Dockerfile
 docker/docker-compose.yaml
-environment/database/
+database/

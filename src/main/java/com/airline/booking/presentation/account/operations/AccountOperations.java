@@ -1,10 +1,7 @@
 package com.airline.booking.presentation.account.operations;
 
 import com.airline.booking.application.account.dataTransferObject.AccountDTO;
-import com.airline.booking.application.account.dataTransferObject.request.ChangePasswordRequest;
-import com.airline.booking.application.account.dataTransferObject.request.LoginRequest;
-import com.airline.booking.application.account.dataTransferObject.request.RefreshTokenRequest;
-import com.airline.booking.application.account.dataTransferObject.request.RegisterRequest;
+import com.airline.booking.application.account.dataTransferObject.request.*;
 import com.airline.booking.infrastructure.exception.ApiResponse;
 import com.airline.booking.infrastructure.security.UserDetail;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,9 +23,8 @@ public interface AccountOperations {
             HttpServletRequest httpServletRequest
     );
 
-    @GetMapping("/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<ApiResponse<String>> handleGetUser(@PathVariable String userId);
+    @PostMapping("/logout")
+    ResponseEntity<ApiResponse<Void>> handleLogout(@RequestBody LogoutRequest request);
 
     @PatchMapping("/changePassword")
     @PreAuthorize("hasRole('ROLE_USER')")
