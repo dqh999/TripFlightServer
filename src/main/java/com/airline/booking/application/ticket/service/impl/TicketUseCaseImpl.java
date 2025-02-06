@@ -5,8 +5,9 @@ import com.airline.booking.application.payment.dataTransferObject.response.InitP
 import com.airline.booking.application.payment.service.IPaymentGatewayService;
 import com.airline.booking.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
 import com.airline.booking.application.ticket.dataTransferObject.request.TicketBookingRequest;
-import com.airline.booking.application.ticket.dataTransferObject.request.TicketBookRequest;
-import com.airline.booking.application.ticket.dataTransferObject.response.TicketBookResponse;
+import com.airline.booking.application.ticket.dataTransferObject.request.TicketConfirmRequest;
+import com.airline.booking.application.ticket.dataTransferObject.response.TicketBookingResponse;
+import com.airline.booking.application.ticket.dataTransferObject.response.TicketConfirmResponse;
 import com.airline.booking.application.ticket.dataTransferObject.response.TicketResponse;
 import com.airline.booking.application.ticket.mapper.TicketMapper;
 import com.airline.booking.application.ticket.service.ITicketUseCase;
@@ -74,7 +75,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
     }
 
     @Override
-    public TicketResponse create(TicketBookingRequest request) {
+    public TicketBookingResponse booking(TicketBookingRequest request) {
         String flightId = request.getFlightId();
         Flight existFlight = flightService.getById(request.getFlightId());
 
@@ -86,8 +87,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
                 null,
                 flightId,
                 totalPare,
-                request.getChildSeats(),
-                request.getAdultSeats(),
+                request.getChildSeats(), request.getAdultSeats(),
                 null,
                 null,
                 null,
@@ -99,13 +99,17 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
         logger.info("Ticket creating successful. Ticket ID: {}", newTicket.getId());
 
-        return ticketMapper.toResponse(newTicket);
+        TicketResponse ticketResponse = ticketMapper.toResponse(newTicket);
+        return new TicketBookingResponse(
+                ticketResponse,
+                null
+        );
     }
 
     @Override
-    public TicketBookResponse book(
+    public TicketConfirmResponse confirm(
             String ticketId,
-            TicketBookRequest request
+            TicketConfirmRequest request
     ) {
         String cacheKey = String.format(confirmKey, ticketId);
 
@@ -134,7 +138,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
 
         TicketResponse ticketResponse = ticketMapper.toResponse(confirmedTicket);
 
-        TicketBookResponse response = new TicketBookResponse(ticketResponse, initPaymentResponse);
+        TicketConfirmResponse response = new TicketConfirmResponse(ticketResponse, initPaymentResponse);
         sendConfirmEmail(response);
 
         return response;
@@ -167,7 +171,7 @@ public class TicketUseCaseImpl implements ITicketUseCase {
         throw new ApplicationException("");
     }
 
-    private void sendConfirmEmail(TicketBookResponse response) {
+    private void sendConfirmEmail(TicketConfirmResponse response) {
         TicketResponse ticketResponse = response.getTicket();
 
         Map<String, Object> variables = new HashMap<>();

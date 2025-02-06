@@ -2,11 +2,11 @@ package com.airline.booking.application.ticket.dataTransferObject.response;
 
 import com.airline.booking.application.payment.dataTransferObject.response.InitPaymentResponse;
 
-public class TicketBookResponse {
+public class TicketConfirmResponse {
     private TicketResponse ticket;
     private InitPaymentResponse payment;
 
-    public TicketBookResponse(TicketResponse ticket, InitPaymentResponse payment) {
+    public TicketConfirmResponse(TicketResponse ticket, InitPaymentResponse payment) {
         this.ticket = ticket;
         this.payment = payment;
     }

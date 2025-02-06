@@ -2,8 +2,9 @@ package com.airline.booking.presentation.ticket;
 
 import com.airline.booking.application.ticket.dataTransferObject.request.ApplyDiscountRequest;
 import com.airline.booking.application.ticket.dataTransferObject.request.TicketBookingRequest;
-import com.airline.booking.application.ticket.dataTransferObject.request.TicketBookRequest;
-import com.airline.booking.application.ticket.dataTransferObject.response.TicketBookResponse;
+import com.airline.booking.application.ticket.dataTransferObject.request.TicketConfirmRequest;
+import com.airline.booking.application.ticket.dataTransferObject.response.TicketBookingResponse;
+import com.airline.booking.application.ticket.dataTransferObject.response.TicketConfirmResponse;
 import com.airline.booking.application.ticket.dataTransferObject.response.TicketResponse;
 import com.airline.booking.application.ticket.service.ITicketUseCase;
 import com.airline.booking.application.utils.RequestUtil;
@@ -29,20 +30,20 @@ public class TicketController {
         this.ticketUseCase = ticketUseCase;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse<TicketResponse>> handleCreateTicket(@RequestBody TicketBookingRequest request) {
+    @PostMapping("/booking")
+    public ResponseEntity<ApiResponse<TicketBookingResponse>> handleCreateTicket(@RequestBody TicketBookingRequest request) {
         logger.info("Received request to create ticket: {}", request);
 
-        var result = ticketUseCase.create(request);
-        return ApiResponse.<TicketResponse>build()
+        var result = ticketUseCase.booking(request);
+        return ApiResponse.<TicketBookingResponse>build()
                 .withData(result)
                 .toEntity();
     }
 
-    @PostMapping("/{ticketId}/book")
-    public ResponseEntity<ApiResponse<TicketBookResponse>> handleBookingTicket(
+    @PostMapping("/{ticketId}/confirm")
+    public ResponseEntity<ApiResponse<TicketConfirmResponse>> handleBookingTicket(
             @PathVariable String ticketId,
-            @RequestBody TicketBookRequest request,
+            @RequestBody TicketConfirmRequest request,
             HttpServletRequest httpServletRequest
     ) {
         var ipAddress = RequestUtil.getIpAddress(httpServletRequest);
@@ -51,8 +52,8 @@ public class TicketController {
         logger.info("Received request to book ticket. Ticket ID: {}, Request: {}, IP: {}",
                 ticketId, request, ipAddress);
 
-        var result = ticketUseCase.book(ticketId, request);
-        return ApiResponse.<TicketBookResponse>build()
+        var result = ticketUseCase.confirm(ticketId, request);
+        return ApiResponse.<TicketConfirmResponse>build()
                 .withData(result)
                 .toEntity();
     }

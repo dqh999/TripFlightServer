@@ -4,17 +4,17 @@ import com.airline.booking.application.ticket.dataTransferObject.PassengerDTO;
 
 import java.util.List;
 
-public class TicketBookRequest {
+public class TicketConfirmRequest {
     private String ipAddress;
     private String customerName;
     private String contactEmail;
     private List<PassengerDTO> passengers;
 
-    public TicketBookRequest() {
+    public TicketConfirmRequest() {
     }
 
 
-    public TicketBookRequest(String ipAddress, String customerName, String contactEmail, List<PassengerDTO> passengers) {
+    public TicketConfirmRequest(String ipAddress, String customerName, String contactEmail, List<PassengerDTO> passengers) {
         this.ipAddress = ipAddress;
         this.customerName = customerName;
         this.contactEmail = contactEmail;
@@ -45,7 +45,7 @@ public class TicketBookRequest {
         this.contactEmail = contactEmail;
     }
 
-    public TicketBookRequest(List<PassengerDTO> passengers) {
+    public TicketConfirmRequest(List<PassengerDTO> passengers) {
         this.passengers = passengers;
     }
 }
