@@ -1,6 +1,6 @@
 FROM gradle:8.11.1-jdk23 AS build
 WORKDIR /app
-COPY . /app
+COPY .. /app
 RUN gradle build --no-daemon -x test
 
 FROM openjdk:23-slim

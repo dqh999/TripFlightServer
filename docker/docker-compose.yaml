@@ -37,7 +37,7 @@ services:
   app:
     image: airline-server:latest
     build:
-      context: ../..
+      context: ..
       dockerfile: ../../Dockerfile
     container_name: airline-app
     restart: always
@@ -65,4 +65,8 @@ networks:
 
 # docker compose build app
 # docker compose up -d airline-mysql airline-redis
+# docker stop
+# docker rm
+# docker rmi
+# docker images
 # docker compose up -d app

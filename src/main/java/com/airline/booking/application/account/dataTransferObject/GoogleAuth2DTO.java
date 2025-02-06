@@ -14,7 +14,10 @@ public class GoogleAuth2DTO {
     @JsonProperty("date_of_birth")
     private LocalDate dateOfBirth;
     private String gender;
-    public GoogleAuth2DTO() {}
+
+    public GoogleAuth2DTO() {
+    }
+
     public GoogleAuth2DTO(String sub, String firstName, String lastName, String email, LocalDate dateOfBirth, String gender) {
         this.sub = sub;
         this.firstName = firstName;
