@@ -16,4 +16,7 @@ public class RequestUtil {
 
         return xForwardedForHeader.split(",")[0].trim();
     }
+    public static String getSessionId(HttpServletRequest request) {
+        return request.getHeader("X-Session-Id");
+    }
 }

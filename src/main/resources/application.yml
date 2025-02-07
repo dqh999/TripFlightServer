@@ -27,22 +27,8 @@ spring:
       password: Hop2005@
       timeout: 2000
 
-      key:
-        flight:
-          detail: flightId:%s
-        ticket:
-          ticket-confirm:
-            value:  ticket_confirm:%s
-            timout: 900
-          ticket-payment:
-            value: ticket_payment:%s
-
   kafka:
     bootstrap-servers: 147.93.29.117:9092,147.93.29.117:9093
-    topic:
-      email: email-topic
-      ticket:
-        ticket-cancel: ticket-cancel
 
   mail:
     host: smtp.gmail.com
